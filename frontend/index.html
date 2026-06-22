@@ -1,0 +1,667 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cd-gold: #C9943A;
+    --cd-gold-light: #F5E6C8;
+    --cd-purple: #534AB7;
+    --cd-purple-light: #EEEDFE;
+    --cd-rarity-comum: #888780;
+    --cd-rarity-incomum: #1D9E75;
+    --cd-rarity-raro: #185FA5;
+    --cd-rarity-epico: #7F77DD;
+    --cd-rarity-lendario: #C9943A;
+    --cd-rarity-exclusivo: #D4537E;
+  }
+  body { font-family: var(--font-sans); background: transparent; }
+  .app { display: flex; flex-direction: column; min-height: 600px; }
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; height: 52px;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-primary);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .logo { display: flex; align-items: center; gap: 8px; }
+  .logo-icon {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: var(--cd-purple); display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon i { color: white; font-size: 16px; }
+  .logo-text { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+  .logo-text span { color: var(--cd-purple); }
+  .topbar-nav { display: flex; gap: 4px; }
+  .nav-btn {
+    padding: 6px 12px; border-radius: var(--border-radius-md); border: none;
+    background: transparent; cursor: pointer; font-size: 13px; font-weight: 400;
+    color: var(--color-text-secondary); display: flex; align-items: center; gap: 5px;
+    transition: all 0.15s;
+  }
+  .nav-btn:hover { background: var(--color-background-secondary); color: var(--color-text-primary); }
+  .nav-btn.active { background: var(--cd-purple-light); color: var(--cd-purple); font-weight: 500; }
+  .nav-btn i { font-size: 15px; }
+  .topbar-user { display: flex; align-items: center; gap: 10px; }
+  .coins { display: flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 500; color: var(--cd-gold); background: var(--cd-gold-light); padding: 4px 10px; border-radius: 20px; }
+  .coins i { font-size: 14px; }
+  .avatar-sm { width: 30px; height: 30px; border-radius: 50%; background: var(--cd-purple-light); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: var(--cd-purple); cursor: pointer; }
+  .content { flex: 1; padding: 20px; overflow: auto; }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* HOME SCREEN */
+  .hero {
+    background: var(--cd-purple-light); border-radius: var(--border-radius-lg);
+    padding: 28px 24px; margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    border: 0.5px solid #CECBF6;
+  }
+  .hero-text h2 { font-size: 20px; font-weight: 500; color: #3C3489; margin-bottom: 6px; }
+  .hero-text p { font-size: 13px; color: #534AB7; max-width: 340px; line-height: 1.5; }
+  .hero-actions { display: flex; gap: 8px; margin-top: 14px; }
+  .btn-primary {
+    padding: 8px 16px; border-radius: var(--border-radius-md); border: none;
+    background: var(--cd-purple); color: white; font-size: 13px; font-weight: 500;
+    cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-secondary {
+    padding: 8px 16px; border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary);
+    font-size: 13px; color: var(--color-text-primary); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s;
+  }
+  .btn-secondary:hover { background: var(--color-background-secondary); }
+  .pack-preview {
+    display: flex; gap: -8px;
+  }
+  .pack-card-mini {
+    width: 64px; height: 90px; border-radius: 8px; border: 1.5px solid white;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    margin-left: -10px; box-shadow: 0 2px 8px rgba(83,74,183,0.15);
+    position: relative;
+  }
+  .section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); margin-bottom: 10px; }
+  .section-title { font-size: 16px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+  .section-title button { font-size: 12px; color: var(--cd-purple); background: none; border: none; cursor: pointer; }
+  .collections-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .collection-card {
+    background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg); padding: 14px; cursor: pointer; transition: all 0.15s;
+    position: relative; overflow: hidden;
+  }
+  .collection-card:hover { border-color: var(--color-border-secondary); transform: translateY(-1px); }
+  .collection-card .coll-emoji { font-size: 28px; margin-bottom: 8px; }
+  .collection-card .coll-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .collection-card .coll-count { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .progress-bar { height: 3px; background: var(--color-background-secondary); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; background: var(--cd-purple); }
+  .coll-pct { font-size: 11px; color: var(--cd-purple); margin-top: 4px; font-weight: 500; }
+  .activity-feed { display: flex; flex-direction: column; gap: 8px; }
+  .activity-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); }
+  .activity-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; }
+  .ai-pack { background: var(--cd-purple-light); color: var(--cd-purple); }
+  .ai-trade { background: #E1F5EE; color: #0F6E56; }
+  .ai-ach { background: #FAEEDA; color: #854F0B; }
+  .activity-text { font-size: 13px; color: var(--color-text-primary); flex: 1; }
+  .activity-text span { color: var(--color-text-secondary); font-size: 12px; }
+  .activity-time { font-size: 11px; color: var(--color-text-tertiary); }
+
+  /* STATS ROW */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stat-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px 14px; }
+  .stat-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 4px; }
+  .stat-value { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+  .stat-value.gold { color: var(--cd-gold); }
+  .stat-value.purple { color: var(--cd-purple); }
+
+  /* PACK SCREEN */
+  .packs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+  .pack-item {
+    background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg); padding: 20px 16px; cursor: pointer; transition: all 0.15s; text-align: center;
+  }
+  .pack-item:hover { border-color: var(--color-border-secondary); transform: translateY(-2px); }
+  .pack-item .pack-emoji { font-size: 48px; margin-bottom: 12px; }
+  .pack-item .pack-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; color: var(--color-text-primary); }
+  .pack-item .pack-desc { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 14px; line-height: 1.4; }
+  .pack-item .pack-price { display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 13px; font-weight: 500; color: var(--cd-gold); margin-bottom: 12px; }
+  .pack-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 8px; font-weight: 500; }
+  .badge-basic { background: #D3D1C7; color: #444441; }
+  .badge-premium { background: var(--cd-purple-light); color: var(--cd-purple); }
+  .badge-special { background: #FAEEDA; color: #854F0B; }
+  .badge-event { background: #FCEBEB; color: #A32D2D; }
+  .prob-row { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 8px; }
+  .prob-pill { font-size: 10px; padding: 2px 6px; border-radius: 10px; }
+  .r-comum { background: #F1EFE8; color: #5F5E5A; }
+  .r-incomum { background: #E1F5EE; color: #0F6E56; }
+  .r-raro { background: #E6F1FB; color: #185FA5; }
+  .r-epico { background: #EEEDFE; color: #534AB7; }
+  .r-lendario { background: #FAEEDA; color: #854F0B; }
+  .r-exclusivo { background: #FBEAF0; color: #993556; }
+
+  /* PACK OPENING MODAL */
+  .modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.55); z-index: 100; align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--color-background-primary); border-radius: 16px; padding: 28px; max-width: 480px; width: 90%; border: 0.5px solid var(--color-border-tertiary); }
+  .modal-title { font-size: 18px; font-weight: 500; margin-bottom: 6px; color: var(--color-text-primary); }
+  .modal-sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 20px; }
+  .cards-reveal { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .card-flip { perspective: 600px; height: 110px; cursor: pointer; }
+  .card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.5s; border-radius: 10px; }
+  .card-inner.flipped { transform: rotateY(180deg); }
+  .card-face { position: absolute; width: 100%; height: 100%; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; backface-visibility: hidden; border: 1px solid var(--color-border-tertiary); }
+  .card-back { background: var(--cd-purple); display: flex; align-items: center; justify-content: center; }
+  .card-back i { color: rgba(255,255,255,0.4); font-size: 28px; }
+  .card-front { background: var(--color-background-secondary); transform: rotateY(180deg); padding: 8px; }
+  .card-front .cf-emoji { font-size: 26px; margin-bottom: 4px; }
+  .card-front .cf-name { font-size: 10px; font-weight: 500; text-align: center; color: var(--color-text-primary); line-height: 1.2; }
+  .card-front .cf-rarity { font-size: 9px; margin-top: 3px; }
+  .modal-actions { display: flex; gap: 8px; }
+  .reveal-all-btn { flex: 1; }
+
+  /* COLLECTION BROWSER */
+  .coll-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding: 16px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); }
+  .coll-header-emoji { font-size: 42px; }
+  .coll-header-info h2 { font-size: 17px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
+  .coll-header-info p { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .coll-progress-big { display: flex; align-items: center; gap: 10px; }
+  .coll-progress-big .progress-bar { flex: 1; height: 6px; }
+  .coll-progress-big .pct { font-size: 13px; font-weight: 500; color: var(--cd-purple); }
+  .filters { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .filter-btn { padding: 5px 12px; border-radius: 20px; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); font-size: 12px; cursor: pointer; color: var(--color-text-secondary); transition: all 0.15s; }
+  .filter-btn:hover, .filter-btn.active { border-color: var(--cd-purple); background: var(--cd-purple-light); color: var(--cd-purple); }
+  .stickers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 10px; }
+  .sticker {
+    aspect-ratio: 2/3; border-radius: 10px; border: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-secondary); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; padding: 8px; position: relative;
+  }
+  .sticker:hover { transform: translateY(-2px); }
+  .sticker.missing { opacity: 0.4; filter: grayscale(1); }
+  .sticker .s-num { position: absolute; top: 5px; left: 7px; font-size: 9px; color: var(--color-text-tertiary); }
+  .sticker .s-emoji { font-size: 28px; margin-bottom: 5px; }
+  .sticker .s-name { font-size: 10px; font-weight: 500; text-align: center; color: var(--color-text-primary); line-height: 1.2; }
+  .sticker .s-rarity { position: absolute; bottom: 5px; right: 5px; width: 8px; height: 8px; border-radius: 50%; }
+  .dot-comum { background: var(--cd-rarity-comum); }
+  .dot-incomum { background: var(--cd-rarity-incomum); }
+  .dot-raro { background: var(--cd-rarity-raro); }
+  .dot-epico { background: var(--cd-rarity-epico); }
+  .dot-lendario { background: var(--cd-rarity-lendario); }
+  .dot-exclusivo { background: var(--cd-rarity-exclusivo); }
+
+  /* MARKET */
+  .market-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .search-bar { flex: 1; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); }
+  .search-bar i { color: var(--color-text-tertiary); font-size: 15px; }
+  .search-bar input { border: none; background: transparent; font-size: 13px; color: var(--color-text-primary); outline: none; flex: 1; }
+  .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .market-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px; cursor: pointer; transition: all 0.15s; }
+  .market-card:hover { border-color: var(--color-border-secondary); transform: translateY(-1px); }
+  .market-card .mc-emoji { font-size: 32px; text-align: center; margin-bottom: 8px; }
+  .market-card .mc-name { font-size: 12px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 3px; }
+  .market-card .mc-coll { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 8px; }
+  .market-card .mc-price { display: flex; align-items: center; justify-content: space-between; }
+  .price-tag { display: flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 500; color: var(--cd-gold); }
+  .buy-btn { font-size: 11px; padding: 3px 8px; border-radius: 6px; border: none; background: var(--cd-purple); color: white; cursor: pointer; }
+  .rarity-badge { display: inline-block; font-size: 9px; font-weight: 500; padding: 2px 6px; border-radius: 8px; margin-bottom: 6px; }
+
+  /* PROFILE */
+  .profile-hero { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 20px; margin-bottom: 16px; text-align: center; }
+  .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--cd-purple-light); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 500; color: var(--cd-purple); margin: 0 auto 12px; border: 2px solid var(--cd-purple); }
+  .profile-name { font-size: 17px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .profile-level { font-size: 12px; color: var(--cd-purple); background: var(--cd-purple-light); display: inline-block; padding: 3px 10px; border-radius: 10px; margin-bottom: 12px; }
+  .xp-bar-wrap { background: var(--color-background-secondary); border-radius: 4px; height: 6px; overflow: hidden; margin-bottom: 6px; }
+  .xp-bar-fill { height: 100%; background: var(--cd-purple); border-radius: 4px; }
+  .xp-label { font-size: 11px; color: var(--color-text-secondary); }
+  .badges-row { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+  .badge-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .badge-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--color-background-secondary); display: flex; align-items: center; justify-content: center; font-size: 20px; border: 0.5px solid var(--color-border-tertiary); }
+  .badge-name { font-size: 10px; color: var(--color-text-secondary); text-align: center; max-width: 52px; }
+  .profile-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .achievement { display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); }
+  .ach-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: var(--cd-gold-light); flex-shrink: 0; }
+  .ach-info .ach-name { font-size: 12px; font-weight: 500; color: var(--color-text-primary); }
+  .ach-info .ach-desc { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+</style>
+
+<h2 class="sr-only">Caderneta Digital — protótipo interativo da plataforma de colecionismo</h2>
+
+<div class="app">
+  <div class="topbar">
+    <div class="logo">
+      <div class="logo-icon"><i class="ti ti-stack-2" aria-hidden="true"></i></div>
+      <span class="logo-text">Caderneta<span>Digital</span></span>
+    </div>
+    <div class="topbar-nav">
+      <button class="nav-btn active" onclick="show('home')" id="nav-home"><i class="ti ti-home" aria-hidden="true"></i>Início</button>
+      <button class="nav-btn" onclick="show('packs')" id="nav-packs"><i class="ti ti-package" aria-hidden="true"></i>Packs</button>
+      <button class="nav-btn" onclick="show('collection')" id="nav-collection"><i class="ti ti-book" aria-hidden="true"></i>Caderneta</button>
+      <button class="nav-btn" onclick="show('market')" id="nav-market"><i class="ti ti-building-store" aria-hidden="true"></i>Mercado</button>
+      <button class="nav-btn" onclick="show('profile')" id="nav-profile"><i class="ti ti-user" aria-hidden="true"></i>Perfil</button>
+    </div>
+    <div class="topbar-user">
+      <div class="coins"><i class="ti ti-coin" aria-hidden="true"></i>1.240</div>
+      <div class="avatar-sm" onclick="show('profile')">JM</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- HOME -->
+    <div class="screen active" id="screen-home">
+      <div class="hero">
+        <div class="hero-text">
+          <div class="section-label">Bem-vindo, João</div>
+          <h2>A tua coleção está a crescer 🔥</h2>
+          <p>Tens 3 cromos repetidos prontos para trocar e um evento especial ativo esta semana!</p>
+          <div class="hero-actions">
+            <button class="btn-primary" onclick="show('packs')"><i class="ti ti-package" aria-hidden="true"></i>Abrir packs</button>
+            <button class="btn-secondary" onclick="show('collection')"><i class="ti ti-book" aria-hidden="true"></i>Ver caderneta</button>
+          </div>
+        </div>
+        <div class="pack-preview">
+          <div class="pack-card-mini" style="background:#EEEDFE; z-index:3;">🃏</div>
+          <div class="pack-card-mini" style="background:#E1F5EE; z-index:2;">🎴</div>
+          <div class="pack-card-mini" style="background:#FAEEDA; z-index:1;">✨</div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Cromos colecionados</div>
+          <div class="stat-value purple">247</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Cadernetas activas</div>
+          <div class="stat-value">4</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Trocas realizadas</div>
+          <div class="stat-value">31</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Moedas</div>
+          <div class="stat-value gold">1.240</div>
+        </div>
+      </div>
+
+      <div class="section-title">
+        Coleções em curso
+        <button onclick="show('collection')">Ver todas →</button>
+      </div>
+      <div class="collections-grid">
+        <div class="collection-card" onclick="show('collection')">
+          <div class="coll-emoji">⚽</div>
+          <div class="coll-name">Liga Portuguesa 24/25</div>
+          <div class="coll-count">183 / 240 cromos</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:76%"></div></div>
+          <div class="coll-pct">76%</div>
+        </div>
+        <div class="collection-card" onclick="show('collection')">
+          <div class="coll-emoji">🎌</div>
+          <div class="coll-name">Anime Legends</div>
+          <div class="coll-count">54 / 120 cromos</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div>
+          <div class="coll-pct">45%</div>
+        </div>
+        <div class="collection-card" onclick="show('collection')">
+          <div class="coll-emoji">🎮</div>
+          <div class="coll-name">Gaming Icons</div>
+          <div class="coll-count">10 / 80 cromos</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:12%"></div></div>
+          <div class="coll-pct">12%</div>
+        </div>
+        <div class="collection-card" onclick="show('collection')">
+          <div class="coll-emoji">🐉</div>
+          <div class="coll-name">Fantasia Épica</div>
+          <div class="coll-count">0 / 60 cromos</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+          <div class="coll-pct">Nova!</div>
+        </div>
+      </div>
+
+      <div class="section-title">Atividade recente</div>
+      <div class="activity-feed">
+        <div class="activity-item">
+          <div class="activity-icon ai-pack"><i class="ti ti-package" aria-hidden="true"></i></div>
+          <div class="activity-text">Abriste um <strong>Pack Premium</strong> e obtiveste 5 novos cromos! <span>Liga Portuguesa</span></div>
+          <div class="activity-time">há 2h</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon ai-trade"><i class="ti ti-arrows-exchange" aria-hidden="true"></i></div>
+          <div class="activity-text">Troca com <strong>maria_collector</strong> concluída — Recebeste Bruno Fernandes ⭐</div>
+          <div class="activity-time">há 5h</div>
+        </div>
+        <div class="activity-item">
+          <div class="activity-icon ai-ach"><i class="ti ti-trophy" aria-hidden="true"></i></div>
+          <div class="activity-text">Nova conquista desbloqueada: <strong>Colecionador Dedicado</strong> 🏆</div>
+          <div class="activity-time">ontem</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PACKS -->
+    <div class="screen" id="screen-packs">
+      <div class="section-title" style="margin-bottom:18px">
+        Loja de packs
+        <div class="coins" style="font-size:12px"><i class="ti ti-coin" aria-hidden="true"></i>1.240 moedas</div>
+      </div>
+      <div class="packs-grid">
+        <div class="pack-item" onclick="openPack('Básico')">
+          <div class="pack-badge badge-basic">Básico</div>
+          <div class="pack-emoji">📦</div>
+          <div class="pack-name">Pack Básico</div>
+          <div class="pack-desc">3 cromos por pack. Ideal para começar.</div>
+          <div class="pack-price"><i class="ti ti-coin" aria-hidden="true"></i>100</div>
+          <div class="prob-row">
+            <span class="prob-pill r-comum">Comum 65%</span>
+            <span class="prob-pill r-incomum">Incomum 25%</span>
+            <span class="prob-pill r-raro">Raro 10%</span>
+          </div>
+          <button class="btn-primary" style="width:100%;margin-top:12px;justify-content:center">Comprar</button>
+        </div>
+        <div class="pack-item" onclick="openPack('Premium')">
+          <div class="pack-badge badge-premium">Premium</div>
+          <div class="pack-emoji">🎁</div>
+          <div class="pack-name">Pack Premium</div>
+          <div class="pack-desc">5 cromos. Garantia de 1 raro ou superior.</div>
+          <div class="pack-price"><i class="ti ti-coin" aria-hidden="true"></i>250</div>
+          <div class="prob-row">
+            <span class="prob-pill r-comum">Comum 40%</span>
+            <span class="prob-pill r-incomum">Incomum 30%</span>
+            <span class="prob-pill r-raro">Raro 20%</span>
+            <span class="prob-pill r-epico">Épico 10%</span>
+          </div>
+          <button class="btn-primary" style="width:100%;margin-top:12px;justify-content:center">Comprar</button>
+        </div>
+        <div class="pack-item" onclick="openPack('Especial')">
+          <div class="pack-badge badge-special">Especial</div>
+          <div class="pack-emoji">✨</div>
+          <div class="pack-name">Pack Especial</div>
+          <div class="pack-desc">8 cromos. Alta probabilidade de épicos.</div>
+          <div class="pack-price"><i class="ti ti-coin" aria-hidden="true"></i>500</div>
+          <div class="prob-row">
+            <span class="prob-pill r-incomum">Incomum 30%</span>
+            <span class="prob-pill r-raro">Raro 30%</span>
+            <span class="prob-pill r-epico">Épico 30%</span>
+            <span class="prob-pill r-lendario">Lendário 10%</span>
+          </div>
+          <button class="btn-primary" style="width:100%;margin-top:12px;justify-content:center">Comprar</button>
+        </div>
+        <div class="pack-item" onclick="openPack('Evento')">
+          <div class="pack-badge badge-event">⏰ Evento</div>
+          <div class="pack-emoji">🔥</div>
+          <div class="pack-name">Pack Euro 2024</div>
+          <div class="pack-desc">Edição limitada. Cromos exclusivos da seleção.</div>
+          <div class="pack-price"><i class="ti ti-coin" aria-hidden="true"></i>400</div>
+          <div class="prob-row">
+            <span class="prob-pill r-raro">Raro 35%</span>
+            <span class="prob-pill r-epico">Épico 35%</span>
+            <span class="prob-pill r-lendario">Lendário 20%</span>
+            <span class="prob-pill r-exclusivo">Exclusivo 10%</span>
+          </div>
+          <button class="btn-primary" style="width:100%;margin-top:12px;justify-content:center">Comprar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLLECTION -->
+    <div class="screen" id="screen-collection">
+      <div class="coll-header">
+        <div class="coll-header-emoji">⚽</div>
+        <div class="coll-header-info" style="flex:1">
+          <h2>Liga Portuguesa 24/25</h2>
+          <p>240 cromos · Futebol · Temporada 2024–25</p>
+          <div class="coll-progress-big">
+            <div class="progress-bar"><div class="progress-fill" style="width:76%"></div></div>
+            <div class="pct">76% (183/240)</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="btn-primary" onclick="show('packs')"><i class="ti ti-package" aria-hidden="true"></i>Abrir pack</button>
+          <button class="btn-secondary"><i class="ti ti-arrows-exchange" aria-hidden="true"></i>Trocas</button>
+        </div>
+      </div>
+      <div class="filters" id="rarity-filters">
+        <button class="filter-btn active" onclick="filterStickers('all',this)">Todos</button>
+        <button class="filter-btn" onclick="filterStickers('missing',this)">Em falta</button>
+        <button class="filter-btn" onclick="filterStickers('comum',this)">Comum</button>
+        <button class="filter-btn" onclick="filterStickers('incomum',this)">Incomum</button>
+        <button class="filter-btn" onclick="filterStickers('raro',this)">Raro</button>
+        <button class="filter-btn" onclick="filterStickers('epico',this)">Épico</button>
+        <button class="filter-btn" onclick="filterStickers('lendario',this)">Lendário</button>
+      </div>
+      <div class="stickers-grid" id="stickers-grid"></div>
+    </div>
+
+    <!-- MARKET -->
+    <div class="screen" id="screen-market">
+      <div class="section-title" style="margin-bottom:14px">Mercado de cromos</div>
+      <div class="market-header">
+        <div class="search-bar">
+          <i class="ti ti-search" aria-hidden="true"></i>
+          <input type="text" placeholder="Pesquisar cromo, coleção..." oninput="filterMarket(this.value)">
+        </div>
+        <button class="btn-secondary"><i class="ti ti-adjustments" aria-hidden="true"></i>Filtros</button>
+      </div>
+      <div class="filters">
+        <button class="filter-btn active">Todos</button>
+        <button class="filter-btn">Futebol</button>
+        <button class="filter-btn">Anime</button>
+        <button class="filter-btn">Gaming</button>
+        <button class="filter-btn">Raridade</button>
+      </div>
+      <div class="market-grid" id="market-grid"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="screen" id="screen-profile">
+      <div class="profile-hero">
+        <div class="profile-avatar">JM</div>
+        <div class="profile-name">João Mendes</div>
+        <div class="profile-level">🏅 Nível 12 — Colecionador Experiente</div>
+        <div style="max-width:260px;margin:0 auto">
+          <div class="xp-bar-wrap"><div class="xp-bar-fill" style="width:68%"></div></div>
+          <div class="xp-label">6.800 / 10.000 XP para o nível 13</div>
+        </div>
+        <div class="badges-row">
+          <div class="badge-item"><div class="badge-icon">🏆</div><div class="badge-name">Campeão</div></div>
+          <div class="badge-item"><div class="badge-icon">🔥</div><div class="badge-name">Streak 30d</div></div>
+          <div class="badge-item"><div class="badge-icon">⭐</div><div class="badge-name">1º lendário</div></div>
+          <div class="badge-item"><div class="badge-icon">🤝</div><div class="badge-name">Negociante</div></div>
+          <div class="badge-item"><div class="badge-icon">📚</div><div class="badge-name">Enciclopédia</div></div>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-card"><div class="stat-label">Cromos únicos</div><div class="stat-value purple">247</div></div>
+        <div class="stat-card"><div class="stat-label">Packs abertos</div><div class="stat-value">89</div></div>
+        <div class="stat-card"><div class="stat-label">Rank global</div><div class="stat-value">#342</div></div>
+      </div>
+      <div class="section-title">Conquistas recentes</div>
+      <div class="achievements-grid">
+        <div class="achievement"><div class="ach-icon">🏆</div><div class="ach-info"><div class="ach-name">Colecionador Dedicado</div><div class="ach-desc">Colecionar 200 cromos únicos</div></div></div>
+        <div class="achievement"><div class="ach-icon">🔥</div><div class="ach-info"><div class="ach-name">Em chamas</div><div class="ach-desc">Login 30 dias seguidos</div></div></div>
+        <div class="achievement"><div class="ach-icon">🤝</div><div class="ach-info"><div class="ach-name">Grande Negociante</div><div class="ach-desc">Completar 25 trocas</div></div></div>
+        <div class="achievement"><div class="ach-icon">⭐</div><div class="ach-info"><div class="ach-name">Caça-lendários</div><div class="ach-desc">Obter o primeiro cromo lendário</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PACK OPENING MODAL -->
+<div class="modal-overlay" id="pack-modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Pack Básico</div>
+    <div class="modal-sub">Clica em cada cromo para o revelar!</div>
+    <div class="cards-reveal" id="cards-reveal"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="revealAll()">Revelar todos</button>
+      <button class="btn-primary reveal-all-btn" onclick="closePack()"><i class="ti ti-check" aria-hidden="true"></i>Guardar cromos</button>
+      <button class="btn-secondary" onclick="closePack()" style="padding:8px 14px"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STICKERS = [
+  {n:1,name:'Diogo Costa',emoji:'🧤',rarity:'lendario',owned:true},
+  {n:2,name:'Nuno Mendes',emoji:'🛡️',rarity:'raro',owned:true},
+  {n:3,name:'Rúben Dias',emoji:'⚔️',rarity:'epico',owned:true},
+  {n:4,name:'Danilo Pereira',emoji:'💪',rarity:'incomum',owned:true},
+  {n:5,name:'João Cancelo',emoji:'🏃',rarity:'raro',owned:false},
+  {n:6,name:'Bruno Fernandes',emoji:'⭐',rarity:'lendario',owned:true},
+  {n:7,name:'Bernardo Silva',emoji:'🎯',rarity:'epico',owned:true},
+  {n:8,name:'William Carvalho',emoji:'🔵',rarity:'incomum',owned:false},
+  {n:9,name:'Rafael Leão',emoji:'⚡',rarity:'epico',owned:true},
+  {n:10,name:'Gonçalo Ramos',emoji:'🥅',rarity:'raro',owned:false},
+  {n:11,name:'Cristiano Ronaldo',emoji:'👑',rarity:'exclusivo',owned:true},
+  {n:12,name:'João Félix',emoji:'🌟',rarity:'epico',owned:true},
+  {n:13,name:'Vitinha',emoji:'🎪',rarity:'raro',owned:true},
+  {n:14,name:'Pedro Gonçalves',emoji:'🎭',rarity:'raro',owned:false},
+  {n:15,name:'Matheus Nunes',emoji:'🏋️',rarity:'incomum',owned:true},
+  {n:16,name:'Otávio',emoji:'🎯',rarity:'comum',owned:true},
+  {n:17,name:'André Silva',emoji:'⚽',rarity:'comum',owned:false},
+  {n:18,name:'Pote',emoji:'🔮',rarity:'incomum',owned:true},
+];
+
+const MARKET_ITEMS = [
+  {name:'João Cancelo',emoji:'🏃',coll:'Liga PT',rarity:'raro',price:180},
+  {name:'Ryuk',emoji:'💀',coll:'Anime Legends',rarity:'epico',price:320},
+  {name:'Gonçalo Ramos',emoji:'🥅',coll:'Liga PT',rarity:'raro',price:150},
+  {name:'Link',emoji:'🗡️',coll:'Gaming Icons',rarity:'lendario',price:600},
+  {name:'William Carvalho',emoji:'🔵',coll:'Liga PT',rarity:'incomum',price:80},
+  {name:'Luffy',emoji:'🌊',coll:'Anime Legends',rarity:'lendario',price:520},
+  {name:'André Silva',emoji:'⚽',coll:'Liga PT',rarity:'comum',price:40},
+  {name:'Mario',emoji:'🍄',coll:'Gaming Icons',rarity:'raro',price:200},
+];
+
+const PACK_CARDS = {
+  'Básico': [
+    {emoji:'⚽',name:'André Silva',rarity:'comum'},
+    {emoji:'🏃',name:'Otávio',rarity:'comum'},
+    {emoji:'🔵',name:'William Carvalho',rarity:'incomum'},
+  ],
+  'Premium': [
+    {emoji:'⭐',name:'Bruno Fernandes',rarity:'lendario'},
+    {emoji:'🎯',name:'Bernardo Silva',rarity:'epico'},
+    {emoji:'🏋️',name:'Matheus Nunes',rarity:'incomum'},
+    {emoji:'🔮',name:'Pote',rarity:'incomum'},
+    {emoji:'⚽',name:'Gonçalo Ramos',rarity:'raro'},
+  ],
+  'Especial': [
+    {emoji:'👑',name:'Cristiano Ronaldo',rarity:'exclusivo'},
+    {emoji:'⚡',name:'Rafael Leão',rarity:'epico'},
+    {emoji:'🌟',name:'João Félix',rarity:'epico'},
+    {emoji:'🎯',name:'Vitinha',rarity:'raro'},
+    {emoji:'🛡️',name:'Nuno Mendes',rarity:'raro'},
+    {emoji:'💪',name:'Danilo',rarity:'incomum'},
+    {emoji:'🧤',name:'Diogo Costa',rarity:'lendario'},
+    {emoji:'⚔️',name:'Rúben Dias',rarity:'epico'},
+  ],
+  'Evento': [
+    {emoji:'👑',name:'CR7 Euro Special',rarity:'exclusivo'},
+    {emoji:'⭐',name:'Bruno Euro Gold',rarity:'lendario'},
+    {emoji:'⚡',name:'Leão Modo Evento',rarity:'epico'},
+    {emoji:'🎯',name:'Bernardo Euro',rarity:'epico'},
+    {emoji:'🌟',name:'João Félix Euro',rarity:'raro'},
+  ],
+};
+
+const RARITY_COLORS = {
+  comum: '#888780', incomum: '#1D9E75', raro: '#185FA5',
+  epico: '#7F77DD', lendario: '#C9943A', exclusivo: '#D4537E'
+};
+
+const RARITY_BG = {
+  comum: '#F1EFE8', incomum: '#E1F5EE', raro: '#E6F1FB',
+  epico: '#EEEDFE', lendario: '#FAEEDA', exclusivo: '#FBEAF0'
+};
+
+function show(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + screen).classList.add('active');
+  document.getElementById('nav-' + screen).classList.add('active');
+}
+
+function renderStickers(filter) {
+  const grid = document.getElementById('stickers-grid');
+  let items = STICKERS;
+  if (filter === 'missing') items = STICKERS.filter(s => !s.owned);
+  else if (filter && filter !== 'all') items = STICKERS.filter(s => s.rarity === filter);
+  grid.innerHTML = items.map(s => `
+    <div class="sticker ${s.owned ? '' : 'missing'}" title="${s.name}">
+      <div class="s-num">#${String(s.n).padStart(3,'0')}</div>
+      <div class="s-emoji">${s.emoji}</div>
+      <div class="s-name">${s.name}</div>
+      <div class="s-rarity dot-${s.rarity}"></div>
+    </div>
+  `).join('');
+}
+
+function filterStickers(f, btn) {
+  document.querySelectorAll('#rarity-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderStickers(f);
+}
+
+function renderMarket(q) {
+  const grid = document.getElementById('market-grid');
+  let items = MARKET_ITEMS;
+  if (q) items = MARKET_ITEMS.filter(i => i.name.toLowerCase().includes(q.toLowerCase()) || i.coll.toLowerCase().includes(q.toLowerCase()));
+  grid.innerHTML = items.map(i => `
+    <div class="market-card">
+      <div class="mc-emoji">${i.emoji}</div>
+      <div class="rarity-badge" style="background:${RARITY_BG[i.rarity]};color:${RARITY_COLORS[i.rarity]}">${i.rarity.charAt(0).toUpperCase()+i.rarity.slice(1)}</div>
+      <div class="mc-name">${i.name}</div>
+      <div class="mc-coll">${i.coll}</div>
+      <div class="mc-price">
+        <div class="price-tag"><i class="ti ti-coin" aria-hidden="true"></i>${i.price}</div>
+        <button class="buy-btn">Comprar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterMarket(q) { renderMarket(q); }
+
+let currentPack = null;
+function openPack(type) {
+  currentPack = type;
+  const cards = PACK_CARDS[type];
+  document.getElementById('modal-title').textContent = 'Pack ' + type + ' — Clica para revelar!';
+  document.getElementById('cards-reveal').innerHTML = cards.map((c,i) => `
+    <div class="card-flip" onclick="flipCard(this,${i})">
+      <div class="card-inner" id="card-${i}">
+        <div class="card-face card-back"><i class="ti ti-stack-2" aria-hidden="true"></i></div>
+        <div class="card-face card-front" style="background:${RARITY_BG[c.rarity]}">
+          <div class="cf-emoji">${c.emoji}</div>
+          <div class="cf-name">${c.name}</div>
+          <div class="cf-rarity" style="color:${RARITY_COLORS[c.rarity]};font-size:9px;font-weight:500">${c.rarity.toUpperCase()}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('pack-modal').classList.add('open');
+}
+
+function flipCard(wrap, i) {
+  document.getElementById('card-' + i).classList.add('flipped');
+}
+
+function revealAll() {
+  const cards = PACK_CARDS[currentPack] || [];
+  cards.forEach((_,i) => { const el = document.getElementById('card-'+i); if(el) el.classList.add('flipped'); });
+}
+
+function closePack() {
+  document.getElementById('pack-modal').classList.remove('open');
+}
+
+renderStickers('all');
+renderMarket('');
+</script>
