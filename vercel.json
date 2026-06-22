@@ -1,4 +1,3 @@
-ECHO is on.
-json{
+{
   "rootDirectory": "frontend"
 }
