@@ -152,86 +152,102 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
 </div>
 
 <script>
-  const { createClient } = supabase;
-  const sb = createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY');
+  var supabaseClient = supabase.createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY');
 
-  // Se já está autenticado, vai direto ao dashboard
-  sb.auth.getSession().then({ data: { session } } => {
-    if (session) window.location.href = 'dashboard.html';
+  // Se já está autenticado vai direto ao dashboard
+  supabaseClient.auth.getSession().then(function(result) {
+    if (result.data.session) {
+      window.location.href = 'dashboard.html';
+    }
   });
 
-  function abrirModal(tipo) { document.getElementById('modal-'+tipo).classList.add('aberto'); }
-  function fecharModal(tipo) {
-    document.getElementById('modal-'+tipo).classList.remove('aberto');
-    document.querySelectorAll('.erro').forEach(e => e.style.display='none');
+  function abrirModal(tipo) {
+    document.getElementById('modal-' + tipo).classList.add('aberto');
   }
-  function trocarModal(fechar, abrir) { fecharModal(fechar); setTimeout(()=>abrirModal(abrir),150); }
-  function mostrarErro(id, msg) { const el=document.getElementById(id); el.textContent=msg; el.style.display='block'; }
+
+  function fecharModal(tipo) {
+    document.getElementById('modal-' + tipo).classList.remove('aberto');
+    document.querySelectorAll('.erro').forEach(function(e) { e.style.display = 'none'; });
+  }
+
+  function trocarModal(fechar, abrir) {
+    fecharModal(fechar);
+    setTimeout(function() { abrirModal(abrir); }, 150);
+  }
+
+  function mostrarErro(id, msg) {
+    var el = document.getElementById(id);
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
 
   async function registar() {
-    const nome = document.getElementById('reg-nome').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const pass = document.getElementById('reg-pass').value;
-    const pass2 = document.getElementById('reg-pass2').value;
-    const btn = document.getElementById('btn-registar');
-    document.getElementById('erro-registo').style.display='none';
+    var nome = document.getElementById('reg-nome').value.trim();
+    var email = document.getElementById('reg-email').value.trim();
+    var pass = document.getElementById('reg-pass').value;
+    var pass2 = document.getElementById('reg-pass2').value;
+    var btn = document.getElementById('btn-registar');
+    document.getElementById('erro-registo').style.display = 'none';
 
-    if(!nome||!email||!pass||!pass2) { mostrarErro('erro-registo','Preenche todos os campos!'); return; }
-    if(pass.length<6) { mostrarErro('erro-registo','A password deve ter pelo menos 6 caracteres!'); return; }
-    if(pass!==pass2) { mostrarErro('erro-registo','As passwords não coincidem!'); return; }
+    if (!nome || !email || !pass || !pass2) { mostrarErro('erro-registo', 'Preenche todos os campos!'); return; }
+    if (pass.length < 6) { mostrarErro('erro-registo', 'A password deve ter pelo menos 6 caracteres!'); return; }
+    if (pass !== pass2) { mostrarErro('erro-registo', 'As passwords não coincidem!'); return; }
 
-    btn.disabled=true; btn.textContent='A criar conta...';
+    btn.disabled = true;
+    btn.textContent = 'A criar conta...';
 
-    const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data: { display_name: nome } } });
+    var result = await supabaseClient.auth.signUp({ email: email, password: pass, options: { data: { display_name: nome } } });
 
-    if(error) {
-      btn.disabled=false; btn.textContent='Criar conta';
-      mostrarErro('erro-registo', error.message.includes('already registered') ? 'Este email já está registado!' : 'Erro ao criar conta. Tenta novamente!');
+    if (result.error) {
+      btn.disabled = false;
+      btn.textContent = 'Criar conta';
+      mostrarErro('erro-registo', result.error.message.includes('already registered') ? 'Este email já está registado!' : 'Erro ao criar conta. Tenta novamente!');
       return;
     }
 
-    if(data.user) {
-      await sb.from('profiles').upsert({
-        id: data.user.id,
-        username: email.split('@')[0] + Math.floor(Math.random()*1000),
+    if (result.data.user) {
+      await supabaseClient.from('profiles').upsert({
+        id: result.data.user.id,
+        username: email.split('@')[0] + Math.floor(Math.random() * 1000),
         display_name: nome,
         coins: 500,
         saldo: 0
       });
     }
 
-    document.getElementById('registo-form').style.display='none';
-    document.getElementById('registo-sucesso').style.display='block';
-
-    // Vai ao dashboard após 1.5 segundos
-    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+    document.getElementById('registo-form').style.display = 'none';
+    document.getElementById('registo-sucesso').style.display = 'block';
+    setTimeout(function() { window.location.href = 'dashboard.html'; }, 1500);
   }
 
   async function entrar() {
-    const email = document.getElementById('login-email').value.trim();
-    const pass = document.getElementById('login-pass').value;
-    const btn = document.getElementById('btn-entrar');
-    document.getElementById('erro-login').style.display='none';
+    var email = document.getElementById('login-email').value.trim();
+    var pass = document.getElementById('login-pass').value;
+    var btn = document.getElementById('btn-entrar');
+    document.getElementById('erro-login').style.display = 'none';
 
-    if(!email||!pass) { mostrarErro('erro-login','Preenche todos os campos!'); return; }
+    if (!email || !pass) { mostrarErro('erro-login', 'Preenche todos os campos!'); return; }
 
-    btn.disabled=true; btn.textContent='A entrar...';
+    btn.disabled = true;
+    btn.textContent = 'A entrar...';
 
-    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+    var result = await supabaseClient.auth.signInWithPassword({ email: email, password: pass });
 
-    if(error) {
-      btn.disabled=false; btn.textContent='Entrar';
-      mostrarErro('erro-login','Email ou password incorretos!');
+    if (result.error) {
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      mostrarErro('erro-login', 'Email ou password incorretos!');
       return;
     }
 
-    btn.textContent='Bem-vindo! ✓';
-    // Vai ao dashboard após 0.8 segundos
-    setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+    btn.textContent = 'Bem-vindo! ✓';
+    setTimeout(function() { window.location.href = 'dashboard.html'; }, 800);
   }
 
-  document.querySelectorAll('.modal-overlay').forEach(m => {
-    m.addEventListener('click', function(e) { if(e.target===this) this.classList.remove('aberto'); });
+  document.querySelectorAll('.modal-overlay').forEach(function(m) {
+    m.addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('aberto');
+    });
   });
 </script>
 </body>
