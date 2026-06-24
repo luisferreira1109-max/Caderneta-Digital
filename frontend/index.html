@@ -112,32 +112,18 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
     <div id="registo-form">
       <p class="modal-titulo">Criar conta</p>
       <p class="modal-sub">Junta-te à Caderneta Digital</p>
-      <div class="campo">
-        <label>Nome</label>
-        <input type="text" id="reg-nome" placeholder="O teu nome"/>
-      </div>
-      <div class="campo">
-        <label>Email</label>
-        <input type="email" id="reg-email" placeholder="email@exemplo.com"/>
-      </div>
-      <div class="campo">
-        <label>Password</label>
-        <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres"/>
-      </div>
-      <div class="campo">
-        <label>Confirmar password</label>
-        <input type="password" id="reg-pass2" placeholder="Repete a password"/>
-      </div>
+      <div class="campo"><label>Nome</label><input type="text" id="reg-nome" placeholder="O teu nome"/></div>
+      <div class="campo"><label>Email</label><input type="email" id="reg-email" placeholder="email@exemplo.com"/></div>
+      <div class="campo"><label>Password</label><input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres"/></div>
+      <div class="campo"><label>Confirmar password</label><input type="password" id="reg-pass2" placeholder="Repete a password"/></div>
       <div class="erro" id="erro-registo"></div>
       <button class="btn-modal" id="btn-registar" onclick="registar()">Criar conta</button>
-      <div class="modal-trocar">
-        Já tens conta? <span onclick="trocarModal('registo','login')">Entra aqui</span>
-      </div>
+      <div class="modal-trocar">Já tens conta? <span onclick="trocarModal('registo','login')">Entra aqui</span></div>
     </div>
     <div class="sucesso" id="registo-sucesso">
       <div class="sucesso-icon">🎉</div>
       <p class="sucesso-texto">Conta criada com sucesso!</p>
-      <p class="sucesso-sub">Bem-vindo à Caderneta Digital!<br>Tens 500 moedas de boas-vindas! 🪙</p>
+      <p class="sucesso-sub">A entrar na tua caderneta...</p>
     </div>
   </div>
 </div>
@@ -156,19 +142,11 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
     <div id="login-form">
       <p class="modal-titulo">Bem-vindo de volta!</p>
       <p class="modal-sub">Entra na tua conta</p>
-      <div class="campo">
-        <label>Email</label>
-        <input type="email" id="login-email" placeholder="email@exemplo.com"/>
-      </div>
-      <div class="campo">
-        <label>Password</label>
-        <input type="password" id="login-pass" placeholder="A tua password"/>
-      </div>
+      <div class="campo"><label>Email</label><input type="email" id="login-email" placeholder="email@exemplo.com"/></div>
+      <div class="campo"><label>Password</label><input type="password" id="login-pass" placeholder="A tua password"/></div>
       <div class="erro" id="erro-login"></div>
       <button class="btn-modal" id="btn-entrar" onclick="entrar()">Entrar</button>
-      <div class="modal-trocar">
-        Não tens conta? <span onclick="trocarModal('login','registo')">Regista-te aqui</span>
-      </div>
+      <div class="modal-trocar">Não tens conta? <span onclick="trocarModal('login','registo')">Regista-te aqui</span></div>
     </div>
   </div>
 </div>
@@ -177,22 +155,18 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
   const { createClient } = supabase;
   const sb = createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY');
 
-  function abrirModal(tipo) {
-    document.getElementById('modal-' + tipo).classList.add('aberto');
-  }
+  // Se já está autenticado, vai direto ao dashboard
+  sb.auth.getSession().then({ data: { session } } => {
+    if (session) window.location.href = 'dashboard.html';
+  });
+
+  function abrirModal(tipo) { document.getElementById('modal-'+tipo).classList.add('aberto'); }
   function fecharModal(tipo) {
-    document.getElementById('modal-' + tipo).classList.remove('aberto');
-    document.querySelectorAll('.erro').forEach(e => e.style.display = 'none');
+    document.getElementById('modal-'+tipo).classList.remove('aberto');
+    document.querySelectorAll('.erro').forEach(e => e.style.display='none');
   }
-  function trocarModal(fechar, abrir) {
-    fecharModal(fechar);
-    setTimeout(() => abrirModal(abrir), 150);
-  }
-  function mostrarErro(id, msg) {
-    const el = document.getElementById(id);
-    el.textContent = msg;
-    el.style.display = 'block';
-  }
+  function trocarModal(fechar, abrir) { fecharModal(fechar); setTimeout(()=>abrirModal(abrir),150); }
+  function mostrarErro(id, msg) { const el=document.getElementById(id); el.textContent=msg; el.style.display='block'; }
 
   async function registar() {
     const nome = document.getElementById('reg-nome').value.trim();
@@ -200,74 +174,64 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
     const pass = document.getElementById('reg-pass').value;
     const pass2 = document.getElementById('reg-pass2').value;
     const btn = document.getElementById('btn-registar');
-    document.getElementById('erro-registo').style.display = 'none';
+    document.getElementById('erro-registo').style.display='none';
 
-    if (!nome || !email || !pass || !pass2) { mostrarErro('erro-registo', 'Preenche todos os campos!'); return; }
-    if (pass.length < 6) { mostrarErro('erro-registo', 'A password deve ter pelo menos 6 caracteres!'); return; }
-    if (pass !== pass2) { mostrarErro('erro-registo', 'As passwords não coincidem!'); return; }
+    if(!nome||!email||!pass||!pass2) { mostrarErro('erro-registo','Preenche todos os campos!'); return; }
+    if(pass.length<6) { mostrarErro('erro-registo','A password deve ter pelo menos 6 caracteres!'); return; }
+    if(pass!==pass2) { mostrarErro('erro-registo','As passwords não coincidem!'); return; }
 
-    btn.disabled = true;
-    btn.textContent = 'A criar conta...';
+    btn.disabled=true; btn.textContent='A criar conta...';
 
     const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data: { display_name: nome } } });
 
-    if (error) {
-      btn.disabled = false;
-      btn.textContent = 'Criar conta';
-      if (error.message.includes('already registered')) {
-        mostrarErro('erro-registo', 'Este email já está registado!');
-      } else {
-        mostrarErro('erro-registo', 'Erro: ' + error.message);
-      }
+    if(error) {
+      btn.disabled=false; btn.textContent='Criar conta';
+      mostrarErro('erro-registo', error.message.includes('already registered') ? 'Este email já está registado!' : 'Erro ao criar conta. Tenta novamente!');
       return;
     }
 
-    if (data.user) {
+    if(data.user) {
       await sb.from('profiles').upsert({
         id: data.user.id,
         username: email.split('@')[0] + Math.floor(Math.random()*1000),
         display_name: nome,
-        coins: 500
+        coins: 500,
+        saldo: 0
       });
     }
 
-    document.getElementById('registo-form').style.display = 'none';
-    document.getElementById('registo-sucesso').style.display = 'block';
+    document.getElementById('registo-form').style.display='none';
+    document.getElementById('registo-sucesso').style.display='block';
+
+    // Vai ao dashboard após 1.5 segundos
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
   }
 
   async function entrar() {
     const email = document.getElementById('login-email').value.trim();
     const pass = document.getElementById('login-pass').value;
     const btn = document.getElementById('btn-entrar');
-    document.getElementById('erro-login').style.display = 'none';
+    document.getElementById('erro-login').style.display='none';
 
-    if (!email || !pass) { mostrarErro('erro-login', 'Preenche todos os campos!'); return; }
+    if(!email||!pass) { mostrarErro('erro-login','Preenche todos os campos!'); return; }
 
-    btn.disabled = true;
-    btn.textContent = 'A entrar...';
+    btn.disabled=true; btn.textContent='A entrar...';
 
     const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
 
-    if (error) {
-      btn.disabled = false;
-      btn.textContent = 'Entrar';
-      mostrarErro('erro-login', 'Email ou password incorretos!');
+    if(error) {
+      btn.disabled=false; btn.textContent='Entrar';
+      mostrarErro('erro-login','Email ou password incorretos!');
       return;
     }
 
-    btn.textContent = 'Bem-vindo! ✓';
-    setTimeout(() => {
-      fecharModal('login');
-      btn.disabled = false;
-      btn.textContent = 'Entrar';
-      alert('Bem-vindo ' + (data.user.user_metadata.display_name || '') + '! 🎉\nDashboard em breve!');
-    }, 800);
+    btn.textContent='Bem-vindo! ✓';
+    // Vai ao dashboard após 0.8 segundos
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
   }
 
   document.querySelectorAll('.modal-overlay').forEach(m => {
-    m.addEventListener('click', function(e) {
-      if (e.target === this) this.classList.remove('aberto');
-    });
+    m.addEventListener('click', function(e) { if(e.target===this) this.classList.remove('aberto'); });
   });
 </script>
 </body>
