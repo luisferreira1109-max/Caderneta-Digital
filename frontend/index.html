@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Caderneta Digital</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: hidden; }
@@ -32,130 +33,35 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
 .btn-login:hover { border-color: #C9943A; color: #C9943A; }
 .separador { font-size: 12px; color: rgba(255,255,255,0.4); }
 .rodape { text-align: center; padding: 20px; font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 0.06em; }
-
-/* MODAL */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.7);
-  z-index: 100;
-  align-items: center;
-  justify-content: center;
-}
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
 .modal-overlay.aberto { display: flex; }
-.modal {
-  background: #0f0f1a;
-  border: 1.5px solid #C9943A;
-  border-radius: 16px;
-  padding: 36px;
-  width: 100%;
-  max-width: 400px;
-  position: relative;
-}
-.modal-fechar {
-  position: absolute;
-  top: 14px; right: 18px;
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.4);
-  font-size: 22px;
-  cursor: pointer;
-  line-height: 1;
-}
+.modal { background: #0f0f1a; border: 1.5px solid #C9943A; border-radius: 16px; padding: 36px; width: 100%; max-width: 400px; position: relative; }
+.modal-fechar { position: absolute; top: 14px; right: 18px; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 22px; cursor: pointer; }
 .modal-fechar:hover { color: #C9943A; }
-.modal-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 24px;
-  justify-content: center;
-}
-.modal-titulo {
-  font-size: 20px;
-  font-weight: 600;
-  color: white;
-  text-align: center;
-  margin-bottom: 6px;
-}
-.modal-sub {
-  font-size: 13px;
-  color: rgba(255,255,255,0.4);
-  text-align: center;
-  margin-bottom: 24px;
-}
-.campo {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
-}
-.campo label {
-  font-size: 12px;
-  color: rgba(255,255,255,0.5);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.campo input {
-  padding: 12px 16px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 10px;
-  color: white;
-  font-size: 14px;
-  outline: none;
-  transition: border 0.2s;
-}
-.campo input:focus {
-  border-color: #C9943A;
-}
-.campo input::placeholder {
-  color: rgba(255,255,255,0.2);
-}
-.btn-modal {
-  width: 100%;
-  padding: 14px;
-  background: #C9943A;
-  color: #0f0f1a;
-  border: none;
-  border-radius: 50px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 8px;
-  letter-spacing: 0.04em;
-  transition: all 0.2s;
-}
+.modal-logo { display: flex; justify-content: center; margin-bottom: 24px; }
+.modal-titulo { font-size: 20px; font-weight: 600; color: white; text-align: center; margin-bottom: 6px; }
+.modal-sub { font-size: 13px; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 24px; }
+.campo { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.campo label { font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; }
+.campo input { padding: 12px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: white; font-size: 14px; outline: none; transition: border 0.2s; }
+.campo input:focus { border-color: #C9943A; }
+.campo input::placeholder { color: rgba(255,255,255,0.2); }
+.btn-modal { width: 100%; padding: 14px; background: #C9943A; color: #0f0f1a; border: none; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.2s; }
 .btn-modal:hover { background: #E8A83E; transform: translateY(-1px); }
-.modal-trocar {
-  text-align: center;
-  margin-top: 18px;
-  font-size: 13px;
-  color: rgba(255,255,255,0.4);
-}
-.modal-trocar span {
-  color: #C9943A;
-  cursor: pointer;
-  font-weight: 500;
-}
+.btn-modal:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.modal-trocar { text-align: center; margin-top: 18px; font-size: 13px; color: rgba(255,255,255,0.4); }
+.modal-trocar span { color: #C9943A; cursor: pointer; font-weight: 500; }
 .modal-trocar span:hover { text-decoration: underline; }
-.erro { font-size: 12px; color: #E24B4A; margin-top: 4px; display: none; }
-.sucesso {
-  text-align: center;
-  padding: 20px;
-  display: none;
-}
+.erro { font-size: 12px; color: #E24B4A; margin-top: 6px; text-align: center; display: none; padding: 8px; background: rgba(226,75,74,0.1); border-radius: 8px; }
+.sucesso { text-align: center; padding: 20px; display: none; }
 .sucesso-icon { font-size: 48px; margin-bottom: 12px; }
 .sucesso-texto { font-size: 16px; color: white; font-weight: 500; margin-bottom: 6px; }
-.sucesso-sub { font-size: 13px; color: rgba(255,255,255,0.4); }
+.sucesso-sub { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6; }
 </style>
 </head>
 <body>
-
 <div class="bg"></div>
 <div class="overlay"></div>
-
 <div class="page">
   <div class="topbar">
     <div class="logo-icon">
@@ -168,7 +74,6 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
     </div>
     <span class="logo-text">Caderneta Digital</span>
   </div>
-
   <div class="center">
     <div class="emblemas">
       <div class="emblema-wrap">
@@ -190,7 +95,6 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
       <button class="btn-login" onclick="abrirModal('login')">Já tenho conta</button>
     </div>
   </div>
-
   <div class="rodape">© 2026 Caderneta Digital · Todos os direitos reservados</div>
 </div>
 
@@ -223,9 +127,9 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
       <div class="campo">
         <label>Confirmar password</label>
         <input type="password" id="reg-pass2" placeholder="Repete a password"/>
-        <span class="erro" id="erro-pass">As passwords não coincidem!</span>
       </div>
-      <button class="btn-modal" onclick="registar()">Criar conta</button>
+      <div class="erro" id="erro-registo"></div>
+      <button class="btn-modal" id="btn-registar" onclick="registar()">Criar conta</button>
       <div class="modal-trocar">
         Já tens conta? <span onclick="trocarModal('registo','login')">Entra aqui</span>
       </div>
@@ -233,7 +137,7 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
     <div class="sucesso" id="registo-sucesso">
       <div class="sucesso-icon">🎉</div>
       <p class="sucesso-texto">Conta criada com sucesso!</p>
-      <p class="sucesso-sub">Bem-vindo à Caderneta Digital.<br>Tens 500 moedas de boas-vindas!</p>
+      <p class="sucesso-sub">Bem-vindo à Caderneta Digital!<br>Tens 500 moedas de boas-vindas! 🪙</p>
     </div>
   </div>
 </div>
@@ -259,9 +163,9 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
       <div class="campo">
         <label>Password</label>
         <input type="password" id="login-pass" placeholder="A tua password"/>
-        <span class="erro" id="erro-login">Email ou password incorretos!</span>
       </div>
-      <button class="btn-modal" onclick="entrar()">Entrar</button>
+      <div class="erro" id="erro-login"></div>
+      <button class="btn-modal" id="btn-entrar" onclick="entrar()">Entrar</button>
       <div class="modal-trocar">
         Não tens conta? <span onclick="trocarModal('login','registo')">Regista-te aqui</span>
       </div>
@@ -270,42 +174,101 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
 </div>
 
 <script>
-function abrirModal(tipo) {
-  document.getElementById('modal-' + tipo).classList.add('aberto');
-}
-function fecharModal(tipo) {
-  document.getElementById('modal-' + tipo).classList.remove('aberto');
-}
-function trocarModal(fechar, abrir) {
-  fecharModal(fechar);
-  setTimeout(() => abrirModal(abrir), 150);
-}
-function registar() {
-  const nome = document.getElementById('reg-nome').value;
-  const email = document.getElementById('reg-email').value;
-  const pass = document.getElementById('reg-pass').value;
-  const pass2 = document.getElementById('reg-pass2').value;
-  const erroPass = document.getElementById('erro-pass');
+  const { createClient } = supabase;
+  const sb = createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY');
 
-  if (!nome || !email || !pass || !pass2) { alert('Preenche todos os campos!'); return; }
-  if (pass !== pass2) { erroPass.style.display = 'block'; return; }
-  erroPass.style.display = 'none';
+  function abrirModal(tipo) {
+    document.getElementById('modal-' + tipo).classList.add('aberto');
+  }
+  function fecharModal(tipo) {
+    document.getElementById('modal-' + tipo).classList.remove('aberto');
+    document.querySelectorAll('.erro').forEach(e => e.style.display = 'none');
+  }
+  function trocarModal(fechar, abrir) {
+    fecharModal(fechar);
+    setTimeout(() => abrirModal(abrir), 150);
+  }
+  function mostrarErro(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
 
-  document.getElementById('registo-form').style.display = 'none';
-  document.getElementById('registo-sucesso').style.display = 'block';
-}
-function entrar() {
-  const email = document.getElementById('login-email').value;
-  const pass = document.getElementById('login-pass').value;
-  if (!email || !pass) { alert('Preenche todos os campos!'); return; }
-  alert('Login em breve ligado à base de dados! 🚀');
-}
+  async function registar() {
+    const nome = document.getElementById('reg-nome').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const pass = document.getElementById('reg-pass').value;
+    const pass2 = document.getElementById('reg-pass2').value;
+    const btn = document.getElementById('btn-registar');
+    document.getElementById('erro-registo').style.display = 'none';
 
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', function(e) {
-    if (e.target === this) this.classList.remove('aberto');
+    if (!nome || !email || !pass || !pass2) { mostrarErro('erro-registo', 'Preenche todos os campos!'); return; }
+    if (pass.length < 6) { mostrarErro('erro-registo', 'A password deve ter pelo menos 6 caracteres!'); return; }
+    if (pass !== pass2) { mostrarErro('erro-registo', 'As passwords não coincidem!'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'A criar conta...';
+
+    const { data, error } = await sb.auth.signUp({ email, password: pass, options: { data: { display_name: nome } } });
+
+    if (error) {
+      btn.disabled = false;
+      btn.textContent = 'Criar conta';
+      if (error.message.includes('already registered')) {
+        mostrarErro('erro-registo', 'Este email já está registado!');
+      } else {
+        mostrarErro('erro-registo', 'Erro: ' + error.message);
+      }
+      return;
+    }
+
+    if (data.user) {
+      await sb.from('profiles').upsert({
+        id: data.user.id,
+        username: email.split('@')[0] + Math.floor(Math.random()*1000),
+        display_name: nome,
+        coins: 500
+      });
+    }
+
+    document.getElementById('registo-form').style.display = 'none';
+    document.getElementById('registo-sucesso').style.display = 'block';
+  }
+
+  async function entrar() {
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    const btn = document.getElementById('btn-entrar');
+    document.getElementById('erro-login').style.display = 'none';
+
+    if (!email || !pass) { mostrarErro('erro-login', 'Preenche todos os campos!'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'A entrar...';
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+
+    if (error) {
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      mostrarErro('erro-login', 'Email ou password incorretos!');
+      return;
+    }
+
+    btn.textContent = 'Bem-vindo! ✓';
+    setTimeout(() => {
+      fecharModal('login');
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      alert('Bem-vindo ' + (data.user.user_metadata.display_name || '') + '! 🎉\nDashboard em breve!');
+    }, 800);
+  }
+
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('aberto');
+    });
   });
-});
 </script>
 </body>
 </html>
