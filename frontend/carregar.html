@@ -6,275 +6,168 @@
 <title>Caderneta Digital — Carregar Saldo</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.stripe.com/v3/"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0a0a0f 0%, #0f0f1a 50%, #0a0f0a 100%); color: white; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #0a0a0f; color: white; min-height: 100vh; }
 
-.bg { display: none; }
-
-.page { position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; }
-
-/* TOPBAR */
-.topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 28px;
-  background: rgba(10,10,15,0.8); backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(201,148,58,0.15);
-}
-.topbar-logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.logo-box {
-  width: 40px; height: 54px; border: 1.5px solid #C9943A; border-radius: 7px;
-  background: rgba(201,148,58,0.08);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-}
-.logo-lendario { font-size: 5px; color: #C9943A; letter-spacing: 0.1em; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: #0f0f1a; border-bottom: 1px solid rgba(201,148,58,0.2); }
+.logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.logo-box { width: 38px; height: 52px; border: 1.5px solid #C9943A; border-radius: 7px; background: rgba(201,148,58,0.08); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.logo-lendario { font-size: 5px; color: #C9943A; letter-spacing: 0.1em; margin-top: 2px; }
 .logo-nome { font-size: 13px; font-weight: 600; color: #C9943A; }
-.voltar-btn {
-  display: flex; align-items: center; gap: 8px;
-  padding: 8px 16px; background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
-  color: rgba(255,255,255,0.6); font-size: 13px; cursor: pointer; transition: all 0.2s;
-  text-decoration: none;
-}
-.voltar-btn:hover { border-color: rgba(201,148,58,0.3); color: #C9943A; }
+.voltar { padding: 8px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: rgba(255,255,255,0.6); font-size: 13px; cursor: pointer; }
+.voltar:hover { border-color: #C9943A; color: #C9943A; }
 
-/* CONTEÚDO */
-.content {
-  flex: 1; display: flex; flex-direction: column; align-items: center;
-  padding: 40px 20px; gap: 28px; position: relative; z-index: 5;
-}
+.main { max-width: 600px; margin: 0 auto; padding: 32px 20px; }
 
-.page-titulo { font-size: 24px; font-weight: 700; text-align: center; }
-.page-sub { font-size: 14px; color: rgba(255,255,255,0.4); text-align: center; margin-top: 6px; }
+h1 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+.sub { font-size: 13px; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 28px; }
 
-/* SALDO ATUAL */
-.saldo-atual {
-  display: flex; align-items: center; gap: 20px;
-  background: rgba(10,10,15,0.7); backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
-  padding: 20px 28px; width: 100%; max-width: 560px;
-}
-.saldo-item { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
-.saldo-label { font-size: 11px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.07em; }
-.saldo-valor { font-size: 24px; font-weight: 700; }
-.saldo-valor.gold { color: #C9943A; }
+.saldo-box { display: flex; background: #0f0f1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden; margin-bottom: 28px; }
+.saldo-item { flex: 1; padding: 18px; text-align: center; }
+.saldo-item:first-child { border-right: 1px solid rgba(255,255,255,0.08); }
+.saldo-label { font-size: 11px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.saldo-valor { font-size: 22px; font-weight: 700; }
 .saldo-valor.green { color: #1D9E75; }
-.saldo-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.08); }
+.saldo-valor.gold { color: #C9943A; }
 
-/* PACOTES */
-.pacotes-titulo { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.07em; align-self: flex-start; max-width: 560px; width: 100%; }
-.pacotes-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; width: 100%; max-width: 560px; position: relative; z-index: 10; }
+.secao-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; }
 
-.pacote { position: relative; z-index: 10;
-  background: rgba(10,10,15,0.7); backdrop-filter: blur(12px);
-  border: 1.5px solid rgba(255,255,255,0.07); border-radius: 14px;
-  padding: 18px; cursor: pointer; transition: all 0.22s;
-  position: relative; overflow: hidden;
-}
-.pacote:hover { border-color: rgba(201,148,58,0.35); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,148,58,0.1); }
-.pacote.selected { border-color: #C9943A; background: rgba(201,148,58,0.08); }
-.pacote.popular::before {
-  content: 'POPULAR'; position: absolute; top: 10px; right: -22px;
-  background: #C9943A; color: #0a0a0f; font-size: 9px; font-weight: 700;
-  padding: 3px 28px; transform: rotate(35deg); letter-spacing: 0.08em;
-}
-.pacote-euros { font-size: 28px; font-weight: 700; color: white; margin-bottom: 4px; }
-.pacote-moedas { font-size: 13px; color: #C9943A; font-weight: 600; margin-bottom: 8px; }
-.pacote-bonus {
-  display: inline-block; font-size: 10px; color: #1D9E75;
-  background: rgba(29,158,117,0.12); border: 1px solid rgba(29,158,117,0.25);
-  padding: 2px 8px; border-radius: 20px; font-weight: 600;
-}
-.pacote-detalhe { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 6px; }
-.check-icon {
-  position: absolute; top: 12px; left: 12px;
-  width: 20px; height: 20px; border-radius: 50%;
-  background: #C9943A; display: none; align-items: center; justify-content: center;
-  font-size: 11px; color: #0a0a0f;
-}
-.pacote.selected .check-icon { display: flex; }
+.pacotes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.pacote { background: #0f0f1a; border: 2px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; cursor: pointer; position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
+.pacote:hover { border-color: rgba(201,148,58,0.4); transform: translateY(-2px); }
+.pacote.ativo { border-color: #C9943A; background: rgba(201,148,58,0.08); }
+.popular-tag { position: absolute; top: 8px; right: -20px; background: #C9943A; color: #0a0a0f; font-size: 8px; font-weight: 700; padding: 2px 24px; transform: rotate(35deg); letter-spacing: 0.06em; }
+.p-euros { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.p-moedas { font-size: 13px; color: #C9943A; font-weight: 600; margin-bottom: 6px; }
+.p-bonus { display: inline-block; font-size: 10px; color: #1D9E75; background: rgba(29,158,117,0.12); border: 1px solid rgba(29,158,117,0.2); padding: 2px 8px; border-radius: 10px; }
+.p-detalhe { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 5px; }
 
-/* MÉTODO PAGAMENTO */
-.metodo-titulo { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.07em; align-self: flex-start; max-width: 560px; width: 100%; }
-.metodos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 560px; position: relative; z-index: 10; }
-.metodo { position: relative; z-index: 10;
-  display: flex; align-items: center; gap: 10px;
-  padding: 14px 16px; border-radius: 12px; cursor: pointer;
-  border: 1.5px solid rgba(255,255,255,0.07); background: rgba(10,10,15,0.7);
-  transition: all 0.2s; backdrop-filter: blur(12px);
-}
-.metodo:hover { border-color: rgba(201,148,58,0.3); }
-.metodo.selected { border-color: #C9943A; background: rgba(201,148,58,0.08); }
-.metodo-icon { font-size: 22px; }
-.metodo-nome { font-size: 13px; font-weight: 500; color: white; }
-.metodo-sub { font-size: 11px; color: rgba(255,255,255,0.3); }
+.metodos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.metodo { background: #0f0f1a; border: 2px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s; }
+.metodo:hover { border-color: rgba(201,148,58,0.4); }
+.metodo.ativo { border-color: #C9943A; background: rgba(201,148,58,0.08); }
+.metodo-icon { font-size: 24px; }
+.metodo-nome { font-size: 14px; font-weight: 600; }
+.metodo-sub { font-size: 11px; color: rgba(255,255,255,0.35); }
 
-/* FORM CARTÃO */
-.card-form {
-  width: 100%; max-width: 560px;
-  background: rgba(10,10,15,0.7); backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.08); border-radius: 14px;
-  padding: 20px; display: none;
-}
+.card-form { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; margin-bottom: 20px; display: none; }
 .card-form.visible { display: block; }
-.card-label-form { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
-#card-element {
-  padding: 12px 16px; background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.15); border-radius: 10px;
-}
+.card-form-label { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+#card-element { padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; }
 #card-errors { color: #E24B4A; font-size: 12px; margin-top: 8px; }
 
-/* BOTÃO PAGAR */
-.btn-pagar {
-  width: 100%; max-width: 560px; padding: 16px;
-  background: #C9943A; color: #0a0a0f; border: none; border-radius: 50px;
-  font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.btn-pagar:hover { background: #E8A83E; transform: translateY(-1px); }
-.btn-pagar:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-pagar { width: 100%; padding: 16px; background: #C9943A; color: #0a0a0f; border: none; border-radius: 50px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-pagar:hover { background: #E8A83E; }
+.btn-pagar:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* SUCESSO */
-.sucesso-overlay {
-  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.8); z-index: 200;
-  align-items: center; justify-content: center;
-}
+.sucesso-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; align-items: center; justify-content: center; }
 .sucesso-overlay.visible { display: flex; }
-.sucesso-box {
-  background: #0f0f1a; border: 1.5px solid #C9943A; border-radius: 20px;
-  padding: 40px; text-align: center; max-width: 380px; width: 90%;
-}
-.sucesso-icon { font-size: 56px; margin-bottom: 16px; }
-.sucesso-titulo { font-size: 20px; font-weight: 700; color: white; margin-bottom: 8px; }
-.sucesso-sub { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.6; margin-bottom: 24px; }
-.sucesso-moedas { font-size: 28px; font-weight: 700; color: #C9943A; margin: 12px 0; }
-.btn-continuar {
-  padding: 12px 32px; background: #C9943A; color: #0a0a0f;
-  border: none; border-radius: 50px; font-size: 15px; font-weight: 700;
-  cursor: pointer; transition: all 0.2s;
-}
-.btn-continuar:hover { background: #E8A83E; }
+.sucesso-box { background: #0f0f1a; border: 2px solid #C9943A; border-radius: 20px; padding: 40px; text-align: center; max-width: 360px; width: 90%; }
+.s-icon { font-size: 52px; margin-bottom: 16px; }
+.s-titulo { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.s-moedas { font-size: 32px; font-weight: 700; color: #C9943A; margin: 12px 0; }
+.s-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 24px; line-height: 1.6; }
+.btn-continuar { padding: 12px 32px; background: #C9943A; color: #0a0a0f; border: none; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; }
 </style>
 </head>
 <body>
-<div class="page">
-  <div class="topbar">
-    <div class="topbar-logo" onclick="window.location.href='dashboard.html'">
-      <div class="logo-box">
-        <svg width="24" height="24" viewBox="0 0 36 36" fill="none">
-          <rect x="1" y="1" width="34" height="34" rx="6" fill="rgba(201,148,58,0.08)" stroke="#C9943A" stroke-width="1.5"/>
-          <polygon points="18,6 26,11 26,21 18,26 10,21 10,11" fill="none" stroke="#C9943A" stroke-width="1.5"/>
-          <text x="18" y="19" font-family="Arial" font-size="8" font-weight="600" text-anchor="middle" fill="#C9943A">CD</text>
-        </svg>
-        <span class="logo-lendario">LENDÁRIO</span>
-      </div>
-      <span class="logo-nome">Caderneta Digital</span>
+
+<div class="topbar">
+  <div class="logo" onclick="window.location.href='dashboard.html'">
+    <div class="logo-box">
+      <svg width="24" height="24" viewBox="0 0 36 36" fill="none">
+        <rect x="1" y="1" width="34" height="34" rx="6" fill="rgba(201,148,58,0.08)" stroke="#C9943A" stroke-width="1.5"/>
+        <polygon points="18,6 26,11 26,21 18,26 10,21 10,11" fill="none" stroke="#C9943A" stroke-width="1.5"/>
+        <text x="18" y="19" font-family="Arial" font-size="8" font-weight="600" text-anchor="middle" fill="#C9943A">CD</text>
+      </svg>
+      <span class="logo-lendario">LENDÁRIO</span>
     </div>
-    <a class="voltar-btn" onclick="window.location.href='dashboard.html'">
-      <i class="ti ti-arrow-left"></i> Voltar ao dashboard
-    </a>
+    <span class="logo-nome">Caderneta Digital</span>
   </div>
-
-  <div class="content">
-    <div>
-      <p class="page-titulo">💳 Carregar Saldo</p>
-      <p class="page-sub">Escolhe o pacote e o método de pagamento</p>
-    </div>
-
-    <!-- SALDO ATUAL -->
-    <div class="saldo-atual">
-      <div class="saldo-item">
-        <span class="saldo-label">Saldo atual</span>
-        <span class="saldo-valor green" id="saldo-atual">0,00 €</span>
-      </div>
-      <div class="saldo-divider"></div>
-      <div class="saldo-item">
-        <span class="saldo-label">Moedas</span>
-        <span class="saldo-valor gold" id="moedas-atuais">500</span>
-      </div>
-    </div>
-
-    <!-- PACOTES -->
-    <p class="pacotes-titulo">Escolhe um pacote</p>
-    <div class="pacotes-grid">
-      <div class="pacote" onclick="selecionarPacote(this, 5, 500, 50)" data-euros="5" data-moedas="500" data-bonus="50">
-        <div class="check-icon">✓</div>
-        <div class="pacote-euros">5€</div>
-        <div class="pacote-moedas">🪙 500 moedas</div>
-        <div class="pacote-bonus">+50 moedas bónus</div>
-        <div class="pacote-detalhe">~3 packs disponíveis</div>
-      </div>
-      <div class="pacote popular" onclick="selecionarPacote(this, 10, 1100, 150)" data-euros="10" data-moedas="1100" data-bonus="150">
-        <div class="check-icon">✓</div>
-        <div class="pacote-euros">10€</div>
-        <div class="pacote-moedas">🪙 1.100 moedas</div>
-        <div class="pacote-bonus">+150 moedas bónus</div>
-        <div class="pacote-detalhe">~6 packs disponíveis</div>
-      </div>
-      <div class="pacote" onclick="selecionarPacote(this, 20, 2400, 400)" data-euros="20" data-moedas="2400" data-bonus="400">
-        <div class="check-icon">✓</div>
-        <div class="pacote-euros">20€</div>
-        <div class="pacote-moedas">🪙 2.400 moedas</div>
-        <div class="pacote-bonus">+400 moedas bónus</div>
-        <div class="pacote-detalhe">~13 packs disponíveis</div>
-      </div>
-      <div class="pacote" onclick="selecionarPacote(this, 50, 6500, 1000)" data-euros="50" data-moedas="6500" data-bonus="1000">
-        <div class="check-icon">✓</div>
-        <div class="pacote-euros">50€</div>
-        <div class="pacote-moedas">🪙 6.500 moedas</div>
-        <div class="pacote-bonus">+1.000 moedas bónus</div>
-        <div class="pacote-detalhe">~33 packs disponíveis</div>
-      </div>
-    </div>
-
-    <!-- MÉTODO -->
-    <p class="metodo-titulo">Método de pagamento</p>
-    <div class="metodos-grid">
-      <div class="metodo" onclick="selecionarMetodo(this, 'cartao')">
-        <div class="metodo-icon">💳</div>
-        <div>
-          <div class="metodo-nome">Cartão</div>
-          <div class="metodo-sub">Visa, Mastercard</div>
-        </div>
-      </div>
-      <div class="metodo" onclick="selecionarMetodo(this, 'mbway')">
-        <div class="metodo-icon">📱</div>
-        <div>
-          <div class="metodo-nome">MB Way</div>
-          <div class="metodo-sub">Pagamento rápido</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- FORM CARTÃO -->
-    <div class="card-form" id="card-form">
-      <p class="card-label-form">Dados do cartão</p>
-      <div id="card-element"></div>
-      <div id="card-errors"></div>
-    </div>
-
-    <!-- BOTÃO PAGAR -->
-    <button class="btn-pagar" id="btn-pagar" onclick="pagar()" disabled>
-      <i class="ti ti-lock"></i>
-      <span id="btn-texto">Seleciona um pacote</span>
-    </button>
-
-  </div>
+  <button class="voltar" onclick="window.location.href='dashboard.html'">← Voltar</button>
 </div>
 
-<!-- SUCESSO -->
+<div class="main">
+  <h1>💳 Carregar Saldo</h1>
+  <p class="sub">Escolhe o pacote e o método de pagamento</p>
+
+  <div class="saldo-box">
+    <div class="saldo-item">
+      <div class="saldo-label">Saldo atual</div>
+      <div class="saldo-valor green" id="saldo-atual">0,00 €</div>
+    </div>
+    <div class="saldo-item">
+      <div class="saldo-label">Moedas</div>
+      <div class="saldo-valor gold" id="moedas-atuais">500</div>
+    </div>
+  </div>
+
+  <p class="secao-label">Escolhe um pacote</p>
+  <div class="pacotes">
+    <div class="pacote" id="p5" onclick="selecionarPacote('p5', 5, 500, 50)">
+      <div class="p-euros">5€</div>
+      <div class="p-moedas">🪙 500 moedas</div>
+      <span class="p-bonus">+50 bónus</span>
+      <div class="p-detalhe">~3 packs disponíveis</div>
+    </div>
+    <div class="pacote" id="p10" onclick="selecionarPacote('p10', 10, 1100, 150)">
+      <div class="popular-tag">POPULAR</div>
+      <div class="p-euros">10€</div>
+      <div class="p-moedas">🪙 1.100 moedas</div>
+      <span class="p-bonus">+150 bónus</span>
+      <div class="p-detalhe">~6 packs disponíveis</div>
+    </div>
+    <div class="pacote" id="p20" onclick="selecionarPacote('p20', 20, 2400, 400)">
+      <div class="p-euros">20€</div>
+      <div class="p-moedas">🪙 2.400 moedas</div>
+      <span class="p-bonus">+400 bónus</span>
+      <div class="p-detalhe">~13 packs disponíveis</div>
+    </div>
+    <div class="pacote" id="p50" onclick="selecionarPacote('p50', 50, 6500, 1000)">
+      <div class="p-euros">50€</div>
+      <div class="p-moedas">🪙 6.500 moedas</div>
+      <span class="p-bonus">+1.000 bónus</span>
+      <div class="p-detalhe">~33 packs disponíveis</div>
+    </div>
+  </div>
+
+  <p class="secao-label">Método de pagamento</p>
+  <div class="metodos">
+    <div class="metodo" id="m-cartao" onclick="selecionarMetodo('cartao')">
+      <div class="metodo-icon">💳</div>
+      <div>
+        <div class="metodo-nome">Cartão</div>
+        <div class="metodo-sub">Visa, Mastercard</div>
+      </div>
+    </div>
+    <div class="metodo" id="m-mbway" onclick="selecionarMetodo('mbway')">
+      <div class="metodo-icon">📱</div>
+      <div>
+        <div class="metodo-nome">MB Way</div>
+        <div class="metodo-sub">Pagamento rápido</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-form" id="card-form">
+    <p class="card-form-label">Dados do cartão (teste)</p>
+    <div id="card-element"></div>
+    <div id="card-errors"></div>
+  </div>
+
+  <button class="btn-pagar" id="btn-pagar" onclick="pagar()" disabled>
+    🔒 Seleciona um pacote
+  </button>
+</div>
+
 <div class="sucesso-overlay" id="sucesso">
   <div class="sucesso-box">
-    <div class="sucesso-icon">🎉</div>
-    <div class="sucesso-titulo">Pagamento confirmado!</div>
-    <div class="sucesso-moedas" id="sucesso-moedas">+500 🪙</div>
-    <div class="sucesso-sub" id="sucesso-sub">Saldo e moedas atualizados com sucesso!</div>
-    <button class="btn-continuar" onclick="window.location.href='dashboard.html'">
-      Ir para o dashboard
-    </button>
+    <div class="s-icon">🎉</div>
+    <div class="s-titulo">Pagamento confirmado!</div>
+    <div class="s-moedas" id="s-moedas">+500 🪙</div>
+    <div class="s-sub" id="s-sub">Moedas adicionadas com sucesso!</div>
+    <button class="btn-continuar" onclick="window.location.href='dashboard.html'">Ir para o dashboard</button>
   </div>
 </div>
 
@@ -283,23 +176,14 @@ var sb = supabase.createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', 'eyJh
 var stripe = Stripe('pk_test_51Tm03bRvq8wadwxjTK897TTGxntpadMgaeokYMOqJQQldCMYSeY4SUJAt9y1FEGQRf3GHCgXdSl1qghPdZvUnndc006Z1UdFba');
 var elements = stripe.elements();
 var cardElement = elements.create('card', {
-  style: {
-    base: {
-      color: 'white', fontFamily: 'Inter, sans-serif', fontSize: '14px',
-      '::placeholder': { color: 'rgba(255,255,255,0.3)' }
-    }
-  }
+  style: { base: { color: 'white', fontSize: '14px', '::placeholder': { color: 'rgba(255,255,255,0.3)' } } }
 });
 cardElement.mount('#card-element');
-cardElement.on('change', function(e) {
-  document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
-});
 
-var pacoteSelected = null;
-var metodoSelected = null;
+var pacote = null;
+var metodo = null;
 var userId = null;
 
-// Carrega dados do utilizador
 sb.auth.getSession().then(function(r) {
   if (!r.data.session) { window.location.href = 'index.html'; return; }
   userId = r.data.session.user.id;
@@ -312,85 +196,54 @@ sb.auth.getSession().then(function(r) {
   });
 });
 
-function selecionarPacote(el, euros, moedas, bonus) {
-  document.querySelectorAll('.pacote').forEach(function(p) { p.classList.remove('selected'); });
-  el.classList.add('selected');
-  pacoteSelected = { euros: euros, moedas: moedas, bonus: bonus };
+function selecionarPacote(id, euros, moedas, bonus) {
+  document.querySelectorAll('.pacote').forEach(function(p) { p.classList.remove('ativo'); });
+  document.getElementById(id).classList.add('ativo');
+  pacote = { euros: euros, moedas: moedas, bonus: bonus };
   atualizarBotao();
 }
 
-function selecionarMetodo(el, tipo) {
-  document.querySelectorAll('.metodo').forEach(function(m) { m.classList.remove('selected'); });
-  el.classList.add('selected');
-  metodoSelected = tipo;
+function selecionarMetodo(tipo) {
+  document.querySelectorAll('.metodo').forEach(function(m) { m.classList.remove('ativo'); });
+  document.getElementById('m-' + tipo).classList.add('ativo');
+  metodo = tipo;
   document.getElementById('card-form').className = 'card-form' + (tipo === 'cartao' ? ' visible' : '');
   atualizarBotao();
 }
 
 function atualizarBotao() {
   var btn = document.getElementById('btn-pagar');
-  var txt = document.getElementById('btn-texto');
-  if (!pacoteSelected) { txt.textContent = 'Seleciona um pacote'; btn.disabled = true; return; }
-  if (!metodoSelected) { txt.textContent = 'Seleciona um método'; btn.disabled = true; return; }
-  txt.textContent = 'Pagar ' + pacoteSelected.euros + '€ e ganhar ' + pacoteSelected.moedas + ' moedas';
+  if (!pacote) { btn.textContent = '🔒 Seleciona um pacote'; btn.disabled = true; return; }
+  if (!metodo) { btn.textContent = '🔒 Seleciona um método'; btn.disabled = true; return; }
+  btn.textContent = '💳 Pagar ' + pacote.euros + '€ e ganhar ' + pacote.moedas + ' moedas';
   btn.disabled = false;
 }
 
 async function pagar() {
-  if (!pacoteSelected || !metodoSelected) return;
-
+  if (!pacote || !metodo) return;
   var btn = document.getElementById('btn-pagar');
   btn.disabled = true;
-  document.getElementById('btn-texto').textContent = 'A processar...';
+  btn.textContent = 'A processar...';
 
-  if (metodoSelected === 'mbway') {
-    // MB Way — em modo de teste simula o pagamento
-    await processarPagamento();
-    return;
+  if (metodo === 'cartao') {
+    var result = await stripe.createPaymentMethod({ type: 'card', card: cardElement });
+    if (result.error) {
+      document.getElementById('card-errors').textContent = result.error.message;
+      btn.disabled = false;
+      btn.textContent = 'Tentar novamente';
+      return;
+    }
   }
 
-  // Cartão via Stripe (modo teste)
-  var result = await stripe.createPaymentMethod({
-    type: 'card',
-    card: cardElement,
-  });
+  var res = await sb.from('profiles').select('coins, saldo').eq('id', userId).single();
+  var novasCoins = (res.data.coins || 0) + pacote.moedas;
+  var novoSaldo = (res.data.saldo || 0) + pacote.euros;
 
-  if (result.error) {
-    document.getElementById('card-errors').textContent = result.error.message;
-    btn.disabled = false;
-    document.getElementById('btn-texto').textContent = 'Tentar novamente';
-    return;
-  }
+  await sb.from('profiles').update({ coins: novasCoins, saldo: novoSaldo }).eq('id', userId);
 
-  await processarPagamento();
-}
-
-async function processarPagamento() {
-  try {
-    // Atualiza saldo e moedas no Supabase
-    var res = await sb.from('profiles').select('coins, saldo').eq('id', userId).single();
-    var coinsAtual = res.data.coins || 0;
-    var saldoAtual = res.data.saldo || 0;
-    var novasCoins = coinsAtual + pacoteSelected.moedas;
-    var novoSaldo = saldoAtual + pacoteSelected.euros;
-
-    await sb.from('profiles').update({
-      coins: novasCoins,
-      saldo: novoSaldo
-    }).eq('id', userId);
-
-    // Mostra sucesso
-    document.getElementById('sucesso-moedas').textContent = '+' + pacoteSelected.moedas + ' 🪙';
-    document.getElementById('sucesso-sub').textContent =
-      'Recebeste ' + pacoteSelected.moedas + ' moedas (incluindo ' + pacoteSelected.bonus + ' de bónus)!
-Novo saldo: ' + novoSaldo.toFixed(2).replace('.', ',') + '€';
-    document.getElementById('sucesso').classList.add('visible');
-
-  } catch(e) {
-    document.getElementById('card-errors').textContent = 'Erro ao processar. Tenta novamente.';
-    document.getElementById('btn-pagar').disabled = false;
-    document.getElementById('btn-texto').textContent = 'Tentar novamente';
-  }
+  document.getElementById('s-moedas').textContent = '+' + pacote.moedas + ' 🪙';
+  document.getElementById('s-sub').textContent = 'Recebeste ' + pacote.moedas + ' moedas (com ' + pacote.bonus + ' de bónus)! Novo saldo: ' + novoSaldo.toFixed(2).replace('.', ',') + '€';
+  document.getElementById('sucesso').classList.add('visible');
 }
 </script>
 </body>
