@@ -13,31 +13,15 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
 .topbar { display: flex; align-items: center; padding: 20px 32px; gap: 12px; }
 .logo-icon { width: 54px; height: 74px; border-radius: 8px; border: 1.5px solid #C9943A; background: #0f0f1a; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; }
 .logo-lendario { font-size: 7px; color: #C9943A; letter-spacing: 0.08em; margin-top: 4px; }
-.logo-text { font-size: 18px; font-weight: 500; color: #C9943A; letter-spacing: 0.02em; }
+.logo-text { font-size: 18px; font-weight: 500; color: #C9943A; }
 .center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 48px; padding: 20px; }
 .emblemas { display: flex; align-items: center; gap: 80px; }
 .emblema-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-
-/* Emblema normal */
 .emblema { width: 140px; height: 140px; object-fit: contain; transition: transform 0.3s ease; }
 .emblema:hover { transform: scale(1.05); }
-
-/* Emblema Irivo com fundo branco para melhorar visibilidade */
-.emblema-irivo-wrap {
-  width: 140px;
-  height: 140px;
-  background: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  transition: transform 0.3s ease;
-  box-shadow: 0 0 20px rgba(255,255,255,0.2);
-}
+.emblema-irivo-wrap { width: 140px; height: 140px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 8px; transition: transform 0.3s ease; }
 .emblema-irivo-wrap:hover { transform: scale(1.05); }
 .emblema-irivo { width: 120px; height: 120px; object-fit: contain; }
-
 .emblema-nome { font-size: 13px; color: rgba(255,255,255,0.7); letter-spacing: 0.1em; text-transform: uppercase; }
 .vs { font-size: 48px; font-weight: 700; color: #C9943A; opacity: 0.8; }
 .acoes { display: flex; flex-direction: column; align-items: center; gap: 14px; }
@@ -48,11 +32,130 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
 .btn-login:hover { border-color: #C9943A; color: #C9943A; }
 .separador { font-size: 12px; color: rgba(255,255,255,0.4); }
 .rodape { text-align: center; padding: 20px; font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 0.06em; }
+
+/* MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.aberto { display: flex; }
+.modal {
+  background: #0f0f1a;
+  border: 1.5px solid #C9943A;
+  border-radius: 16px;
+  padding: 36px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+}
+.modal-fechar {
+  position: absolute;
+  top: 14px; right: 18px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+}
+.modal-fechar:hover { color: #C9943A; }
+.modal-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+.modal-titulo {
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.modal-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  margin-bottom: 24px;
+}
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.campo label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.campo input {
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s;
+}
+.campo input:focus {
+  border-color: #C9943A;
+}
+.campo input::placeholder {
+  color: rgba(255,255,255,0.2);
+}
+.btn-modal {
+  width: 100%;
+  padding: 14px;
+  background: #C9943A;
+  color: #0f0f1a;
+  border: none;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+}
+.btn-modal:hover { background: #E8A83E; transform: translateY(-1px); }
+.modal-trocar {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+}
+.modal-trocar span {
+  color: #C9943A;
+  cursor: pointer;
+  font-weight: 500;
+}
+.modal-trocar span:hover { text-decoration: underline; }
+.erro { font-size: 12px; color: #E24B4A; margin-top: 4px; display: none; }
+.sucesso {
+  text-align: center;
+  padding: 20px;
+  display: none;
+}
+.sucesso-icon { font-size: 48px; margin-bottom: 12px; }
+.sucesso-texto { font-size: 16px; color: white; font-weight: 500; margin-bottom: 6px; }
+.sucesso-sub { font-size: 13px; color: rgba(255,255,255,0.4); }
 </style>
 </head>
 <body>
+
 <div class="bg"></div>
 <div class="overlay"></div>
+
 <div class="page">
   <div class="topbar">
     <div class="logo-icon">
@@ -65,6 +168,7 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
     </div>
     <span class="logo-text">Caderneta Digital</span>
   </div>
+
   <div class="center">
     <div class="emblemas">
       <div class="emblema-wrap">
@@ -81,12 +185,127 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
     </div>
     <div class="acoes">
       <p class="titulo-acoes">Coleciona os cromos dos teus clubes</p>
-      <button class="btn-inscrever">Inscrever agora!</button>
+      <button class="btn-inscrever" onclick="abrirModal('registo')">Inscrever agora!</button>
       <span class="separador">ou</span>
-      <button class="btn-login">Já tenho conta</button>
+      <button class="btn-login" onclick="abrirModal('login')">Já tenho conta</button>
     </div>
   </div>
+
   <div class="rodape">© 2026 Caderneta Digital · Todos os direitos reservados</div>
 </div>
+
+<!-- MODAL REGISTO -->
+<div class="modal-overlay" id="modal-registo">
+  <div class="modal">
+    <button class="modal-fechar" onclick="fecharModal('registo')">✕</button>
+    <div class="modal-logo">
+      <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+        <rect x="1" y="1" width="34" height="34" rx="6" fill="#0f0f1a" stroke="#C9943A" stroke-width="1.5"/>
+        <polygon points="18,6 26,11 26,21 18,26 10,21 10,11" fill="none" stroke="#C9943A" stroke-width="1.5"/>
+        <text x="18" y="19" font-family="Arial" font-size="8" font-weight="600" text-anchor="middle" fill="#C9943A">CD</text>
+      </svg>
+    </div>
+    <div id="registo-form">
+      <p class="modal-titulo">Criar conta</p>
+      <p class="modal-sub">Junta-te à Caderneta Digital</p>
+      <div class="campo">
+        <label>Nome</label>
+        <input type="text" id="reg-nome" placeholder="O teu nome"/>
+      </div>
+      <div class="campo">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="email@exemplo.com"/>
+      </div>
+      <div class="campo">
+        <label>Password</label>
+        <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres"/>
+      </div>
+      <div class="campo">
+        <label>Confirmar password</label>
+        <input type="password" id="reg-pass2" placeholder="Repete a password"/>
+        <span class="erro" id="erro-pass">As passwords não coincidem!</span>
+      </div>
+      <button class="btn-modal" onclick="registar()">Criar conta</button>
+      <div class="modal-trocar">
+        Já tens conta? <span onclick="trocarModal('registo','login')">Entra aqui</span>
+      </div>
+    </div>
+    <div class="sucesso" id="registo-sucesso">
+      <div class="sucesso-icon">🎉</div>
+      <p class="sucesso-texto">Conta criada com sucesso!</p>
+      <p class="sucesso-sub">Bem-vindo à Caderneta Digital.<br>Tens 500 moedas de boas-vindas!</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal">
+    <button class="modal-fechar" onclick="fecharModal('login')">✕</button>
+    <div class="modal-logo">
+      <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+        <rect x="1" y="1" width="34" height="34" rx="6" fill="#0f0f1a" stroke="#C9943A" stroke-width="1.5"/>
+        <polygon points="18,6 26,11 26,21 18,26 10,21 10,11" fill="none" stroke="#C9943A" stroke-width="1.5"/>
+        <text x="18" y="19" font-family="Arial" font-size="8" font-weight="600" text-anchor="middle" fill="#C9943A">CD</text>
+      </svg>
+    </div>
+    <div id="login-form">
+      <p class="modal-titulo">Bem-vindo de volta!</p>
+      <p class="modal-sub">Entra na tua conta</p>
+      <div class="campo">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="email@exemplo.com"/>
+      </div>
+      <div class="campo">
+        <label>Password</label>
+        <input type="password" id="login-pass" placeholder="A tua password"/>
+        <span class="erro" id="erro-login">Email ou password incorretos!</span>
+      </div>
+      <button class="btn-modal" onclick="entrar()">Entrar</button>
+      <div class="modal-trocar">
+        Não tens conta? <span onclick="trocarModal('login','registo')">Regista-te aqui</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function abrirModal(tipo) {
+  document.getElementById('modal-' + tipo).classList.add('aberto');
+}
+function fecharModal(tipo) {
+  document.getElementById('modal-' + tipo).classList.remove('aberto');
+}
+function trocarModal(fechar, abrir) {
+  fecharModal(fechar);
+  setTimeout(() => abrirModal(abrir), 150);
+}
+function registar() {
+  const nome = document.getElementById('reg-nome').value;
+  const email = document.getElementById('reg-email').value;
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  const erroPass = document.getElementById('erro-pass');
+
+  if (!nome || !email || !pass || !pass2) { alert('Preenche todos os campos!'); return; }
+  if (pass !== pass2) { erroPass.style.display = 'block'; return; }
+  erroPass.style.display = 'none';
+
+  document.getElementById('registo-form').style.display = 'none';
+  document.getElementById('registo-sucesso').style.display = 'block';
+}
+function entrar() {
+  const email = document.getElementById('login-email').value;
+  const pass = document.getElementById('login-pass').value;
+  if (!email || !pass) { alert('Preenche todos os campos!'); return; }
+  alert('Login em breve ligado à base de dados! 🚀');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('aberto');
+  });
+});
+</script>
 </body>
 </html>
