@@ -4,7 +4,7 @@ var isAndroid = /android/i.test(navigator.userAgent);
 var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 var deferredPrompt = null;
 
-if ((isIOS || isAndroid) && !isStandalone) {
+if (!isStandalone) {
   var btn = document.createElement('button');
   btn.id = 'btn-instalar-app';
   btn.innerHTML = '📱 Instalar App';
