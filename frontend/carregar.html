@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Caderneta Digital — Carregar Saldo</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://js.stripe.com/v3/"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Segoe UI', Arial, sans-serif; background: #0a0a0f; color: white; min-height: 100vh; }
-
 .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: #0f0f1a; border-bottom: 1px solid rgba(201,148,58,0.2); }
 .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
 .logo-box { width: 38px; height: 52px; border: 1.5px solid #C9943A; border-radius: 7px; background: rgba(201,148,58,0.08); display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -17,12 +15,9 @@ body { font-family: 'Segoe UI', Arial, sans-serif; background: #0a0a0f; color: w
 .logo-nome { font-size: 13px; font-weight: 600; color: #C9943A; }
 .voltar { padding: 8px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: rgba(255,255,255,0.6); font-size: 13px; cursor: pointer; }
 .voltar:hover { border-color: #C9943A; color: #C9943A; }
-
 .main { max-width: 600px; margin: 0 auto; padding: 32px 20px; }
-
 h1 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; }
 .sub { font-size: 13px; color: rgba(255,255,255,0.4); text-align: center; margin-bottom: 28px; }
-
 .saldo-box { display: flex; background: #0f0f1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden; margin-bottom: 28px; }
 .saldo-item { flex: 1; padding: 18px; text-align: center; }
 .saldo-item:first-child { border-right: 1px solid rgba(255,255,255,0.08); }
@@ -30,9 +25,7 @@ h1 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; 
 .saldo-valor { font-size: 22px; font-weight: 700; }
 .saldo-valor.green { color: #1D9E75; }
 .saldo-valor.gold { color: #C9943A; }
-
 .secao-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; }
-
 .pacotes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
 .pacote { background: #0f0f1a; border: 2px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; cursor: pointer; position: relative; overflow: hidden; transition: border-color 0.2s, transform 0.2s; }
 .pacote:hover { border-color: rgba(201,148,58,0.4); transform: translateY(-2px); }
@@ -42,7 +35,6 @@ h1 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; 
 .p-moedas { font-size: 13px; color: #C9943A; font-weight: 600; margin-bottom: 6px; }
 .p-bonus { display: inline-block; font-size: 10px; color: #1D9E75; background: rgba(29,158,117,0.12); border: 1px solid rgba(29,158,117,0.2); padding: 2px 8px; border-radius: 10px; }
 .p-detalhe { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 5px; }
-
 .metodos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
 .metodo { background: #0f0f1a; border: 2px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: border-color 0.2s; }
 .metodo:hover { border-color: rgba(201,148,58,0.4); }
@@ -51,16 +43,24 @@ h1 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; 
 .metodo-nome { font-size: 14px; font-weight: 600; }
 .metodo-sub { font-size: 11px; color: rgba(255,255,255,0.35); }
 
+/* FORMULARIO CARTAO */
 .card-form { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; margin-bottom: 20px; display: none; }
 .card-form.visible { display: block; }
 .card-form-label { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
-#card-element { padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; }
-#card-errors { color: #E24B4A; font-size: 12px; margin-top: 8px; }
+.campo { margin-bottom: 12px; }
+.campo label { font-size: 11px; color: rgba(255,255,255,0.4); display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+.campo input { width: 100%; padding: 11px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: white; font-size: 14px; outline: none; }
+.campo input:focus { border-color: #C9943A; }
+.campo input::placeholder { color: rgba(255,255,255,0.2); }
+.campos-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* MBWAY */
+.mbway-form { background: #0f0f1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; margin-bottom: 20px; display: none; }
+.mbway-form.visible { display: block; }
 
 .btn-pagar { width: 100%; padding: 16px; background: #C9943A; color: #0a0a0f; border: none; border-radius: 50px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
 .btn-pagar:hover { background: #E8A83E; }
 .btn-pagar:disabled { opacity: 0.45; cursor: not-allowed; }
-
 .sucesso-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999; align-items: center; justify-content: center; }
 .sucesso-overlay.visible { display: flex; }
 .sucesso-box { background: #0f0f1a; border: 2px solid #C9943A; border-radius: 20px; padding: 40px; text-align: center; max-width: 360px; width: 90%; }
@@ -69,6 +69,7 @@ h1 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; 
 .s-moedas { font-size: 32px; font-weight: 700; color: #C9943A; margin: 12px 0; }
 .s-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 24px; line-height: 1.6; }
 .btn-continuar { padding: 12px 32px; background: #C9943A; color: #0a0a0f; border: none; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; }
+.aviso-teste { background: rgba(201,148,58,0.1); border: 1px solid rgba(201,148,58,0.3); border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; font-size: 12px; color: rgba(201,148,58,0.8); text-align: center; }
 </style>
 </head>
 <body>
@@ -91,6 +92,8 @@ h1 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; 
 <div class="main">
   <h1>💳 Carregar Saldo</h1>
   <p class="sub">Escolhe o pacote e o método de pagamento</p>
+
+  <div class="aviso-teste">🧪 Modo de teste — os pagamentos não são reais</div>
 
   <div class="saldo-box">
     <div class="saldo-item">
@@ -150,10 +153,32 @@ h1 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; 
     </div>
   </div>
 
+  <!-- FORM CARTÃO -->
   <div class="card-form" id="card-form">
     <p class="card-form-label">Dados do cartão (teste)</p>
-    <div id="card-element"></div>
-    <div id="card-errors"></div>
+    <div class="campo">
+      <label>Número do cartão</label>
+      <input type="text" id="num-cartao" placeholder="4242 4242 4242 4242" maxlength="19"/>
+    </div>
+    <div class="campos-row">
+      <div class="campo">
+        <label>Validade</label>
+        <input type="text" id="validade" placeholder="MM/AA" maxlength="5"/>
+      </div>
+      <div class="campo">
+        <label>CVC</label>
+        <input type="text" id="cvc" placeholder="123" maxlength="3"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM MBWAY -->
+  <div class="mbway-form" id="mbway-form">
+    <p class="card-form-label">Número de telemóvel</p>
+    <div class="campo">
+      <label>Telemóvel</label>
+      <input type="text" id="telemovel" placeholder="9XX XXX XXX" maxlength="9"/>
+    </div>
   </div>
 
   <button class="btn-pagar" id="btn-pagar" onclick="pagar()" disabled>
@@ -172,13 +197,10 @@ h1 { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; 
 </div>
 
 <script>
-var sb = supabase.createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY');
-var stripe = Stripe('pk_test_51Tm03bRvq8wadwxjTK897TTGxntpadMgaeokYMOqJQQldCMYSeY4SUJAt9y1FEGQRf3GHCgXdSl1qghPdZvUnndc006Z1UdFba');
-var elements = stripe.elements();
-var cardElement = elements.create('card', {
-  style: { base: { color: 'white', fontSize: '14px', '::placeholder': { color: 'rgba(255,255,255,0.3)' } } }
-});
-cardElement.mount('#card-element');
+var sb = supabase.createClient(
+  'https://xbzugnrqrbimydsqjfvs.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY'
+);
 
 var pacote = null;
 var metodo = null;
@@ -190,7 +212,7 @@ sb.auth.getSession().then(function(r) {
   sb.from('profiles').select('coins, saldo').eq('id', userId).single().then(function(res) {
     if (res.data) {
       document.getElementById('moedas-atuais').textContent = res.data.coins || 500;
-      var s = res.data.saldo || 0;
+      var s = parseFloat(res.data.saldo) || 0;
       document.getElementById('saldo-atual').textContent = s.toFixed(2).replace('.', ',') + ' €';
     }
   });
@@ -208,6 +230,7 @@ function selecionarMetodo(tipo) {
   document.getElementById('m-' + tipo).classList.add('ativo');
   metodo = tipo;
   document.getElementById('card-form').className = 'card-form' + (tipo === 'cartao' ? ' visible' : '');
+  document.getElementById('mbway-form').className = 'mbway-form' + (tipo === 'mbway' ? ' visible' : '');
   atualizarBotao();
 }
 
@@ -221,29 +244,34 @@ function atualizarBotao() {
 
 async function pagar() {
   if (!pacote || !metodo) return;
+
   var btn = document.getElementById('btn-pagar');
   btn.disabled = true;
   btn.textContent = 'A processar...';
 
-  if (metodo === 'cartao') {
-    var result = await stripe.createPaymentMethod({ type: 'card', card: cardElement });
-    if (result.error) {
-      document.getElementById('card-errors').textContent = result.error.message;
-      btn.disabled = false;
-      btn.textContent = 'Tentar novamente';
-      return;
-    }
+  try {
+    var res = await sb.from('profiles').select('coins, saldo').eq('id', userId).single();
+    var coinsAtual = parseInt(res.data.coins) || 0;
+    var saldoAtual = parseFloat(res.data.saldo) || 0;
+    var novasCoins = coinsAtual + pacote.moedas;
+    var novoSaldo = saldoAtual + pacote.euros;
+
+    var update = await sb.from('profiles').update({
+      coins: novasCoins,
+      saldo: novoSaldo
+    }).eq('id', userId);
+
+    if (update.error) throw update.error;
+
+    document.getElementById('s-moedas').textContent = '+' + pacote.moedas + ' 🪙';
+    document.getElementById('s-sub').textContent = 'Recebeste ' + pacote.moedas + ' moedas (com ' + pacote.bonus + ' de bónus)!\nNovo saldo: ' + novoSaldo.toFixed(2).replace('.', ',') + '€';
+    document.getElementById('sucesso').classList.add('visible');
+
+  } catch(e) {
+    alert('Erro ao processar: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = '💳 Pagar ' + pacote.euros + '€ e ganhar ' + pacote.moedas + ' moedas';
   }
-
-  var res = await sb.from('profiles').select('coins, saldo').eq('id', userId).single();
-  var novasCoins = (res.data.coins || 0) + pacote.moedas;
-  var novoSaldo = (res.data.saldo || 0) + pacote.euros;
-
-  await sb.from('profiles').update({ coins: novasCoins, saldo: novoSaldo }).eq('id', userId);
-
-  document.getElementById('s-moedas').textContent = '+' + pacote.moedas + ' 🪙';
-  document.getElementById('s-sub').textContent = 'Recebeste ' + pacote.moedas + ' moedas (com ' + pacote.bonus + ' de bónus)! Novo saldo: ' + novoSaldo.toFixed(2).replace('.', ',') + '€';
-  document.getElementById('sucesso').classList.add('visible');
 }
 </script>
 </body>
