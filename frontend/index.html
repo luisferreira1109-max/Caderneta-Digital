@@ -150,7 +150,7 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
       <div class="campo"><label>Password</label><input type="password" id="login-pass" placeholder="A tua password"/></div>
       <div class="erro" id="erro-login"></div>
       <button class="btn-modal" id="btn-entrar" onclick="entrar()">Entrar</button>
-      <div class="modal-trocar">Não tens conta? <span onclick="trocarModal('login','registo')">Regista-te aqui</span></div>
+      <div class="modal-trocar">Não tens conta? <span onclick="trocarModal('login','registo')">Regista-te aqui</span><br><br><span onclick="recuperarPassword()" style="color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer;">Recuperar password</span></div>
     </div>
   </div>
 </div>
@@ -222,6 +222,15 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
     document.getElementById('registo-form').style.display = 'none';
     document.getElementById('registo-sucesso').style.display = 'block';
     setTimeout(function() { window.location.href = 'dashboard.html'; }, 1500);
+  }
+
+  function recuperarPassword() {
+    var email = document.getElementById('login-email').value.trim();
+    if (!email) { mostrarErro('erro-login', 'Introduz o teu email primeiro!'); return; }
+    sb.auth.resetPasswordForEmail(email, { redirectTo: 'https://caderneta-digital.com' }).then(function(r) {
+      if (r.error) { mostrarErro('erro-login', 'Erro ao enviar email. Verifica o email introduzido.'); }
+      else { alert('Email de recuperação enviado para ' + email + '! Verifica a tua caixa de entrada.'); }
+    });
   }
 
   async function entrar() {
