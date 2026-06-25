@@ -17,6 +17,7 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
 .logo-text { font-size: 18px; font-weight: 500; color: #C9943A; }
 .center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 48px; padding: 20px; }
 .emblemas { display: flex; align-items: center; gap: 80px; }
+@media (max-width: 600px) { .emblemas { gap: 20px; } .emblema, .emblema-irivo-wrap { width: 90px; height: 90px; } .emblema-irivo { width: 75px; height: 75px; } }
 .emblema-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .emblema { width: 140px; height: 140px; object-fit: contain; transition: transform 0.3s ease; }
 .emblema:hover { transform: scale(1.05); }
