@@ -160,8 +160,11 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
 
   // Se já está autenticado vai direto ao dashboard
   supabaseClient.auth.getSession().then(function(result) {
-    if (result.data.session) {
+    if (result.data.session && result.data.session.user.email_confirmed_at) {
       window.location.href = 'dashboard.html';
+    } else if (result.data.session && !result.data.session.user.email_confirmed_at) {
+      // Tem sessão mas email não confirmado — mostrar mensagem
+      // Não redirecionar
     }
   });
 
@@ -219,9 +222,17 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
       });
     }
 
-    document.getElementById('registo-form').style.display = 'none';
-    document.getElementById('registo-sucesso').style.display = 'block';
-    setTimeout(function() { window.location.href = 'dashboard.html'; }, 1500);
+    // Verificar se precisa de confirmar email
+    if (result.data.session) {
+      // Confirmação de email desativada — vai direto ao dashboard
+      document.getElementById('registo-form').style.display = 'none';
+      document.getElementById('registo-sucesso').style.display = 'block';
+      setTimeout(function() { window.location.href = 'dashboard.html'; }, 1500);
+    } else {
+      // Confirmação de email ativada — mostrar mensagem
+      document.getElementById('registo-form').style.display = 'none';
+      document.getElementById('registo-confirmar-email').style.display = 'block';
+    }
   }
 
   function recuperarPassword() {
