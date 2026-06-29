@@ -124,6 +124,12 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
       <button class="btn-modal" id="btn-registar" onclick="registar()">Criar conta</button>
       <div class="modal-trocar">Já tens conta? <span onclick="trocarModal('registo','login')">Entra aqui</span></div>
     </div>
+    <div id="registo-confirmar-email" style="display:none; text-align:center; padding:20px 0;">
+        <div style="font-size:48px; margin-bottom:16px;">📧</div>
+        <p style="color:#fff; font-size:18px; margin-bottom:10px; font-weight:700;">Confirma o teu email!</p>
+        <p style="color:#aaa; font-size:13px; line-height:1.6; margin-bottom:20px;">Enviámos um email de confirmação.<br>Clica no link para ativares a tua conta!</p>
+        <p style="color:#666; font-size:11px;">Não encontras? Verifica a pasta de spam.</p>
+      </div>
     <div class="sucesso" id="registo-sucesso">
       <div class="sucesso-icon">🎉</div>
       <p class="sucesso-texto">Conta criada com sucesso!</p>
