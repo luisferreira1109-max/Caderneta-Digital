@@ -807,8 +807,27 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 
       <!-- AMIGOS v2 -->
       <div id="pagina-amigos" style="display:none">
-        <div class="page-header"><p class="page-titulo">Amigos</p><p class="page-sub">Os teus amigos colecionadores</p></div>
-        <div class="em-breve"><div class="em-breve-icon">👥</div><div class="em-breve-titulo">Amigos em breve</div><div class="em-breve-sub">Brevemente poderás adicionar amigos, ver as coleções deles e propor trocas.</div></div>
+        <div class="amigos-header">
+          <div class="page-header"><p class="page-titulo">Amigos</p><p class="page-sub">Os teus amigos colecionadores</p></div>
+          <button class="btn-adicionar-amigo" onclick="abrirModalAmigo()">+ Adicionar amigo</button>
+        </div>
+
+        <div class="meu-codigo">
+          <div class="meu-codigo-info">
+            <div class="meu-codigo-label">O teu código</div>
+            <div class="meu-codigo-valor" id="meu-codigo-valor">------</div>
+            <div class="meu-codigo-sub">Partilha este código para te adicionarem como amigo</div>
+          </div>
+          <div class="meu-qr"><canvas id="meu-qr-canvas"></canvas></div>
+        </div>
+
+        <div class="pedidos-section" id="pedidos-section" style="display:none">
+          <div class="pedidos-titulo">Pedidos de amizade</div>
+          <div id="pedidos-lista"></div>
+        </div>
+
+        <div class="amigos-lista-titulo">Os teus amigos (<span id="amigos-count">0</span>)</div>
+        <div id="amigos-lista"></div>
       </div>
 
       <!-- PERFIL -->
