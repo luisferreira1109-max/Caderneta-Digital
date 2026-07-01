@@ -818,7 +818,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
             <div class="meu-codigo-valor" id="meu-codigo-valor">------</div>
             <div class="meu-codigo-sub">Partilha este código para te adicionarem como amigo</div>
           </div>
-          <div class="meu-qr"><canvas id="meu-qr-canvas"></canvas></div>
+          <div class="meu-qr"><img id="meu-qr-canvas" width="80" height="80" style="display:block;" alt="QR code"/></div>
         </div>
 
         <div class="pedidos-section" id="pedidos-section" style="display:none">
@@ -975,37 +975,10 @@ function gerarCodigoAmigo() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
-function gerarQR(texto, canvas) {
-  // QR Code simples usando canvas
-  const size = 80;
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d');
-  
-  // Fundo branco
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, size, size);
-  
-  // Texto do código em vez de QR real (simplificado)
-  ctx.fillStyle = '#000';
-  ctx.font = 'bold 9px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('SCAN', size/2, 20);
-  ctx.font = 'bold 8px monospace';
-  ctx.fillText(texto, size/2, 35);
-  
-  // Quadrado decorativo
-  ctx.strokeStyle = '#000';
-  ctx.lineWidth = 3;
-  ctx.strokeRect(10, 10, 25, 25);
-  ctx.strokeRect(45, 10, 25, 25);
-  ctx.strokeRect(10, 45, 25, 25);
-  ctx.fillRect(14, 14, 17, 17);
-  ctx.fillRect(49, 14, 17, 17);
-  ctx.fillRect(14, 49, 17, 17);
-  ctx.font = '6px monospace';
-  ctx.fillText('caderneta', size/2, 68);
-  ctx.fillText('digital.com', size/2, 76);
+function gerarQR(texto, img) {
+  // QR Code real, gerado através de uma API gratuita
+  const url = 'https://www.caderneta-digital.com/?amigo=' + encodeURIComponent(texto);
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=0&data=' + encodeURIComponent(url);
 }
 
 async function carregarAmigos() {
@@ -1110,7 +1083,7 @@ async function carregarListaAmigos(userId) {
   count.textContent = todos.length;
   
   if (todos.length === 0) {
-    lista.innerHTML = '<div style="text-align:center; color:#333; padding:40px; font-size:13px;">Ainda não tens amigos! Adiciona alguém com o código deles 😊</div>';
+    lista.innerHTML = '<div style="text-align:center; color:#ccc; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:40px 20px; font-size:13px;">Ainda não tens amigos! Adiciona alguém com o código deles 😊</div>';
     return;
   }
   
