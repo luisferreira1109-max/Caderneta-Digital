@@ -991,7 +991,7 @@ async function carregarAmigos() {
   let codigo = profile?.codigo_amigo;
   if (!codigo) {
     codigo = gerarCodigoAmigo();
-    await sb.from('profiles').update({ codigo_amigo: codigo }).eq('id', user.id);
+    await sb.from('profiles').upsert({ id: user.id, codigo_amigo: codigo });
   }
   
   // Mostrar código e QR
@@ -1386,7 +1386,19 @@ document.addEventListener('keydown', e => {
 async function carregarUtilizador() {
   const { data:{ user } } = await sb.auth.getUser();
   if(!user) { window.location.href='index.html'; return; }
-  const { data:profile } = await sb.from('profiles').select('*').eq('id',user.id).single();
+  let { data:profile } = await sb.from('profiles').select('*').eq('id',user.id).single();
+  if(!profile) {
+    // Rede de segurança: se o perfil não foi criado no registo (ex: confirmação de email em curso), cria-o agora
+    const nomeInicial = (user.user_metadata && user.user_metadata.display_name) || user.email.split('@')[0];
+    const { data: novoPerfil } = await sb.from('profiles').upsert({
+      id: user.id,
+      username: user.email.split('@')[0] + Math.floor(Math.random() * 1000),
+      display_name: nomeInicial,
+      coins: 500,
+      saldo: 0
+    }).select().single();
+    profile = novoPerfil;
+  }
   if(profile) {
     const nome = profile.display_name || user.email;
     document.getElementById('user-nome').textContent = nome;
