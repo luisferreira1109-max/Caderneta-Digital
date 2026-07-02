@@ -129,6 +129,8 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
         <p style="color:#fff; font-size:18px; margin-bottom:10px; font-weight:700;">Confirma o teu email!</p>
         <p style="color:#aaa; font-size:13px; line-height:1.6; margin-bottom:20px;">Enviámos um email de confirmação.<br>Clica no link para ativares a tua conta!</p>
         <p style="color:#666; font-size:11px;">Não encontras? Verifica a pasta de spam.</p>
+        <p id="reenviar-msg" style="color:#2ecc71; font-size:12px; margin-top:12px; display:none;"></p>
+        <button id="btn-reenviar-email" onclick="reenviarEmailConfirmacao()" style="margin-top:14px; background:transparent; border:1px solid #C9943A; color:#C9943A; padding:9px 18px; border-radius:8px; font-size:12px; cursor:pointer;">Enviar email outra vez</button>
       </div>
     <div class="sucesso" id="registo-sucesso">
       <div class="sucesso-icon">🎉</div>
@@ -163,6 +165,7 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
 
 <script>
   var supabaseClient = supabase.createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY');
+  var emailRegistoAtual = '';
 
   // Se já está autenticado vai direto ao dashboard
   supabaseClient.auth.getSession().then(function(result) {
@@ -236,15 +239,38 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
       setTimeout(function() { window.location.href = 'dashboard.html'; }, 1500);
     } else {
       // Confirmação de email ativada — mostrar mensagem
+      emailRegistoAtual = email;
       document.getElementById('registo-form').style.display = 'none';
       document.getElementById('registo-confirmar-email').style.display = 'block';
     }
   }
 
+  async function reenviarEmailConfirmacao() {
+    if (!emailRegistoAtual) return;
+    var btn = document.getElementById('btn-reenviar-email');
+    var msg = document.getElementById('reenviar-msg');
+    btn.disabled = true;
+    btn.textContent = 'A enviar...';
+    msg.style.display = 'none';
+
+    var result = await supabaseClient.auth.resend({ type: 'signup', email: emailRegistoAtual });
+
+    if (result.error) {
+      msg.style.color = '#e0453c';
+      msg.textContent = 'Erro ao reenviar. Tenta novamente em instantes.';
+    } else {
+      msg.style.color = '#2ecc71';
+      msg.textContent = 'Email reenviado! Verifica a tua caixa de entrada (e spam).';
+    }
+    msg.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Enviar email outra vez';
+  }
+
   function recuperarPassword() {
     var email = document.getElementById('login-email').value.trim();
     if (!email) { mostrarErro('erro-login', 'Introduz o teu email primeiro!'); return; }
-    sb.auth.resetPasswordForEmail(email, { redirectTo: 'https://caderneta-digital.com' }).then(function(r) {
+    supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: 'https://www.caderneta-digital.com' }).then(function(r) {
       if (r.error) { mostrarErro('erro-login', 'Erro ao enviar email. Verifica o email introduzido.'); }
       else { alert('Email de recuperação enviado para ' + email + '! Verifica a tua caixa de entrada.'); }
     });
