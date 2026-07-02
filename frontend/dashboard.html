@@ -573,7 +573,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 
 <div class="layout">
   <aside class="sidebar">
-    <div class="sidebar-logo">
+    <div class="sidebar-logo" onclick="irParaInicio()" style="cursor:pointer;">
       <div class="logo-box">
         <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
           <rect x="1" y="1" width="34" height="34" rx="6" fill="rgba(201,148,58,0.08)" stroke="#C9943A" stroke-width="1.5"/>
@@ -661,7 +661,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
               <i class="ti ti-book card-icon"></i>
               <span class="card-label">Coleções em curso</span>
             </div>
-            <div class="mini-colecao">
+            <div class="mini-colecao" id="mini-colecao-fcps" style="display:none">
               <div class="mini-emblema paco"><img src="images/emblema-paco-mini.png" alt="FC Paço de Sousa"/></div>
               <div class="mini-info">
                 <div class="mini-nome">FC Paço de Sousa</div>
@@ -669,7 +669,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
                 <div class="mini-pct">0 / 30 cromos · Em breve!</div>
               </div>
             </div>
-            <div class="mini-colecao">
+            <div class="mini-colecao" id="mini-colecao-ccrdsv" style="display:none">
               <div class="mini-emblema irivo"><img src="images/emblema-irivo-mini.png" alt="CCRDSV Irivo"/></div>
               <div class="mini-info">
                 <div class="mini-nome">CCRDSV Irivo</div>
@@ -677,6 +677,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
                 <div class="mini-pct">0 / 30 cromos · Em breve!</div>
               </div>
             </div>
+            <div id="mini-colecao-vazio" style="color:#999; font-size:12px; padding:8px 0;">Ainda não desbloqueaste nenhuma caderneta.</div>
           </div>
 
           <!-- Card Moedas -->
@@ -866,6 +867,10 @@ function mostrarPagina(nome, el) {
   if(el) el.classList.add('active');
   document.getElementById('bg-atual').className = 'bg ' + (bgs[nome]||'bg-inicio');
 }
+function irParaInicio() {
+  const navInicio = document.querySelector('.nav-item[onclick*="\'inicio\'"]');
+  mostrarPagina('inicio', navInicio);
+}
 
 
 
@@ -953,6 +958,14 @@ async function carregarCadernetas() {
     const sub = document.getElementById('sub-cad-' + clube);
     if (sub) sub.textContent = '0 / ' + (clube === 'fcps' ? '216' : '240') + ' cromos';
   });
+
+  // Mostrar na página Início só as coleções desbloqueadas
+  const miniFcps = document.getElementById('mini-colecao-fcps');
+  const miniCcrdsv = document.getElementById('mini-colecao-ccrdsv');
+  const miniVazio = document.getElementById('mini-colecao-vazio');
+  if (miniFcps) miniFcps.style.display = cadDesbloqueadas.fcps ? 'flex' : 'none';
+  if (miniCcrdsv) miniCcrdsv.style.display = cadDesbloqueadas.ccrdsv ? 'flex' : 'none';
+  if (miniVazio) miniVazio.style.display = (cadDesbloqueadas.fcps || cadDesbloqueadas.ccrdsv) ? 'none' : 'block';
 }
 
 async function carregarFotoPerfil() {
