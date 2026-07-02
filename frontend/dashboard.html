@@ -943,6 +943,15 @@ async function guardarPerfil() {
 
 // Carregar foto do perfil se existir
 
+function atualizarMiniColecoes() {
+  const miniFcps = document.getElementById('mini-colecao-fcps');
+  const miniCcrdsv = document.getElementById('mini-colecao-ccrdsv');
+  const miniVazio = document.getElementById('mini-colecao-vazio');
+  if (miniFcps) miniFcps.style.display = cadDesbloqueadas.fcps ? 'flex' : 'none';
+  if (miniCcrdsv) miniCcrdsv.style.display = cadDesbloqueadas.ccrdsv ? 'flex' : 'none';
+  if (miniVazio) miniVazio.style.display = (cadDesbloqueadas.fcps || cadDesbloqueadas.ccrdsv) ? 'none' : 'block';
+}
+
 async function carregarCadernetas() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
@@ -959,13 +968,7 @@ async function carregarCadernetas() {
     if (sub) sub.textContent = '0 / ' + (clube === 'fcps' ? '216' : '240') + ' cromos';
   });
 
-  // Mostrar na página Início só as coleções desbloqueadas
-  const miniFcps = document.getElementById('mini-colecao-fcps');
-  const miniCcrdsv = document.getElementById('mini-colecao-ccrdsv');
-  const miniVazio = document.getElementById('mini-colecao-vazio');
-  if (miniFcps) miniFcps.style.display = cadDesbloqueadas.fcps ? 'flex' : 'none';
-  if (miniCcrdsv) miniCcrdsv.style.display = cadDesbloqueadas.ccrdsv ? 'flex' : 'none';
-  if (miniVazio) miniVazio.style.display = (cadDesbloqueadas.fcps || cadDesbloqueadas.ccrdsv) ? 'none' : 'block';
+  atualizarMiniColecoes();
 }
 
 async function carregarFotoPerfil() {
@@ -1335,6 +1338,7 @@ async function desbloquearCaderneta(clube) {
   const elTop = document.getElementById('user-saldo-top');
   
   cadDesbloqueadas[clube] = true;
+  atualizarMiniColecoes();
 
   // Atualizar card visual
   const card = document.getElementById('card-' + clube);
