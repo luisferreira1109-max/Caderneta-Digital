@@ -977,6 +977,19 @@ async function carregarFotoPerfil() {
 // ===== AMIGOS =====
 let amigoAberto = null;
 
+// Verificar mensagens novas a cada 3 segundos enquanto o chat está aberto
+setInterval(async () => {
+  const overlay = document.getElementById('chat-overlay');
+  if (overlay && overlay.classList.contains('show') && amigoAberto) {
+    await carregarMensagens(amigoAberto.id);
+    const { data: { user } } = await sb.auth.getUser();
+    if (user) {
+      await sb.from('mensagens').update({ lida: true }).eq('de_user_id', amigoAberto.id).eq('para_user_id', user.id).eq('lida', false);
+      atualizarBadgeMensagens();
+    }
+  }
+}, 3000);
+
 function gerarCodigoAmigo() {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
