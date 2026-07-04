@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Caderneta Digital — Dashboard</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap');
@@ -39,12 +40,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
   margin-bottom: 26px; padding: 0 6px;
 }
 .logo-box {
-  width: 44px; height: 60px; border: 1.5px solid #C9943A; border-radius: 8px;
-  background: rgba(201,148,58,0.08);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; flex-shrink: 0;
+  width: 44px; height: 44px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
 }
 .logo-lendario { font-size: 6px; color: #C9943A; letter-spacing: 0.1em; }
-.logo-nome { font-size: 13px; font-weight: 600; color: #C9943A; line-height: 1.25; }
+.logo-nome { font-size: 14px; font-weight: 400; font-style: italic; font-family: Georgia, 'Times New Roman', serif; color: #C9943A; line-height: 1.2; }
 
 .nav-item {
   display: flex; align-items: center; gap: 11px;
@@ -575,14 +575,9 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
   <aside class="sidebar">
     <div class="sidebar-logo" onclick="irParaInicio()" style="cursor:pointer;">
       <div class="logo-box">
-        <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-          <rect x="1" y="1" width="34" height="34" rx="6" fill="rgba(201,148,58,0.08)" stroke="#C9943A" stroke-width="1.5"/>
-          <polygon points="18,6 26,11 26,21 18,26 10,21 10,11" fill="none" stroke="#C9943A" stroke-width="1.5"/>
-          <text x="18" y="19" font-family="Arial" font-size="8" font-weight="600" text-anchor="middle" fill="#C9943A">CD</text>
-        </svg>
-        <span class="logo-lendario">LENDÁRIO</span>
+        <img src="images/logo-icon.png" alt="Caderneta Digital" style="width:44px;height:44px;border-radius:10px;display:block;">
       </div>
-      <div><div class="logo-nome">Caderneta</div><div class="logo-nome">Digital</div></div>
+      <div><div class="logo-nome" style="color:#f3ede1;">Caderneta</div><div class="logo-nome" style="color:#C9943A;">Digital</div></div>
     </div>
 
     <div class="nav-item active" onclick="mostrarPagina('inicio', this)">
