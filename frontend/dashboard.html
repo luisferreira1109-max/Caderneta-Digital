@@ -676,8 +676,8 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 .pack-sem-saldo { font-size: 11px; color: #555; margin-top: 8px; }
 
 /* Animação de abrir pack */
-.pack-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.97); z-index: 2000; align-items: center; justify-content: center; flex-direction: column; }
-.pack-overlay.show { display: flex; }
+.pack-rasgar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.97); z-index: 2000; align-items: center; justify-content: center; flex-direction: column; }
+.pack-rasgar-overlay.show { display: flex; }
 
 .pack-animacao { position: relative; display: flex; align-items: center; justify-content: center; }
 
@@ -2071,29 +2071,6 @@ setInterval(async () => {
 </div>
 
 <!-- Pack Overlay -->
-<div class="pack-overlay" id="pack-overlay">
-  <!-- Fase 1: Animação do pack -->
-  <div class="pack-animacao" id="pack-fase1">
-    <div class="pack-visual" onclick="abrirPackAnimacao()">
-      <div class="pack-visual-icon">📦</div>
-      <div class="pack-visual-nome">Pack Standard</div>
-      <div class="pack-visual-hint">Clica para abrir!</div>
-    </div>
-  </div>
-  
-  <!-- Fase 2: Cromos revelados -->
-  <div class="cromos-revelados" id="pack-fase2">
-    <div class="pack-resultado-titulo">Os teus cromos!</div>
-    <div class="pack-resultado-sub" id="pack-resultado-sub">7 novos cromos adicionados à tua coleção</div>
-    <div class="cromos-grid-pack" id="cromos-grid-pack"></div>
-    <div class="pack-resultado-btns">
-      <button class="pack-resultado-btn coleção" onclick="fecharPackOverlay(); mostrarPagina('colecao', document.querySelector('.nav-item[onclick*=colecao]')); carregarColecao()">Ver Coleção</button>
-      <button class="pack-resultado-btn fechar" onclick="fecharPackOverlay()">Fechar</button>
-    </div>
-  </div>
-</div>
-
-<!-- Pack Overlay -->
 <div class="pack-rasgar-overlay" id="pack-overlay">
   <div id="pack-fase1" style="display:flex;flex-direction:column;align-items:center;gap:20px;">
     <div class="pack-rasgar-container" id="pack-rasgar-container">
@@ -2113,4 +2090,3 @@ setInterval(async () => {
   </div>
 </div>
 </body>
-</html>
