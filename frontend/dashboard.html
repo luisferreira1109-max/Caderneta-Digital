@@ -563,6 +563,28 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 .chat-vazio { text-align: center; color: #333; font-size: 13px; margin: auto; }
 
 
+
+/* ===== COLEÇÃO ===== */
+.colecao-filtros { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; }
+.colecao-filtro { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #aaa; border-radius: 20px; padding: 7px 16px; font-family: "Inter", sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+.colecao-filtro:hover, .colecao-filtro.ativo { background: #C9943A; color: #111; border-color: #C9943A; font-weight: 600; }
+.colecao-stats { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+.colecao-stat { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 10px 16px; font-size: 12px; color: #666; }
+.colecao-stat span { color: #C9943A; font-weight: 700; font-size: 16px; display: block; }
+.colecao-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
+.colecao-cromo { position: relative; aspect-ratio: 2/3; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+.colecao-cromo:hover { transform: scale(1.08); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.colecao-cromo img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.colecao-cromo-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 10px; font-weight: 600; border-radius: 8px; }
+.colecao-cromo-placeholder.comum { background: linear-gradient(135deg, #2a2a2a, #1a1a1a); border: 1.5px solid #444; color: #888; }
+.colecao-cromo-placeholder.raro { background: linear-gradient(135deg, #0a2a4a, #0d1f3c); border: 1.5px solid #3498db; color: #3498db; }
+.colecao-cromo-placeholder.epico { background: linear-gradient(135deg, #2a0a4a, #1c0d3c); border: 1.5px solid #9b59b6; color: #9b59b6; }
+.colecao-cromo-placeholder.lendario { background: linear-gradient(135deg, #3a2a00, #2a1a00); border: 1.5px solid #f1c40f; color: #f1c40f; box-shadow: 0 0 12px rgba(241,196,15,0.2); }
+.colecao-qty { position: absolute; top: 4px; right: 4px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border: 1.5px solid #0a0a0f; }
+.colecao-num { font-size: 8px; color: #555; }
+.colecao-vazio { text-align: center; color: #333; padding: 60px 20px; font-size: 14px; }
+.colecao-vazio-icon { font-size: 48px; margin-bottom: 12px; }
+
 /* ===== PACKS ===== */
 .packs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 10px; }
 
@@ -650,12 +672,12 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
     <div class="nav-item" onclick="mostrarPagina('cadernetas', this)">
       <i class="ti ti-book nav-icon"></i><span>Cadernetas</span>
     </div>
-    <div class="nav-item" onclick="mostrarPagina('colecao', this)">
+    <div class="nav-item" onclick="mostrarPagina('colecao', this); carregarColecao()", this)">
       <i class="ti ti-cards nav-icon"></i><span>Coleção</span>
     </div>
     <div class="nav-item" onclick="mostrarPagina('packs', this)">
       <i class="ti ti-package nav-icon"></i><span>Packs</span>
-      <span class="nav-badge">Em breve</span>
+      
     </div>
     <div class="nav-item" onclick="mostrarPagina('mercado', this)">
       <i class="ti ti-building-store nav-icon"></i><span>Mercado</span>
@@ -853,13 +875,36 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
         </div>
       </div>
 
+      
       <!-- COLEÇÃO -->
       <div id="pagina-colecao" style="display:none">
-        <div class="page-header"><p class="page-titulo">Coleção</p><p class="page-sub">Os teus cromos colecionados</p></div>
-        <div class="em-breve"><div class="em-breve-icon">🃏</div><div class="em-breve-titulo">Os teus cromos aparecem aqui</div><div class="em-breve-sub">Quando os clubes confirmarem a participação, os cromos dos jogadores estarão disponíveis.</div></div>
+        <div class="page-header">
+          <p class="page-titulo">Coleção</p>
+          <p class="page-sub">Os teus cromos colecionados</p>
+        </div>
+        <div class="colecao-stats">
+          <div class="colecao-stat"><span id="col-total">0</span>Cromos totais</div>
+          <div class="colecao-stat"><span id="col-unicos">0</span>Cromos únicos</div>
+          <div class="colecao-stat"><span id="col-lendarios">0</span>Lendários ⭐</div>
+          <div class="colecao-stat"><span id="col-epicos">0</span>Épicos 🟣</div>
+        </div>
+        <div class="colecao-filtros">
+          <button class="colecao-filtro ativo" onclick="filtrarColecao('todos', this)">Todos</button>
+          <button class="colecao-filtro" onclick="filtrarColecao('fcps', this)">FCPS</button>
+          <button class="colecao-filtro" onclick="filtrarColecao('ccrdsv', this)">CCRDSV</button>
+          <button class="colecao-filtro" onclick="filtrarColecao('lendario', this)">⭐ Lendários</button>
+          <button class="colecao-filtro" onclick="filtrarColecao('epico', this)">🟣 Épicos</button>
+          <button class="colecao-filtro" onclick="filtrarColecao('raro', this)">🔵 Raros</button>
+        </div>
+        <div class="colecao-grid" id="colecao-grid">
+          <div class="colecao-vazio">
+            <div class="colecao-vazio-icon">🃏</div>
+            <p>Ainda não tens cromos!</p>
+            <p style="font-size:12px;margin-top:8px;">Abre packs para começar a colecionar!</p>
+          </div>
+        </div>
       </div>
 
-      
       <!-- PACKS -->
       <div id="pagina-packs" style="display:none">
         <div class="page-header">
@@ -873,14 +918,31 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
             <div class="pack-nome">Pack Standard</div>
             <div class="pack-desc">7 cromos aleatórios das duas cadernetas</div>
             <div class="pack-cromos">
-              <span class="pack-rarity comum">Comum 70%</span>
+              <span class="pack-rarity comum">Comum 73%</span>
               <span class="pack-rarity raro">Raro 20%</span>
-              <span class="pack-rarity epico">Épico 8%</span>
+              <span class="pack-rarity epico">Épico 5%</span>
               <span class="pack-rarity lendario">⭐ Lendário 2%</span>
             </div>
             <div class="pack-preco">1,50 €</div>
             <button class="pack-btn">Comprar Pack</button>
             <div class="pack-sem-saldo">Saldo: <span id="pack-saldo-display">0,00</span> €</div>
+          </div>
+
+          <!-- Pack Premium -->
+          <div class="pack-card" onclick="comprarPack('premium')" style="border-color:rgba(155,89,182,0.5);">
+            <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(to right,#9b59b6,#e056e0,#9b59b6);"></div>
+            <span class="pack-icon">💎</span>
+            <div class="pack-nome" style="color:#d980fa;">Pack Premium</div>
+            <div class="pack-desc">7 cromos com probabilidades melhoradas!</div>
+            <div class="pack-cromos">
+              <span class="pack-rarity comum">Comum 50%</span>
+              <span class="pack-rarity raro">Raro 30%</span>
+              <span class="pack-rarity epico">Épico 15%</span>
+              <span class="pack-rarity lendario">⭐ Lendário 5%</span>
+            </div>
+            <div class="pack-preco" style="color:#d980fa;">2,00 €</div>
+            <button class="pack-btn" style="background:#9b59b6;">Comprar Pack</button>
+            <div class="pack-sem-saldo">Saldo: <span id="pack-saldo-display2">0,00</span> €</div>
           </div>
         </div>
       </div>
@@ -1372,6 +1434,85 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
+// ===== COLEÇÃO =====
+let _colecaoTodos = [];
+let _colecaoFiltro = 'todos';
+
+async function carregarColecao() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  
+  const { data: cromos } = await sb.from('colecao')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('raridade', { ascending: false })
+    .order('num_cromo', { ascending: true });
+  
+  _colecaoTodos = cromos || [];
+  
+  // Stats
+  const total = _colecaoTodos.reduce((sum, c) => sum + c.quantidade, 0);
+  const unicos = _colecaoTodos.length;
+  const lendarios = _colecaoTodos.filter(c => c.raridade === 'lendario').length;
+  const epicos = _colecaoTodos.filter(c => c.raridade === 'epico').length;
+  
+  document.getElementById('col-total').textContent = total;
+  document.getElementById('col-unicos').textContent = unicos;
+  document.getElementById('col-lendarios').textContent = lendarios;
+  document.getElementById('col-epicos').textContent = epicos;
+  
+  renderColecao(_colecaoFiltro);
+}
+
+function filtrarColecao(filtro, btn) {
+  _colecaoFiltro = filtro;
+  document.querySelectorAll('.colecao-filtro').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  renderColecao(filtro);
+}
+
+function renderColecao(filtro) {
+  const grid = document.getElementById('colecao-grid');
+  
+  let cromos = _colecaoTodos;
+  if (filtro === 'fcps') cromos = cromos.filter(c => c.clube === 'fcps');
+  else if (filtro === 'ccrdsv') cromos = cromos.filter(c => c.clube === 'ccrdsv');
+  else if (['lendario','epico','raro','comum'].includes(filtro)) cromos = cromos.filter(c => c.raridade === filtro);
+  
+  if (cromos.length === 0) {
+    grid.innerHTML = '<div class="colecao-vazio"><div class="colecao-vazio-icon">🃏</div><p>Sem cromos nesta categoria!</p></div>';
+    return;
+  }
+  
+  grid.innerHTML = '';
+  cromos.forEach(cromo => {
+    const key = `${cromo.clube}-${cromo.num_cromo}`;
+    const img = CROMOS_IMAGENS[key];
+    const rarIcon = { comum: '⚪', raro: '🔵', epico: '🟣', lendario: '⭐' };
+    
+    const div = document.createElement('div');
+    div.className = 'colecao-cromo';
+    div.title = `#${cromo.num_cromo} ${cromo.clube === 'fcps' ? 'FCPS' : 'CCRDSV'} - ${cromo.raridade}`;
+    
+    if (img) {
+      div.innerHTML = `<img src="${img}" alt="Cromo ${cromo.num_cromo}"/>`;
+    } else {
+      div.innerHTML = `<div class="colecao-cromo-placeholder ${cromo.raridade}">
+        <span>${rarIcon[cromo.raridade]}</span>
+        <span>#${cromo.num_cromo}</span>
+        <span class="colecao-num">${cromo.clube === 'fcps' ? 'FCPS' : 'CCRDSV'}</span>
+      </div>`;
+    }
+    
+    if (cromo.quantidade > 1) {
+      div.innerHTML += `<div class="colecao-qty">x${cromo.quantidade}</div>`;
+    }
+    
+    grid.appendChild(div);
+  });
+}
+
 // ===== PACKS =====
 
 // Cromos disponíveis com raridade
@@ -1409,31 +1550,29 @@ function getRaridade(clube, num) {
   return 'comum';
 }
 
-function gerarCromo() {
-  // Escolher clube
+function gerarCromo(tipoPack) {
   const clube = Math.random() < 0.5 ? 'fcps' : 'ccrdsv';
   const c = CROMOS_DISPONIVEIS[clube];
-  
-  // Raridade aleatória
   const rand = Math.random() * 100;
   let num;
-  
-  if (rand < 2) {
-    // Lendário
+
+  // Probabilidades por tipo de pack
+  const probs = tipoPack === 'premium'
+    ? { lend: 5, epico: 20, raro: 50 }   // Premium: L5% E15% R30% C50%
+    : { lend: 2, epico: 7, raro: 27 };   // Standard: L2% E5% R20% C73%
+
+  if (rand < probs.lend) {
     num = c.lendarios[Math.floor(Math.random() * c.lendarios.length)];
-  } else if (rand < 10) {
-    // Épico
+  } else if (rand < probs.epico) {
     num = c.epicos[Math.floor(Math.random() * c.epicos.length)];
-  } else if (rand < 30) {
-    // Raro
+  } else if (rand < probs.raro) {
     num = c.raros[Math.floor(Math.random() * c.raros.length)];
   } else {
-    // Comum - qualquer número não lendário/épico/raro
     do {
       num = Math.floor(Math.random() * c.total) + 1;
     } while ([...c.lendarios, ...c.epicos, ...c.raros].includes(num));
   }
-  
+
   return { clube, num, raridade: getRaridade(clube, num) };
 }
 
@@ -1441,15 +1580,14 @@ async function comprarPack(tipo) {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
   
-  // Verificar saldo
+  const preco = tipo === 'premium' ? 2.0 : 1.5;
   const { data: profile } = await sb.from('profiles').select('saldo').eq('id', user.id).single();
-  if (!profile || profile.saldo < 1.5) {
-    alert('Saldo insuficiente! Precisas de 1,50€ para comprar um pack.\nCarrega saldo em Início → + Carregar saldo');
+  if (!profile || profile.saldo < preco) {
+    alert(`Saldo insuficiente! Precisas de ${preco.toFixed(2).replace('.',',')}€ para comprar este pack.\nCarrega saldo em Início → + Carregar saldo`);
     return;
   }
   
-  // Debitar saldo
-  const novoSaldo = parseFloat((profile.saldo - 1.5).toFixed(2));
+  const novoSaldo = parseFloat((profile.saldo - preco).toFixed(2));
   await sb.from('profiles').update({ saldo: novoSaldo }).eq('id', user.id);
   
   // Atualizar display saldo
@@ -1457,11 +1595,13 @@ async function comprarPack(tipo) {
   const saldoTop = document.getElementById('user-saldo-top');
   if (saldoTop) saldoTop.textContent = novoSaldo.toFixed(2).replace('.', ',');
   document.getElementById('pack-saldo-display').textContent = novoSaldo.toFixed(2).replace('.', ',');
+  const ps2 = document.getElementById('pack-saldo-display2');
+  if (ps2) ps2.textContent = novoSaldo.toFixed(2).replace('.', ',');
   
   // Gerar 7 cromos
   const cromos = [];
   for (let i = 0; i < 7; i++) {
-    cromos.push(gerarCromo());
+    cromos.push(gerarCromo(tipo));
   }
   
   // Guardar na coleção
@@ -1499,6 +1639,7 @@ function mostrarPackOverlay(cromos) {
   
   // Guardar cromos para revelar
   window._cromosParaRevelar = cromos;
+  window._packTipo = tipo;
 }
 
 function abrirPackAnimacao() {
@@ -1583,6 +1724,8 @@ function fecharPackOverlay() {
 function atualizarSaldoPacks(saldo) {
   const el = document.getElementById('pack-saldo-display');
   if (el) el.textContent = saldo.toFixed(2).replace('.', ',');
+  const el2 = document.getElementById('pack-saldo-display2');
+  if (el2) el2.textContent = saldo.toFixed(2).replace('.', ',');
 }
 
 // ===== CADERNETAS =====
@@ -1976,7 +2119,7 @@ setInterval(async () => {
     <div class="pack-resultado-sub" id="pack-resultado-sub">7 novos cromos adicionados à tua coleção</div>
     <div class="cromos-grid-pack" id="cromos-grid-pack"></div>
     <div class="pack-resultado-btns">
-      <button class="pack-resultado-btn coleção" onclick="fecharPackOverlay()">Ver Coleção</button>
+      <button class="pack-resultado-btn coleção" onclick="fecharPackOverlay(); mostrarPagina('colecao', document.querySelector('.nav-item[onclick*=colecao]')); carregarColecao()">Ver Coleção</button>
       <button class="pack-resultado-btn fechar" onclick="fecharPackOverlay()">Fechar</button>
     </div>
   </div>
