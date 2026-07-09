@@ -1412,7 +1412,14 @@ function abrirCromo(tipo) {
   document.getElementById('cromo-modal').classList.add('show');
 }
 
-function fecharCromo() { document.getElementById('cromo-modal').classList.remove('show'); }
+function abrirCromoImg(src) {
+    event.stopPropagation();
+    const img = document.getElementById('cromo-grande-img');
+    const txt = document.getElementById('cromo-grande-num');
+    img.src = src; img.style.display = 'block'; txt.style.display = 'none';
+    document.getElementById('cromo-modal').classList.add('show');
+  }
+  function fecharCromo() { document.getElementById('cromo-modal').classList.remove('show'); }
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
