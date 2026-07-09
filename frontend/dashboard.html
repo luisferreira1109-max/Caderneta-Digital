@@ -335,9 +335,9 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 .num-pag { position: absolute; bottom: 14px; font-size: 11px; color: #333; letter-spacing: 2px; font-weight: 500; font-family: "Bebas Neue", sans-serif; }
 .num-pag-esq { left: 18px; }
 .num-pag-dir { right: 18px; }
-.pag-indice-esq { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 30px 20px; position: relative; overflow: hidden; }
-.fcps-pag-cor { background: linear-gradient(160deg, #c0392b 0%, #922b21 60%, #7b241c 100%); }
-.ccrdsv-pag-cor { background: linear-gradient(160deg, #27ae60 0%, #1e8449 60%, #196f3d 100%); }
+.pag-indice-esq { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 30px 20px; position: relative; overflow: hidden; background: inherit; }
+.fcps-pag-cor { background: linear-gradient(160deg, #c0392b 0%, #922b21 60%, #7b241c 100%) !important; }
+.ccrdsv-pag-cor { background: linear-gradient(160deg, #27ae60 0%, #1e8449 60%, #196f3d 100%) !important; }
 .pag-indice-esq::after { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 40%; background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent); pointer-events: none; }
 .pag-emblema { width: clamp(80px, 13vw, 130px); height: clamp(80px, 13vw, 130px); object-fit: contain; filter: drop-shadow(0 6px 20px rgba(0,0,0,0.5)); z-index: 2; }
 .pag-linha { width: 50%; height: 1px; background: rgba(255,255,255,0.25); z-index: 2; }
