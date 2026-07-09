@@ -586,184 +586,73 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 .colecao-vazio-icon { font-size: 48px; margin-bottom: 12px; }
 
 
-/* ===== SAQUETAS PANINI ===== */
-.packs-wrap { display: flex; gap: 70px; justify-content: center; flex-wrap: wrap; margin-top: 30px; align-items: flex-end; }
+/* ===== PACKS ESTILO PANINI REALISTA ===== */
+.packs-wrap { display: flex; gap: 80px; justify-content: center; flex-wrap: wrap; margin-top: 30px; align-items: flex-end; }
 .pack-3d-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-
-/* Saqueta — contentor com perspetiva */
-.pack-3d-scene { width: 160px; height: 240px; perspective: 800px; cursor: pointer; position: relative; }
-.pack-3d-scene:hover .pack-saqueta { transform: scale(1.06) translateY(-6px); filter: drop-shadow(0 28px 40px rgba(0,0,0,0.85)) brightness(1.08); }
-
-/* Corpo da saqueta — retangular, vertical, sem livro */
-.pack-saqueta {
-  width: 160px; height: 240px;
-  position: relative; border-radius: 8px 8px 6px 6px;
-  overflow: hidden; cursor: pointer;
-  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), filter 0.35s;
-  animation: floatSaqueta 3s ease-in-out infinite;
-  filter: drop-shadow(0 18px 32px rgba(0,0,0,0.75));
-}
-.pack-saqueta.premium-body { animation: floatSaquetaPremium 3.2s ease-in-out infinite; }
-
-@keyframes floatSaqueta {
-  0%,100% { transform: translateY(0px) rotate(-1deg); }
-  50% { transform: translateY(-14px) rotate(-1deg); }
-}
-@keyframes floatSaquetaPremium {
-  0%,100% { transform: translateY(-4px) rotate(1deg); }
-  50% { transform: translateY(-18px) rotate(1deg); }
-}
-
-/* Fundo metálico da saqueta Standard — dourado */
-.saqueta-std {
-  background: linear-gradient(
-    135deg,
-    #1a1200 0%,
-    #3d2a00 10%,
-    #C9943A 28%,
-    #f5d97a 42%,
-    #E8A83E 52%,
-    #a06c20 65%,
-    #C9943A 78%,
-    #f5d97a 88%,
-    #7a4e10 100%
-  );
-}
-
-/* Fundo metálico da saqueta Premium — roxo */
-.saqueta-pre {
-  background: linear-gradient(
-    135deg,
-    #0d0018 0%,
-    #2a0050 10%,
-    #9b59b6 28%,
-    #d980fa 42%,
-    #b06dc4 52%,
-    #6a2a8a 65%,
-    #9b59b6 78%,
-    #e0a0f5 88%,
-    #3d0060 100%
-  );
-}
-
-/* Reflexo metálico holográfico em cima */
-.pack-saqueta::before {
-  content: "";
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 0%,
-    rgba(255,255,255,0.04) 20%,
-    rgba(255,255,255,0.22) 38%,
-    rgba(255,255,255,0.06) 45%,
-    transparent 55%,
-    rgba(255,255,255,0.10) 72%,
-    transparent 100%
-  );
-  pointer-events: none; z-index: 5;
-  animation: shimmer 3s ease-in-out infinite;
-}
-@keyframes shimmer {
-  0%,100% { opacity: 0.7; }
-  50% { opacity: 1; }
-}
-
-/* Encurvado topo da saqueta (corte tipo Panini) */
-.saqueta-topo {
-  position: absolute; top: 0; left: 0; right: 0; height: 22px; z-index: 10;
-  background: inherit;
-  border-bottom: 2px dashed rgba(255,255,255,0.25);
-  display: flex; align-items: center; justify-content: center;
-}
-.saqueta-topo::after {
-  content: "▼ ▼ ▼";
-  font-size: 7px; color: rgba(255,255,255,0.4); letter-spacing: 4px;
-}
-
-/* Borda interior da saqueta */
-.saqueta-borda {
-  position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px;
-  border: 1px solid rgba(255,255,255,0.18); border-radius: 4px;
-  pointer-events: none; z-index: 6;
-}
-
-/* Conteúdo interior */
-.saqueta-content {
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-  padding: 28px 14px 18px; z-index: 4;
-}
-
-/* Topo: logo texto */
-.saqueta-brand {
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 10px; letter-spacing: 3px;
-  color: rgba(255,255,255,0.55); text-align: center;
-}
-
-/* Ícone central grande */
-.saqueta-icon { font-size: 58px; line-height: 1; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)); }
-
-/* Nome do pack */
-.saqueta-nome {
-  font-family: "Bebas Neue", sans-serif;
-  font-size: 20px; letter-spacing: 3px;
-  color: rgba(255,255,255,0.95); text-align: center;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-}
-
-/* Rodapé: nº de cromos */
-.saqueta-footer {
-  display: flex; align-items: center; justify-content: space-between;
-  width: 100%;
-  background: rgba(0,0,0,0.35); border-radius: 4px; padding: 5px 10px;
-}
-.saqueta-cromos { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.85); letter-spacing: 1px; }
-.saqueta-cd { font-size: 8px; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-align: right; font-style: italic; }
-
-/* Premium: brilho extra roxo */
-.saqueta-pre::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 60% 30%, rgba(217,128,250,0.18) 0%, transparent 65%);
-  pointer-events: none; z-index: 3;
-}
-
-/* Info abaixo da saqueta */
-.pack-info { text-align: center; width: 160px; }
-.pack-info-preco { font-family: "Bebas Neue", sans-serif; font-size: 34px; color: #C9943A; letter-spacing: 2px; line-height: 1; margin-bottom: 10px; }
-.pack-info-preco.pre { color: #d980fa; }
-.pack-info-btn { width: 100%; background: #C9943A; color: #111; border: none; border-radius: 20px; padding: 11px; font-family: "Inter", sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.15s; margin-bottom: 8px; }
-.pack-info-btn:hover { background: #E8A83E; transform: scale(1.03); }
-.pack-info-btn.pre { background: #9b59b6; }
-.pack-info-btn.pre:hover { background: #b06dc4; }
-.pack-saldo-depois { font-size: 11px; color: #555; }
-.pack-saldo-depois span { color: #888; font-weight: 600; }
-
-/* Saqueta no overlay de abrir pack */
-.pack-visual {
-  width: 180px; height: 270px; border-radius: 8px 8px 6px 6px;
-  position: relative; overflow: hidden;
-  cursor: pointer; transition: transform 0.3s;
-  filter: drop-shadow(0 0 50px rgba(201,148,58,0.5));
-  animation: floatSaqueta 2s ease-in-out infinite;
-}
-.pack-visual.premium-visual { filter: drop-shadow(0 0 50px rgba(155,89,182,0.6)); animation: floatSaquetaPremium 2s ease-in-out infinite; }
-.pack-visual:hover { transform: scale(1.07); }
-.pack-visual-bg-std { background: linear-gradient(135deg,#1a1200 0%,#3d2a00 10%,#C9943A 28%,#f5d97a 42%,#E8A83E 52%,#a06c20 65%,#C9943A 78%,#f5d97a 88%,#7a4e10 100%); }
-.pack-visual-bg-pre { background: linear-gradient(135deg,#0d0018 0%,#2a0050 10%,#9b59b6 28%,#d980fa 42%,#b06dc4 52%,#6a2a8a 65%,#9b59b6 78%,#e0a0f5 88%,#3d0060 100%); }
-.pack-visual::before { content:""; position:absolute; inset:0; background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,0.04) 20%,rgba(255,255,255,0.22) 38%,rgba(255,255,255,0.06) 45%,transparent 55%,rgba(255,255,255,0.10) 72%,transparent 100%); z-index:5; pointer-events:none; }
-.pack-visual-topo { position:absolute; top:0; left:0; right:0; height:24px; border-bottom:2px dashed rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; z-index:10; }
-.pack-visual-topo::after { content:"▼ ▼ ▼"; font-size:7px; color:rgba(255,255,255,0.4); letter-spacing:4px; }
-.pack-visual-borda { position:absolute; top:7px; left:7px; right:7px; bottom:7px; border:1px solid rgba(255,255,255,0.18); border-radius:4px; pointer-events:none; z-index:6; }
-.pack-visual-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:30px 16px 20px; z-index:4; }
-.pack-visual-brand { font-family:"Bebas Neue",sans-serif; font-size:10px; letter-spacing:3px; color:rgba(255,255,255,0.55); }
-.pack-visual-icon { font-size:70px; line-height:1; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5)); }
-.pack-visual-nome { font-family:"Bebas Neue",sans-serif; font-size:22px; letter-spacing:3px; color:rgba(255,255,255,0.95); text-shadow:0 2px 8px rgba(0,0,0,0.6); }
-.pack-visual-hint { font-size:11px; color:rgba(255,255,255,0.4); animation:pulse 1.5s infinite; letter-spacing:1px; margin-top:4px; }
-.pack-visual-footer { display:flex; align-items:center; justify-content:space-between; width:100%; background:rgba(0,0,0,0.35); border-radius:4px; padding:5px 10px; }
-.pack-visual-ncromos { font-size:11px; font-weight:700; color:rgba(255,255,255,0.85); letter-spacing:1px; }
-.pack-visual-cd { font-size:8px; color:rgba(255,255,255,0.4); font-style:italic; }
+.pack-saqueta { width:150px; height:210px; position:relative; animation:floatPack 3s ease-in-out infinite; filter:drop-shadow(4px 8px 20px rgba(0,0,0,0.8)); transition:filter 0.3s; pointer-events:none; }
+.pack-saqueta.premium-body { animation:floatPackPre 3.4s ease-in-out infinite; }
+@keyframes floatPack { 0%,100%{transform:translateY(0px) rotate(-2deg)} 50%{transform:translateY(-14px) rotate(-2deg)} }
+@keyframes floatPackPre { 0%,100%{transform:translateY(-4px) rotate(2deg)} 50%{transform:translateY(-18px) rotate(2deg)} }
+.pack-body { width:150px; height:210px; border-radius:6px; position:relative; overflow:hidden; display:flex; flex-direction:column; box-shadow:inset 0 0 0 1px rgba(255,255,255,0.2); }
+.pack-body-std { background:linear-gradient(175deg,#fff8dc 0%,#f5c842 8%,#C9943A 25%,#8a6000 45%,#C9943A 65%,#f5c842 80%,#C9943A 90%,#8a6000 100%); }
+.pack-body-pre { background:linear-gradient(175deg,#f0c0ff 0%,#d980fa 8%,#9b59b6 25%,#4a0a6a 45%,#9b59b6 65%,#d980fa 80%,#9b59b6 90%,#4a0a6a 100%); }
+.pack-body::before { content:""; position:absolute; top:0; left:-100%; width:60%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent); transform:skewX(-20deg); animation:shine 4s ease-in-out infinite; }
+@keyframes shine { 0%,70%{left:-100%} 85%,100%{left:200%} }
+.pack-body::after { content:""; position:absolute; top:0; left:0; right:0; bottom:0; background:linear-gradient(135deg,rgba(255,255,255,0.3) 0%,rgba(255,255,255,0.05) 40%,transparent 60%,rgba(0,0,0,0.15) 100%); pointer-events:none; }
+.pack-topo { height:28px; flex-shrink:0; display:flex; align-items:center; justify-content:center; position:relative; background:rgba(0,0,0,0.15); border-bottom:2px dashed rgba(255,255,255,0.3); }
+.pack-topo-txt { font-size:7px; color:rgba(255,255,255,0.7); letter-spacing:3px; text-transform:uppercase; font-family:"Inter",sans-serif; font-weight:600; z-index:2; }
+.pack-topo::before,.pack-topo::after { content:"✂"; position:absolute; font-size:10px; color:rgba(255,255,255,0.4); top:50%; transform:translateY(-50%); }
+.pack-topo::before { left:6px; }
+.pack-topo::after { right:6px; transform:translateY(-50%) scaleX(-1); }
+.pack-conteudo { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:10px 10px 8px; position:relative; z-index:2; }
+.pack-logo-area { display:flex; flex-direction:column; align-items:center; gap:5px; width:100%; }
+.pack-logo-circulo { width:56px; height:56px; border-radius:50%; background:rgba(0,0,0,0.3); border:2px solid rgba(255,255,255,0.5); display:flex; align-items:center; justify-content:center; font-size:28px; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+.pack-logo-nome { font-family:"Bebas Neue",sans-serif; font-size:12px; color:#fff; letter-spacing:2px; text-align:center; text-shadow:0 1px 4px rgba(0,0,0,0.6); }
+.pack-logo-tipo { font-family:"Bebas Neue",sans-serif; font-size:18px; color:rgba(255,255,255,0.9); letter-spacing:3px; text-align:center; text-shadow:0 2px 6px rgba(0,0,0,0.5); }
+.pack-cromos-preview { display:grid; grid-template-columns:repeat(4,1fr); gap:3px; width:100%; padding:0 2px; }
+.pack-cromo-mini { aspect-ratio:2/3; border-radius:3px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); }
+.pack-quantidade { font-size:9px; color:rgba(255,255,255,0.8); letter-spacing:2px; text-transform:uppercase; background:rgba(0,0,0,0.25); padding:3px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); font-family:"Inter",sans-serif; font-weight:600; }
+.pack-rodape { height:24px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.25); border-top:1px solid rgba(255,255,255,0.15); }
+.pack-rodape-txt { font-size:7px; color:rgba(255,255,255,0.5); letter-spacing:3px; text-transform:uppercase; font-family:"Inter",sans-serif; }
+.pack-saqueta-shadow { position:absolute; left:-6px; top:6px; bottom:6px; width:6px; border-radius:3px 0 0 3px; background:linear-gradient(to right,rgba(0,0,0,0.5),rgba(0,0,0,0.1)); filter:blur(2px); }
+.pack-info { text-align:center; width:160px; }
+.pack-info-preco { font-family:"Bebas Neue",sans-serif; font-size:32px; color:#C9943A; letter-spacing:2px; line-height:1; margin-bottom:10px; }
+.pack-info-preco.pre { color:#d980fa; }
+.pack-info-btn { width:100%; background:#C9943A; color:#111; border:none; border-radius:20px; padding:11px; font-family:"Inter",sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:background 0.2s,transform 0.15s; margin-bottom:8px; }
+.pack-info-btn:hover { background:#E8A83E; transform:scale(1.03); }
+.pack-info-btn.pre { background:#9b59b6; }
+.pack-info-btn.pre:hover { background:#b06dc4; }
+.pack-saldo-depois { font-size:11px; color:#555; }
+.pack-saldo-depois span { color:#888; font-weight:600; }
+/* Animação rasgar */
+.pack-rasgar-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.97); z-index:2000; align-items:center; justify-content:center; flex-direction:column; }
+.pack-rasgar-overlay.show { display:flex; }
+.pack-rasgar-container { position:relative; width:160px; height:230px; cursor:pointer; }
+.pack-rasgar-topo { width:160px; height:40px; border-radius:6px 6px 0 0; position:absolute; top:0; left:0; z-index:2; transform-origin:top center; transition:transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94),opacity 0.4s; }
+.pack-rasgar-baixo { width:160px; height:190px; border-radius:0 0 6px 6px; position:absolute; bottom:0; left:0; z-index:1; transition:transform 0.5s ease-out; }
+.pack-rasgar-topo.std { background:linear-gradient(175deg,#fff8dc,#f5c842,#C9943A,#8a6000); }
+.pack-rasgar-baixo.std { background:linear-gradient(175deg,#C9943A,#8a6000,#C9943A,#f5c842); }
+.pack-rasgar-topo.pre { background:linear-gradient(175deg,#f0c0ff,#d980fa,#9b59b6,#4a0a6a); }
+.pack-rasgar-baixo.pre { background:linear-gradient(175deg,#9b59b6,#4a0a6a,#9b59b6,#d980fa); }
+.pack-rasgar-topo.rasgando { transform:rotate(-45deg) translateX(-60px) translateY(-40px); opacity:0; }
+.pack-rasgar-baixo.rasgando { transform:translateY(20px); }
+.pack-rasgar-hint { font-size:14px; color:#555; margin-top:20px; letter-spacing:2px; animation:blink 1.2s infinite; }
+@keyframes blink { 0%,100%{opacity:0.4} 50%{opacity:1} }
+.cromos-revelados { display:none; flex-direction:column; align-items:center; gap:20px; width:100%; max-width:700px; padding:20px; }
+.cromos-revelados.show { display:flex; }
+.cromos-grid-pack { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+.cromo-pack { width:85px; aspect-ratio:2/3; border-radius:8px; position:relative; animation:revealCromo 0.5s ease forwards; opacity:0; transform:scale(0.5); cursor:pointer; transition:transform 0.2s; }
+.cromo-pack:hover { transform:scale(1.1) !important; }
+@keyframes revealCromo { to{opacity:1;transform:scale(1)} }
+.cromo-pack img { width:100%; height:100%; object-fit:cover; border-radius:8px; border:2px solid #333; }
+.cromo-pack-placeholder { width:100%; height:100%; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; font-size:10px; font-weight:600; background:linear-gradient(135deg,#2a2a2a,#1a1a1a); border:2px solid #444; color:#888; }
+.cromo-pack-num { font-size:8px; color:#555; }
+.pack-resultado-titulo { font-family:"Bebas Neue",sans-serif; font-size:28px; color:#fff; letter-spacing:4px; }
+.pack-resultado-sub { font-size:13px; color:#555; }
+.pack-resultado-btns { display:flex; gap:12px; margin-top:8px; }
+.pack-resultado-btn { padding:12px 28px; border-radius:20px; border:none; font-family:"Inter",sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s; }
+.pack-resultado-btn.colecao { background:#C9943A; color:#111; }
+.pack-resultado-btn.fechar { background:rgba(255,255,255,0.08); color:#fff; }
 
 /* ===== PACKS ===== */
 .packs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 10px; }
@@ -1091,8 +980,1076 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
           <p class="page-sub">Abre packs e descobre novos cromos!</p>
         </div>
         <div class="packs-wrap">
+          <!-- Pack Standard -->
+          <div class="pack-3d-wrap">
+            <div class="pack-saqueta">
+              <div class="pack-saqueta-shadow"></div>
+              <div class="pack-body pack-body-std">
+                <div class="pack-topo"><span class="pack-topo-txt">Abrir aqui</span></div>
+                <div class="pack-conteudo">
+                  <div class="pack-logo-area">
+                    <div class="pack-logo-circulo">🃏</div>
+                    <div class="pack-logo-nome">Caderneta Digital</div>
+                    <div class="pack-logo-tipo">Standard</div>
+                  </div>
+                  <div class="pack-cromos-preview">
+                    <div class="pack-cromo-mini"></div><div class="pack-cromo-mini"></div>
+                    <div class="pack-cromo-mini"></div><div class="pack-cromo-mini"></div>
+                    <div class="pack-cromo-mini"></div><div class="pack-cromo-mini"></div>
+                    <div class="pack-cromo-mini"></div><div class="pack-cromo-mini"></div>
+                  </div>
+                  <span class="pack-quantidade">7 Cromos</span>
+                </div>
+                <div class="pack-rodape"><span class="pack-rodape-txt">Temporada 2026/2027</span></div>
+              </div>
+            </div>
+            <div class="pack-info">
+              <div class="pack-info-preco">1,50 €</div>
+              <button class="pack-info-btn" onclick="comprarPack('standard')">Comprar Pack</button>
+              <div class="pack-saldo-depois">Ficará com <span id="saldo-depois-std">---</span> €</div>
+            </div>
+          </div>
+          <!-- Pack Premium -->
+          <div class="pack-3d-wrap">
+            <div class="pack-saqueta premium-body">
+              <div class="pack-saqueta-shadow"></div>
+              <div class="pack-body pack-body-pre">
+                <div class="pack-topo"><span class="pack-topo-txt">Abrir aqui</span></div>
+                <div class="pack-conteudo">
+                  <div class="pack-logo-area">
+                    <div class="pack-logo-circulo">💎</div>
+                    <div class="pack-logo-nome">Caderneta Digital</div>
+                    <div class="pack-logo-tipo">Premium</div>
+                  </div>
+                  <div class="pack-cromos-preview">
+                    <div class="pack-cromo-mini"></div><div class="pack-cromo-mini"></div>
+                    <div class="pack-cromo-mini"></div><div class="pack-cromo-mini"></div>
+                    <div class="pack-cromo-mini"></div><div class="pack-cromo-mini"></div>
+                    <div class="pack-cromo-mini"></div><div class="pack-cromo-mini"></div>
+                  </div>
+                  <span class="pack-quantidade">7 Cromos</span>
+                </div>
+                <div class="pack-rodape"><span class="pack-rodape-txt">Temporada 2026/2027</span></div>
+              </div>
+            </div>
+            <div class="pack-info">
+              <div class="pack-info-preco pre">2,00 €</div>
+              <button class="pack-info-btn pre" onclick="comprarPack('premium')">Comprar Pack</button>
+              <div class="pack-saldo-depois">Ficará com <span id="saldo-depois-pre">---</span> €</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-          <!-- Chat overlay -->
+      <!-- MERCADO -->
+      <div id="pagina-mercado" style="display:none">
+        <div class="page-header"><p class="page-titulo">Mercado</p><p class="page-sub">Compra e vende cromos com outros colecionadores</p></div>
+        <div class="em-breve"><div class="em-breve-icon">🏪</div><div class="em-breve-titulo">Mercado em breve</div><div class="em-breve-sub">Brevemente poderás comprar, vender e trocar cromos com outros colecionadores.</div></div>
+      </div>
+
+      <!-- AMIGOS v2 -->
+      <div id="pagina-amigos" style="display:none">
+        <div class="amigos-header">
+          <div class="page-header"><p class="page-titulo">Amigos</p><p class="page-sub">Os teus amigos colecionadores</p></div>
+          <button class="btn-adicionar-amigo" onclick="abrirModalAmigo()">+ Adicionar amigo</button>
+        </div>
+
+        <div class="meu-codigo">
+          <div class="meu-codigo-info">
+            <div class="meu-codigo-label">O teu código</div>
+            <div class="meu-codigo-valor" id="meu-codigo-valor">------</div>
+            <div class="meu-codigo-sub">Partilha este código para te adicionarem como amigo</div>
+          </div>
+          <div class="meu-qr"><img id="meu-qr-canvas" width="80" height="80" style="display:block;" alt="QR code"/></div>
+        </div>
+
+        <div class="pedidos-section" id="pedidos-section" style="display:none">
+          <div class="pedidos-titulo">Pedidos de amizade</div>
+          <div id="pedidos-lista"></div>
+        </div>
+
+        <div class="amigos-lista-titulo">Os teus amigos (<span id="amigos-count">0</span>)</div>
+        <div id="amigos-lista"></div>
+      </div>
+
+      <!-- PERFIL -->
+      <div id="pagina-perfil" style="display:none">
+        <div class="page-header"><p class="page-titulo">Perfil</p><p class="page-sub">As tuas estatísticas e conquistas</p></div>
+        <div class="em-breve"><div class="em-breve-icon">🏆</div><div class="em-breve-titulo">Perfil em breve</div><div class="em-breve-sub">Brevemente poderás ver as tuas conquistas, nível e estatísticas detalhadas.</div></div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const { createClient } = supabase;
+const sb = createClient(
+  'https://xbzugnrqrbimydsqjfvs.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY'
+);
+
+const bgs = {
+  inicio:'bg-inicio', cadernetas:'bg-cadernetas', colecao:'bg-colecao',
+  packs:'bg-packs', mercado:'bg-mercado', amigos:'bg-amigos', perfil:'bg-perfil'
+};
+
+function mostrarPagina(nome, el) {
+  document.querySelectorAll('[id^="pagina-"]').forEach(p => p.style.display='none');
+  document.getElementById('pagina-'+nome).style.display='block';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('bg-atual').className = 'bg ' + (bgs[nome]||'bg-inicio');
+}
+function irParaInicio() {
+  const navInicio = document.querySelector('.nav-item[onclick*="\'inicio\'"]');
+  mostrarPagina('inicio', navInicio);
+}
+
+
+
+// ===== MENU PERFIL =====
+let fotoBase64 = null;
+
+function togglePerfilMenu(e) {
+  e.stopPropagation();
+  const menu = document.getElementById('perfil-menu');
+  menu.classList.toggle('show');
+  // Preencher nome atual
+  document.getElementById('perfil-nome-input').value = document.getElementById('user-nome').textContent;
+}
+
+// Fechar ao clicar fora
+document.addEventListener('click', () => {
+  document.getElementById('perfil-menu')?.classList.remove('show');
+});
+
+function previewFoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    fotoBase64 = ev.target.result;
+    // Mostrar preview no menu
+    const avatarMenu = document.getElementById('perfil-avatar-menu');
+    avatarMenu.innerHTML = `<img src="${fotoBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+    // Mostrar no topbar
+    const avatarTop = document.getElementById('user-avatar');
+    avatarTop.innerHTML = `<img src="${fotoBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function guardarPerfil() {
+  const btn = document.querySelector('.perfil-btn');
+  btn.textContent = 'A guardar...';
+  btn.classList.add('perfil-btn-saving');
+
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+
+  const novoNome = document.getElementById('perfil-nome-input').value.trim();
+  if (!novoNome) { btn.textContent = '💾 Guardar alterações'; btn.classList.remove('perfil-btn-saving'); return; }
+
+  const updates = { display_name: novoNome };
+  if (fotoBase64) updates.avatar_url = fotoBase64;
+
+  const { error } = await sb.from('profiles').update(updates).eq('id', user.id);
+
+  if (!error) {
+    document.getElementById('user-nome').textContent = novoNome;
+    // Atualizar iniciais se não tiver foto
+    if (!fotoBase64) {
+      const ini = novoNome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      document.getElementById('user-avatar').textContent = ini;
+    }
+    btn.textContent = '✅ Guardado!';
+    setTimeout(() => {
+      btn.textContent = '💾 Guardar alterações';
+      btn.classList.remove('perfil-btn-saving');
+      document.getElementById('perfil-menu').classList.remove('show');
+    }, 1500);
+  } else {
+    btn.textContent = '❌ Erro!';
+    setTimeout(() => { btn.textContent = '💾 Guardar alterações'; btn.classList.remove('perfil-btn-saving'); }, 2000);
+  }
+}
+
+// Carregar foto do perfil se existir
+
+function atualizarMiniColecoes() {
+  const miniFcps = document.getElementById('mini-colecao-fcps');
+  const miniCcrdsv = document.getElementById('mini-colecao-ccrdsv');
+  const miniVazio = document.getElementById('mini-colecao-vazio');
+  if (miniFcps) miniFcps.style.display = cadDesbloqueadas.fcps ? 'flex' : 'none';
+  if (miniCcrdsv) miniCcrdsv.style.display = cadDesbloqueadas.ccrdsv ? 'flex' : 'none';
+  if (miniVazio) miniVazio.style.display = (cadDesbloqueadas.fcps || cadDesbloqueadas.ccrdsv) ? 'none' : 'block';
+}
+
+async function carregarCadernetas() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+
+  const { data, error } = await sb.from('cadernetas_desbloqueadas').select('caderneta_id').eq('user_id', user.id);
+  if (error || !data) return;
+
+  data.forEach(row => {
+    const clube = row.caderneta_id;
+    cadDesbloqueadas[clube] = true;
+    const card = document.getElementById('card-' + clube);
+    if (card) card.classList.remove('locked');
+    const sub = document.getElementById('sub-cad-' + clube);
+    if (sub) sub.textContent = '0 / ' + (clube === 'fcps' ? '216' : '240') + ' cromos';
+  });
+
+  atualizarMiniColecoes();
+}
+
+async function carregarFotoPerfil() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  const { data: profile } = await sb.from('profiles').select('avatar_url, display_name').eq('id', user.id).single();
+  if (profile?.avatar_url) {
+    fotoBase64 = profile.avatar_url;
+    const imgHtml = `<img src="${profile.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+    
+    // Atualizar avatar no topbar
+    const avatarTop = document.getElementById('user-avatar');
+    if (avatarTop) avatarTop.innerHTML = imgHtml;
+    
+    // Atualizar avatar no menu de perfil
+    const avatarMenu = document.getElementById('perfil-avatar-menu');
+    if (avatarMenu) avatarMenu.innerHTML = imgHtml;
+  }
+}
+
+
+// ===== AMIGOS =====
+let amigoAberto = null;
+
+// Verificar mensagens novas a cada 3 segundos enquanto o chat está aberto
+setInterval(async () => {
+  const overlay = document.getElementById('chat-overlay');
+  if (overlay && overlay.classList.contains('show') && amigoAberto) {
+    await carregarMensagens(amigoAberto.id);
+    const { data: { user } } = await sb.auth.getUser();
+    if (user) {
+      await sb.from('mensagens').update({ lida: true }).eq('de_user_id', amigoAberto.id).eq('para_user_id', user.id).eq('lida', false);
+      atualizarBadgeMensagens();
+    }
+  }
+}, 3000);
+
+function gerarCodigoAmigo() {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
+function gerarQR(texto, img) {
+  // QR Code real, gerado através de uma API gratuita
+  const url = 'https://www.caderneta-digital.com/?amigo=' + encodeURIComponent(texto);
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=0&data=' + encodeURIComponent(url);
+}
+
+async function carregarAmigos() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+
+  // Garantir que o perfil existe e que o utilizador tem código
+  const profile = await garantirPerfil(user);
+
+  let codigo = profile?.codigo_amigo;
+  if (!codigo) {
+    codigo = gerarCodigoAmigo();
+    await sb.from('profiles').update({ codigo_amigo: codigo }).eq('id', user.id);
+  }
+  
+  // Mostrar código e QR
+  const codigoEl = document.getElementById('meu-codigo-valor');
+  if (codigoEl) codigoEl.textContent = codigo;
+  const canvas = document.getElementById('meu-qr-canvas');
+  if (canvas) gerarQR(codigo, canvas);
+
+  // Atualizar online_at
+  await sb.from('profiles').update({ online_at: new Date().toISOString() }).eq('id', user.id);
+
+  // Carregar pedidos pendentes
+  await carregarPedidos(user.id);
+  
+  // Carregar lista de amigos
+  await carregarListaAmigos(user.id);
+}
+
+async function carregarPedidos(userId) {
+  const { data: pedidos } = await sb.from('amigos')
+    .select('*')
+    .eq('amigo_id', userId)
+    .eq('status', 'pendente');
+  
+  // Buscar profiles separadamente
+  if (pedidos && pedidos.length > 0) {
+    for (let p of pedidos) {
+      const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', p.user_id).single();
+      p.profiles = prof;
+    }
+  }
+
+  const section = document.getElementById('pedidos-section');
+  const lista = document.getElementById('pedidos-lista');
+  
+  if (!section || !lista) return;
+  if (!pedidos || pedidos.length === 0) { section.style.display = 'none'; return; }
+  
+  section.style.display = 'block';
+  lista.innerHTML = '';
+  
+  pedidos.forEach(p => {
+    const nome = p.profiles?.display_name || 'Utilizador';
+    const avatar = p.profiles?.avatar_url;
+    const avatarHtml = avatar 
+      ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`
+      : nome[0].toUpperCase();
+    
+    lista.innerHTML += `
+      <div class="pedido-item">
+        <div class="pedido-avatar">${avatarHtml}</div>
+        <div class="pedido-info">
+          <div class="pedido-nome">${nome}</div>
+          <div class="pedido-sub">Quer ser teu amigo!</div>
+        </div>
+        <div class="pedido-btns">
+          <button class="pedido-btn aceitar" onclick="aceitarPedido('${p.id}', '${p.user_id}')">✓ Aceitar</button>
+          <button class="pedido-btn recusar" onclick="recusarPedido('${p.id}')">✕</button>
+        </div>
+      </div>`;
+  });
+}
+
+async function carregarListaAmigos(userId) {
+  const { data: amigos1raw } = await sb.from('amigos').select('*').eq('user_id', userId).eq('status', 'aceite');
+  const { data: amigos2raw } = await sb.from('amigos').select('*').eq('amigo_id', userId).eq('status', 'aceite');
+  
+  // Buscar profiles dos amigos
+  const amigos1 = [];
+  for (const a of (amigos1raw || [])) {
+    const { data: prof } = await sb.from('profiles').select('id, display_name, avatar_url, online_at, status_personalizado, coins').eq('id', a.amigo_id).single();
+    if (prof) amigos1.push({ ...a, profiles: prof });
+  }
+  const amigos2 = [];
+  for (const a of (amigos2raw || [])) {
+    const { data: prof } = await sb.from('profiles').select('id, display_name, avatar_url, online_at, status_personalizado, coins').eq('id', a.user_id).single();
+    if (prof) amigos2.push({ ...a, profiles: prof });
+  }
+
+  const lista = document.getElementById('amigos-lista');
+  const count = document.getElementById('amigos-count');
+  if (!lista || !count) return;
+  
+  const todos = [
+    ...amigos1.map(a => ({ ...a.profiles, amizade_id: a.id })),
+    ...amigos2.map(a => ({ ...a.profiles, amizade_id: a.id }))
+  ];
+  
+  count.textContent = todos.length;
+  
+  if (todos.length === 0) {
+    lista.innerHTML = '<div style="text-align:center; color:#ccc; background:rgba(0,0,0,0.45); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:40px 20px; font-size:13px;">Ainda não tens amigos! Adiciona alguém com o código deles 😊</div>';
+    return;
+  }
+  
+  lista.innerHTML = '';
+  const agora = new Date();
+  
+  todos.forEach(a => {
+    const onlineAt = a.online_at ? new Date(a.online_at) : null;
+    const isOnline = onlineAt && (agora - onlineAt) < 5 * 60 * 1000; // 5 minutos
+    const statusClass = isOnline ? 'online' : 'offline';
+    const statusTexto = isOnline ? '● Online' : '● Offline';
+    const nome = a.display_name || 'Utilizador';
+    const avatar = a.avatar_url;
+    const avatarHtml = avatar 
+      ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`
+      : nome[0].toUpperCase();
+    const statusPers = a.status_personalizado || '🃏';
+    const cromos = a.coins || 0;
+    
+    lista.innerHTML += `
+      <div class="amigo-item" onclick="abrirChat('${a.id}', '${nome}', '${avatar || ''}', ${isOnline})">
+        <div class="amigo-avatar">
+          ${avatarHtml}
+          <div class="amigo-status-dot ${statusClass}"></div>
+        </div>
+        <div class="amigo-info">
+          <div class="amigo-nome">${nome} ${statusPers}</div>
+          <div class="amigo-status-texto ${statusClass}">${statusTexto}</div>
+          <div class="amigo-cromos">💰 ${cromos} moedas</div>
+        </div>
+        <div class="amigo-seta">›</div>
+      </div>`;
+  });
+}
+
+async function aceitarPedido(pedidoId, userId) {
+  await sb.from('amigos').update({ status: 'aceite' }).eq('id', pedidoId);
+  const { data: { user } } = await sb.auth.getUser();
+  await carregarPedidos(user.id);
+  await carregarListaAmigos(user.id);
+}
+
+async function recusarPedido(pedidoId) {
+  await sb.from('amigos').delete().eq('id', pedidoId);
+  const { data: { user } } = await sb.auth.getUser();
+  await carregarPedidos(user.id);
+}
+
+function abrirModalAmigo() {
+  document.getElementById('modal-amigo').classList.add('show');
+  document.getElementById('input-codigo-amigo').value = '';
+  document.getElementById('erro-amigo').style.display = 'none';
+  document.getElementById('sucesso-amigo').style.display = 'none';
+}
+
+function fecharModalAmigo() {
+  document.getElementById('modal-amigo').classList.remove('show');
+}
+
+async function enviarPedidoAmizade() {
+  const codigo = document.getElementById('input-codigo-amigo').value.trim().toUpperCase();
+  const erro = document.getElementById('erro-amigo');
+  const sucesso = document.getElementById('sucesso-amigo');
+  erro.style.display = 'none';
+  sucesso.style.display = 'none';
+  
+  if (!codigo) { erro.textContent = 'Insere um código!'; erro.style.display = 'block'; return; }
+  
+  const { data: { user } } = await sb.auth.getUser();
+  
+  // Encontrar utilizador com esse código
+  const { data: profiles } = await sb.from('profiles').select('id, display_name').eq('codigo_amigo', codigo);
+  
+  if (!profiles || profiles.length === 0) { erro.textContent = 'Código não encontrado!'; erro.style.display = 'block'; return; }
+  const amigo = profiles[0];
+  if (amigo.id === user.id) { erro.textContent = 'Não podes adicionar-te a ti mesmo!'; erro.style.display = 'block'; return; }
+  
+  // Verificar se já são amigos
+  const { data: jaAmigos } = await sb.from('amigos').select('id').eq('user_id', user.id).eq('amigo_id', amigo.id);
+  if (jaAmigos && jaAmigos.length > 0) { erro.textContent = 'Já enviaste um pedido a este utilizador!'; erro.style.display = 'block'; return; }
+  
+  // Enviar pedido
+  const { error } = await sb.from('amigos').insert({ user_id: user.id, amigo_id: amigo.id, status: 'pendente' });
+  if (error) { erro.textContent = 'Erro ao enviar pedido!'; erro.style.display = 'block'; return; }
+  
+  sucesso.textContent = `Pedido enviado a ${amigo.display_name}! 🎉`;
+  sucesso.style.display = 'block';
+  setTimeout(fecharModalAmigo, 2000);
+}
+
+// Chat
+async function abrirChat(amigoId, amigoNome, amigoAvatar, isOnline) {
+  amigoAberto = { id: amigoId, nome: amigoNome, avatar: amigoAvatar, online: isOnline };
+  
+  const avatarHtml = amigoAvatar 
+    ? `<img src="${amigoAvatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`
+    : amigoNome[0].toUpperCase();
+  
+  document.getElementById('chat-header-avatar').innerHTML = avatarHtml;
+  document.getElementById('chat-header-nome').textContent = amigoNome;
+  document.getElementById('chat-header-status').textContent = isOnline ? '● Online' : '● Offline';
+  document.getElementById('chat-header-status').className = 'chat-header-status ' + (isOnline ? 'online' : 'offline');
+  
+  document.getElementById('chat-overlay').classList.add('show');
+  await carregarMensagens(amigoId);
+
+  const { data: { user } } = await sb.auth.getUser();
+  if (user) {
+    await sb.from('mensagens').update({ lida: true }).eq('de_user_id', amigoId).eq('para_user_id', user.id).eq('lida', false);
+    atualizarBadgeMensagens();
+  }
+}
+
+function fecharChat() {
+  document.getElementById('chat-overlay').classList.remove('show');
+  amigoAberto = null;
+}
+
+async function carregarMensagens(amigoId) {
+  const { data: { user } } = await sb.auth.getUser();
+  const msgs = document.getElementById('chat-mensagens');
+  
+  const { data: mensagens } = await sb.from('mensagens')
+    .select('*')
+    .or(`and(de_user_id.eq.${user.id},para_user_id.eq.${amigoId}),and(de_user_id.eq.${amigoId},para_user_id.eq.${user.id})`)
+    .order('criado_em', { ascending: true });
+  
+  if (!mensagens || mensagens.length === 0) {
+    msgs.innerHTML = '<div class="chat-vazio">Ainda não há mensagens!<br>Diz olá! 👋</div>';
+    return;
+  }
+  
+  msgs.innerHTML = '';
+  mensagens.forEach(m => {
+    const enviada = m.de_user_id === user.id;
+    const hora = new Date(m.criado_em).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+    msgs.innerHTML += `
+      <div style="display:flex; flex-direction:column; align-items:${enviada ? 'flex-end' : 'flex-start'}">
+        <div class="msg ${enviada ? 'enviada' : 'recebida'}">${m.mensagem}</div>
+        <div class="msg-hora">${hora}</div>
+      </div>`;
+  });
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+async function enviarMensagem() {
+  if (!amigoAberto) return;
+  const input = document.getElementById('chat-input-msg');
+  const texto = input.value.trim();
+  if (!texto) return;
+  
+  const { data: { user } } = await sb.auth.getUser();
+  
+  await sb.from('mensagens').insert({
+    de_user_id: user.id,
+    para_user_id: amigoAberto.id,
+    mensagem: texto
+  });
+  
+  input.value = '';
+  await carregarMensagens(amigoAberto.id);
+}
+
+// Enter para enviar mensagem
+document.addEventListener('DOMContentLoaded', () => {
+  const chatInput = document.getElementById('chat-input-msg');
+  if (chatInput) {
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarMensagem(); }
+    });
+  }
+});
+
+
+
+// ===== COLEÇÃO =====
+let _colecaoTodos = [];
+let _colecaoFiltro = 'todos';
+
+async function carregarColecao() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  
+  const { data: cromos } = await sb.from('colecao')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('raridade', { ascending: false })
+    .order('num_cromo', { ascending: true });
+  
+  _colecaoTodos = cromos || [];
+  
+  // Stats
+  const total = _colecaoTodos.reduce((sum, c) => sum + c.quantidade, 0);
+  const unicos = _colecaoTodos.length;
+
+  
+  document.getElementById('col-total').textContent = total;
+  document.getElementById('col-unicos').textContent = unicos;
+
+  
+  renderColecao(_colecaoFiltro);
+}
+
+function filtrarColecao(filtro, btn) {
+  _colecaoFiltro = filtro;
+  document.querySelectorAll('.colecao-filtro').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  renderColecao(filtro);
+}
+
+function renderColecao(filtro) {
+  const grid = document.getElementById('colecao-grid');
+  
+  let cromos = _colecaoTodos;
+  if (filtro === 'fcps') cromos = cromos.filter(c => c.clube === 'fcps');
+  else if (filtro === 'ccrdsv') cromos = cromos.filter(c => c.clube === 'ccrdsv');
+  else if (['lendario','epico','raro','comum'].includes(filtro)) cromos = cromos.filter(c => c.raridade === filtro);
+  
+  if (cromos.length === 0) {
+    grid.innerHTML = '<div class="colecao-vazio"><div class="colecao-vazio-icon">🃏</div><p>Sem cromos nesta categoria!</p></div>';
+    return;
+  }
+  
+  grid.innerHTML = '';
+  cromos.forEach(cromo => {
+    const key = `${cromo.clube}-${cromo.num_cromo}`;
+    const img = CROMOS_IMAGENS[key];
+    const div = document.createElement('div');
+    div.className = 'colecao-cromo';
+    div.title = `#${cromo.num_cromo} ${cromo.clube === 'fcps' ? 'FCPS' : 'CCRDSV'}`;
+    if (img) {
+      div.innerHTML = `<img src="${img}" alt="Cromo ${cromo.num_cromo}"/>`;
+    } else {
+      div.innerHTML = `<div class="colecao-cromo-placeholder comum">
+        <span>#${cromo.num_cromo}</span>
+        <span class="colecao-num">${cromo.clube === 'fcps' ? 'FCPS' : 'CCRDSV'}</span>
+      </div>`;
+    }
+    
+    if (cromo.quantidade > 1) {
+      div.innerHTML += `<div class="colecao-qty">x${cromo.quantidade}</div>`;
+    }
+    
+    grid.appendChild(div);
+  });
+}
+
+// ===== PACKS =====
+const CROMOS_DISPONIVEIS = {
+  fcps:{total:216,lendarios:[132],epicos:[25,50,75,100,125,150,175,200],raros:[10,20,30,40,60,70,80,90,110,120,130,140,160,170,180,190,210]},
+  ccrdsv:{total:240,lendarios:[13,223],epicos:[24,48,72,96,120,144,168,192,216],raros:[12,36,60,84,108,132,156,180,204,228]}
+};
+const CROMOS_IMAGENS = {
+  'fcps-132':'images/séniores paço de sousa/cromo-132-fcps.png',
+  'ccrdsv-13':'images/sub 7 irivo/cromo-13-ccrdsv.png',
+  'ccrdsv-223':'images/séniores irivo/cromo-223-ccrdsv.png'
+};
+function getRaridade(clube,num){const c=CROMOS_DISPONIVEIS[clube];if(c.lendarios.includes(num))return'lendario';if(c.epicos.includes(num))return'epico';if(c.raros.includes(num))return'raro';return'comum';}
+function gerarCromo(tipoPack){
+  const clube=Math.random()<0.5?'fcps':'ccrdsv';
+  const c=CROMOS_DISPONIVEIS[clube];
+  const rand=Math.random()*100;
+  const p=tipoPack==='premium'?{lend:5,epico:20,raro:50}:{lend:2,epico:7,raro:27};
+  let num;
+  if(rand<p.lend)num=c.lendarios[Math.floor(Math.random()*c.lendarios.length)];
+  else if(rand<p.epico)num=c.epicos[Math.floor(Math.random()*c.epicos.length)];
+  else if(rand<p.raro)num=c.raros[Math.floor(Math.random()*c.raros.length)];
+  else{do{num=Math.floor(Math.random()*c.total)+1;}while([...c.lendarios,...c.epicos,...c.raros].includes(num));}
+  return{clube,num,raridade:getRaridade(clube,num)};
+}
+async function comprarPack(tipo){
+  const{data:{user}}=await sb.auth.getUser();if(!user)return;
+  const preco=tipo==='premium'?2.0:1.5;
+  const{data:profile}=await sb.from('profiles').select('saldo').eq('id',user.id).single();
+  if(!profile||profile.saldo<preco){alert(`Saldo insuficiente! Precisas de ${preco.toFixed(2).replace('.',',')}€.
+Carrega saldo em Início → + Carregar saldo`);return;}
+  const novoSaldo=parseFloat((profile.saldo-preco).toFixed(2));
+  await sb.from('profiles').update({saldo:novoSaldo}).eq('id',user.id);
+  document.getElementById('stat-saldo').textContent=novoSaldo.toFixed(2).replace('.',',')+'  €';
+  const st=document.getElementById('user-saldo-top');if(st)st.textContent=novoSaldo.toFixed(2).replace('.',',');
+  atualizarSaldoPacks(novoSaldo);
+  const cromos=[];for(let i=0;i<7;i++)cromos.push(gerarCromo(tipo));
+  await guardarCromosColecao(user.id,cromos);
+  mostrarPackOverlay(cromos,tipo);
+}
+async function guardarCromosColecao(userId,cromos){
+  for(const c of cromos){
+    const{data:ex}=await sb.from('colecao').select('quantidade').eq('user_id',userId).eq('clube',c.clube).eq('num_cromo',c.num).maybeSingle();
+    if(ex)await sb.from('colecao').update({quantidade:ex.quantidade+1}).eq('user_id',userId).eq('clube',c.clube).eq('num_cromo',c.num);
+    else await sb.from('colecao').insert({user_id:userId,clube:c.clube,num_cromo:c.num,raridade:c.raridade,quantidade:1});
+  }
+}
+function mostrarPackOverlay(cromos,tipo){
+  const topo=document.getElementById('pack-rasgar-topo');
+  const baixo=document.getElementById('pack-rasgar-baixo');
+  const cls=tipo==='premium'?'pre':'std';
+  topo.className=`pack-rasgar-topo ${cls}`;
+  baixo.className=`pack-rasgar-baixo ${cls}`;
+  document.getElementById('pack-fase1').style.display='flex';
+  document.getElementById('pack-fase2').style.display='none';
+  document.getElementById('pack-fase2').classList.remove('show');
+  document.getElementById('pack-rasgar-hint').style.opacity='1';
+  document.getElementById('pack-overlay').classList.add('show');
+  window._cromosParaRevelar=cromos;
+  document.getElementById('pack-rasgar-container').onclick=()=>abrirPackAnimacao();
+}
+function abrirPackAnimacao(){
+  document.getElementById('pack-rasgar-container').onclick=null;
+  document.getElementById('pack-rasgar-hint').style.opacity='0';
+  document.getElementById('pack-rasgar-topo').classList.add('rasgando');
+  document.getElementById('pack-rasgar-baixo').classList.add('rasgando');
+  const flash=document.createElement('div');
+  flash.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,0.15);pointer-events:none;z-index:9999;';
+  document.body.appendChild(flash);setTimeout(()=>flash.remove(),300);
+  setTimeout(()=>{
+    document.getElementById('pack-fase1').style.display='none';
+    const f2=document.getElementById('pack-fase2');f2.style.display='flex';f2.classList.add('show');
+    revelarCromos(window._cromosParaRevelar);
+  },700);
+}
+function revelarCromos(cromos){
+  const grid=document.getElementById('cromos-grid-pack');grid.innerHTML='';
+  cromos.forEach((cromo,i)=>{
+    setTimeout(()=>{
+      const div=document.createElement('div');div.className='cromo-pack';div.style.animationDelay=`${i*0.1}s`;
+      const key=`${cromo.clube}-${cromo.num}`;const img=CROMOS_IMAGENS[key];
+      if(img){div.innerHTML=`<img src="${img}" alt="#${cromo.num}"/>`;}
+      else{div.innerHTML=`<div class="cromo-pack-placeholder"><span>#${cromo.num}</span><span class="cromo-pack-num">${cromo.clube==='fcps'?'FCPS':'CCRDSV'}</span></div>`;}
+      if(cromo.raridade==='lendario'){div.style.boxShadow='0 0 20px #f1c40f,0 0 40px rgba(241,196,15,0.3)';const fl=document.createElement('div');fl.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(241,196,15,0.2);pointer-events:none;z-index:9999;transition:opacity 0.5s;';document.body.appendChild(fl);setTimeout(()=>{fl.style.opacity='0';setTimeout(()=>fl.remove(),500);},200);}
+      grid.appendChild(div);
+    },i*180);
+  });
+  const lend=cromos.filter(c=>c.raridade==='lendario').length;
+  const epic=cromos.filter(c=>c.raridade==='epico').length;
+  document.getElementById('pack-resultado-sub').textContent=lend>0?'⭐ Incrível! Obtiveste um cromo lendário!':epic>0?'💎 Muito bom! Obtiveste um cromo épico!':'7 novos cromos adicionados à tua coleção!';
+}
+function fecharPackOverlay(){document.getElementById('pack-overlay').classList.remove('show');}
+function atualizarSaldoPacks(saldo){
+  const s=document.getElementById('saldo-depois-std');if(s)s.textContent=Math.max(0,saldo-1.5).toFixed(2).replace('.',',');
+  const p=document.getElementById('saldo-depois-pre');if(p)p.textContent=Math.max(0,saldo-2.0).toFixed(2).replace('.',',');
+}
+
+// ===== CADERNETAS =====
+const estadoCad = { fcps: 0, ccrdsv: 0 };
+const maxPagCad = { fcps: 18, ccrdsv: 20 };
+const luisImg = 'images/foto-luis.jpg';
+const isMobileCad = () => window.innerWidth <= 700;
+let isAnimatingCad = false;
+let moedasAtual = 0;
+const cadDesbloqueadas = { fcps: false, ccrdsv: false };
+
+function abrirCaderneta(clube) {
+  // Se já desbloqueada — abrir diretamente
+  if (cadDesbloqueadas[clube]) {
+    mostrarPaginasCad(clube, 0, false);
+    document.getElementById('modal-' + clube).classList.add('show');
+    return;
+  }
+  // Verificar moedas
+  if (moedasAtual < 250) {
+    document.getElementById('modal-sem-moedas').classList.add('show');
+    return;
+  }
+  // Confirmar antes de desbloquear
+  if (!confirm('Desbloquear esta caderneta por 250 moedas?')) return;
+  // Desbloquear
+  desbloquearCaderneta(clube);
+}
+
+async function desbloquearCaderneta(clube) {
+  const { data:{ user } } = await sb.auth.getUser();
+  if (!user) return;
+
+  // 1. Guardar desbloqueio PRIMEIRO na tabela
+  const { error: errCad } = await sb.from('cadernetas_desbloqueadas').insert({ user_id: user.id, caderneta_id: clube });
+  if (errCad && errCad.code !== '23505') { alert('Erro ao desbloquear: ' + errCad.message); return; }
+
+  // 2. Debitar moedas
+  const novasMoedas = moedasAtual - 250;
+  const { error: errMoedas } = await sb.from('profiles').update({ coins: novasMoedas }).eq('id', user.id);
+  if (errMoedas) { alert('Erro ao debitar moedas!'); return; }
+
+  moedasAtual = novasMoedas;
+  const elStat = document.getElementById('stat-moedas');
+  if (elStat) elStat.textContent = moedasAtual;
+  const elTop = document.getElementById('user-saldo-top');
+  
+  cadDesbloqueadas[clube] = true;
+  atualizarMiniColecoes();
+
+  // Atualizar card visual
+  const card = document.getElementById('card-' + clube);
+  if (card) {
+    card.classList.remove('locked');
+  }
+  (document.getElementById('sub-cad-' + clube) || document.getElementById('sub-' + clube) || {textContent:''}).textContent = '0 / ' + (clube === 'fcps' ? '216' : '240') + ' cromos';
+  
+  // Abrir caderneta
+  mostrarPaginasCad(clube, 0, false);
+  document.getElementById('modal-' + clube).classList.add('show');
+}
+
+function fecharModal(clube) { document.getElementById('modal-' + clube).classList.remove('show'); }
+
+function mostrarPaginasCad(clube, pag, _) {
+  document.querySelectorAll('[id^="' + clube + '-pag-"]').forEach(p => p.classList.remove('ativa'));
+  if (pag === 0) {
+    if (!isMobileCad()) document.getElementById(clube + '-pag-esq-indice').classList.add('ativa');
+    document.getElementById(clube + '-pag-dir-indice').classList.add('ativa');
+    estadoCad[clube] = 0;
+    document.getElementById(clube + '-btn-indice').style.visibility = 'hidden';
+  } else {
+    document.getElementById(clube + '-pag-' + pag).classList.add('ativa');
+    if (!isMobileCad()) document.getElementById(clube + '-pag-' + (pag + 1)).classList.add('ativa');
+    estadoCad[clube] = pag;
+    document.getElementById(clube + '-btn-indice').style.visibility = 'visible';
+  }
+  atualizarNavCad(clube);
+}
+
+function animarFlipCad(clube, dir, cb) {
+  if (isMobileCad() || isAnimatingCad) { cb(); return; }
+  isAnimatingCad = true;
+  const overlay = document.getElementById(clube + '-flip-overlay');
+  const el = document.createElement('div');
+  el.className = dir === 1 ? 'flip-forward' : 'flip-backward';
+  const f = document.createElement('div'); f.className = 'flip-face flip-face-front';
+  const b = document.createElement('div'); b.className = 'flip-face flip-face-back';
+  el.appendChild(f); el.appendChild(b); overlay.appendChild(el);
+  setTimeout(() => cb(), 340);
+  setTimeout(() => { if (overlay.contains(el)) overlay.removeChild(el); isAnimatingCad = false; }, 700);
+}
+
+function irParaPagina(clube, pag, dir) {
+  if (isAnimatingCad) return;
+  animarFlipCad(clube, dir, () => mostrarPaginasCad(clube, pag));
+}
+
+function navIndice(clube) {
+  if (isAnimatingCad) return;
+  animarFlipCad(clube, -1, () => mostrarPaginasCad(clube, 0));
+}
+
+function navPagina(clube, dir) {
+  if (isAnimatingCad) return;
+  const atual = estadoCad[clube];
+  if (atual === 0 && dir === 1) { irParaPagina(clube, 1, 1); return; }
+  if (atual === 0 && dir === -1) return;
+  const nova = atual + dir * 2;
+  if (nova < 1) animarFlipCad(clube, -1, () => mostrarPaginasCad(clube, 0));
+  else if (nova <= maxPagCad[clube]) animarFlipCad(clube, dir, () => mostrarPaginasCad(clube, nova));
+}
+
+function atualizarNavCad(clube) {
+  document.getElementById(clube + '-btn-prev').disabled = estadoCad[clube] === 0;
+  document.getElementById(clube + '-btn-next').disabled = estadoCad[clube] >= maxPagCad[clube] - 1;
+}
+
+function abrirCromo(tipo) {
+  event.stopPropagation();
+  const img = document.getElementById('cromo-grande-img');
+  const txt = document.getElementById('cromo-grande-num');
+  if (tipo === 'luis') { img.src = luisImg; img.style.display = 'block'; txt.style.display = 'none'; }
+  else { img.style.display = 'none'; txt.style.display = 'block'; txt.textContent = 'Espaço vazio'; }
+  document.getElementById('cromo-modal').classList.add('show');
+}
+
+function abrirCromoImg(src) {
+    event.stopPropagation();
+    const img = document.getElementById('cromo-grande-img');
+    const txt = document.getElementById('cromo-grande-num');
+    img.src = src; img.style.display = 'block'; txt.style.display = 'none';
+    document.getElementById('cromo-modal').classList.add('show');
+  }
+  function fecharCromo() { document.getElementById('cromo-modal').classList.remove('show'); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.caderneta-modal, .cromo-modal').forEach(m => m.classList.remove('show'));
+  }
+});
+
+async function garantirPerfil(user) {
+  let { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if (!profile) {
+    const nomeInicial = (user.user_metadata && user.user_metadata.display_name) || user.email.split('@')[0];
+    const { data: novoPerfil } = await sb.from('profiles').upsert({
+      id: user.id,
+      username: user.email.split('@')[0] + Math.floor(Math.random() * 1000),
+      display_name: nomeInicial,
+      coins: 500,
+      saldo: 0
+    }).select().single();
+    profile = novoPerfil;
+  }
+  return profile;
+}
+
+async function carregarUtilizador() {
+  const { data:{ user } } = await sb.auth.getUser();
+  if(!user) { window.location.href='index.html'; return; }
+  const profile = await garantirPerfil(user);
+  if(profile) {
+    const nome = profile.display_name || user.email;
+    document.getElementById('user-nome').textContent = nome;
+    const moedas = profile.coins||500; moedasAtual = moedas; document.getElementById('user-moedas') && (document.getElementById('user-moedas').textContent = moedas);
+    document.getElementById('stat-moedas').textContent = moedasAtual;
+    const ini = nome.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+    document.getElementById('user-avatar').textContent = ini;
+    const saldo = profile.saldo || 0;
+    document.getElementById('stat-saldo').textContent = saldo.toFixed(2).replace('.',',') + ' €'; atualizarSaldoPacks(saldo);
+    const saldoTop = document.getElementById('user-saldo-top');
+    if (saldoTop) saldoTop.textContent = saldo.toFixed(2).replace('.',',');
+  }
+}
+
+async function logout() {
+  await sb.auth.signOut();
+  window.location.href='index.html';
+}
+
+async function carregarAtividadeAmigos() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  const lista = document.getElementById('atividade-lista');
+  if (!lista) return;
+
+  const { data: a1 } = await sb.from('amigos').select('id, amigo_id, criado_em').eq('user_id', user.id).eq('status', 'aceite').order('criado_em', { ascending: false }).limit(3);
+  const { data: a2 } = await sb.from('amigos').select('id, user_id, criado_em').eq('amigo_id', user.id).eq('status', 'aceite').order('criado_em', { ascending: false }).limit(3);
+
+  const combinados = [
+    ...(a1 || []).map(a => ({ outroId: a.amigo_id, quando: a.criado_em })),
+    ...(a2 || []).map(a => ({ outroId: a.user_id, quando: a.criado_em }))
+  ].sort((x, y) => new Date(y.quando) - new Date(x.quando)).slice(0, 3);
+
+  if (combinados.length === 0) return;
+
+  for (const item of combinados) {
+    const { data: prof } = await sb.from('profiles').select('display_name').eq('id', item.outroId).single();
+    const nome = prof?.display_name || 'Utilizador';
+    const tempo = tempoRelativo(new Date(item.quando));
+    const div = document.createElement('div');
+    div.className = 'atividade-item';
+    div.innerHTML = `
+      <div class="atividade-icon ai-ach"><i class="ti ti-users" style="color:#C9943A"></i></div>
+      <div class="atividade-texto">Tu e <strong>${nome}</strong> são agora amigos</div>
+      <div class="atividade-tempo">${tempo}</div>`;
+    lista.prepend(div);
+  }
+}
+
+function tempoRelativo(data) {
+  const diffMs = new Date() - data;
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return 'agora';
+  if (mins < 60) return mins + 'm';
+  const horas = Math.floor(mins / 60);
+  if (horas < 24) return horas + 'h';
+  return Math.floor(horas / 24) + 'd';
+}
+
+async function atualizarBadgeMensagens() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  const { count } = await sb.from('mensagens').select('id', { count: 'exact', head: true }).eq('para_user_id', user.id).eq('lida', false);
+  const navAmigos = document.querySelector(".nav-item[onclick*=\"mostrarPagina('amigos'\"]");
+  if (!navAmigos) return;
+  let badge = navAmigos.querySelector('.nav-badge');
+  if (count && count > 0) {
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'nav-badge';
+      navAmigos.appendChild(badge);
+    }
+    badge.textContent = count > 9 ? '9+' : count;
+  } else if (badge) {
+    badge.remove();
+  }
+}
+
+carregarUtilizador().then(() => {
+  carregarFotoPerfil();
+  carregarCadernetas();
+  carregarAtividadeAmigos();
+  atualizarBadgeMensagens();
+});
+setInterval(atualizarBadgeMensagens, 30 * 1000);
+
+// Atualizar online_at a cada 2 minutos
+setInterval(async () => {
+  const { data: { user } } = await sb.auth.getUser();
+  if (user) await sb.from('profiles').update({ online_at: new Date().toISOString() }).eq('id', user.id);
+}, 2 * 60 * 1000);
+</script>
+<script src="instalar.js"></script>
+<div class="caderneta-modal" id="modal-fcps" onclick="fecharModal('fcps')">
+  <div onclick="event.stopPropagation()">
+    <div class="caderneta-wrapper">
+      <button class="nav-btn" id="fcps-btn-prev" onclick="navPagina('fcps',-1)" disabled>‹</button>
+      <div style="position:relative;">
+        <div class="caderneta-top-btns">
+          <button class="btn-topo" id="fcps-btn-indice" onclick="navIndice('fcps')" style="visibility:hidden;">← Índice</button>
+          <button class="btn-topo" onclick="fecharModal('fcps')">✕ Fechar</button>
+        </div>
+        <div class="caderneta-aberta" id="caderneta-fcps">
+          <div class="pag-esq ativa desktop-only" id="fcps-pag-esq-indice">
+            <div class="pag-indice-esq fcps-pag-cor">
+              <img class="pag-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/>
+              <div class="pag-linha"></div>
+              <div class="pag-clube-nome">FC Paço<br>de Sousa</div>
+              <div class="pag-clube-anos">Fundado em 1958</div>
+            </div>
+            <span class="num-pag num-pag-esq">—</span>
+          </div>
+          <div class="pag-dir ativa pag-indice-wrapper" id="fcps-pag-dir-indice">
+            <div class="pag-indice-dir">
+              <div class="pag-indice-titulo">Índice</div>
+              <div class="indice-item" onclick="irParaPagina('fcps',1,1)"><div class="indice-left"><span class="indice-escalao fcps-esc">Sub 9</span><span class="indice-pags">Pág. 1 — 2</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('fcps',3,1)"><div class="indice-left"><span class="indice-escalao fcps-esc">Sub 11</span><span class="indice-pags">Pág. 3 — 4</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('fcps',5,1)"><div class="indice-left"><span class="indice-escalao fcps-esc">Sub 13</span><span class="indice-pags">Pág. 5 — 6</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('fcps',7,1)"><div class="indice-left"><span class="indice-escalao fcps-esc">Futsal Feminino</span><span class="indice-pags">Pág. 7 — 8</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('fcps',9,1)"><div class="indice-left"><span class="indice-escalao fcps-esc">Futsal Masculino</span><span class="indice-pags">Pág. 9 — 10</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('fcps',11,1)"><div class="indice-left"><span class="indice-escalao fcps-esc">Séniores Futebol</span><span class="indice-pags">Pág. 11 — 12</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('fcps',13,1)"><div class="indice-left"><span class="indice-escalao fcps-esc">Atletismo</span><span class="indice-pags">Pág. 13 — 14</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('fcps',15,1)"><div class="indice-left"><span class="indice-escalao fcps-esc">Sub 18 Andebol</span><span class="indice-pags">Pág. 15 — 16</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('fcps',17,1)"><div class="indice-left"><span class="indice-escalao fcps-esc">Andebol Formação</span><span class="indice-pags">Pág. 17 — 18</span></div><span class="indice-seta">→</span></div>
+            </div>
+            <span class="num-pag num-pag-dir">—</span>
+          </div>
+          <div class="pag-esq" id="fcps-pag-1"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Sub 9</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>1</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>2</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>3</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>4</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>5</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>6</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>7</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>8</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>9</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>10</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>11</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>12</span></div></div></div><span class="num-pag num-pag-esq">1</span></div><div class="pag-dir" id="fcps-pag-2"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Sub 9</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>13</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>14</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>15</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>16</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>17</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>18</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>19</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>20</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>21</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>22</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>23</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>24</span></div></div></div><span class="num-pag num-pag-dir">2</span></div><div class="pag-esq" id="fcps-pag-3"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Sub 11</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>25</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>26</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>27</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>28</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>29</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>30</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>31</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>32</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>33</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>34</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>35</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>36</span></div></div></div><span class="num-pag num-pag-esq">3</span></div><div class="pag-dir" id="fcps-pag-4"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Sub 11</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>37</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>38</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>39</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>40</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>41</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>42</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>43</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>44</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>45</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>46</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>47</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>48</span></div></div></div><span class="num-pag num-pag-dir">4</span></div><div class="pag-esq" id="fcps-pag-5"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Sub 13</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>49</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>50</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>51</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>52</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>53</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>54</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>55</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>56</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>57</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>58</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>59</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>60</span></div></div></div><span class="num-pag num-pag-esq">5</span></div><div class="pag-dir" id="fcps-pag-6"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Sub 13</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>61</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>62</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>63</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>64</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>65</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>66</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>67</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>68</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>69</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>70</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>71</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>72</span></div></div></div><span class="num-pag num-pag-dir">6</span></div><div class="pag-esq" id="fcps-pag-7"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Futsal Feminino</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>73</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>74</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>75</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>76</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>77</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>78</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>79</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>80</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>81</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>82</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>83</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>84</span></div></div></div><span class="num-pag num-pag-esq">7</span></div><div class="pag-dir" id="fcps-pag-8"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Futsal Feminino</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>85</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>86</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>87</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>88</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>89</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>90</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>91</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>92</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>93</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>94</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>95</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>96</span></div></div></div><span class="num-pag num-pag-dir">8</span></div><div class="pag-esq" id="fcps-pag-9"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Futsal Masculino</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>97</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>98</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>99</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>100</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>101</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>102</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>103</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>104</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>105</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>106</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>107</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>108</span></div></div></div><span class="num-pag num-pag-esq">9</span></div><div class="pag-dir" id="fcps-pag-10"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Futsal Masculino</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>109</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>110</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>111</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>112</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>113</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>114</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>115</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>116</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>117</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>118</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>119</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>120</span></div></div></div><span class="num-pag num-pag-dir">10</span></div><div class="pag-esq" id="fcps-pag-11"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Séniores Futebol</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>121</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>122</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>123</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>124</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>125</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>126</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>127</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>128</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>129</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>130</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>131</span></div><div class="cromo-slot tem-cromo" onclick="abrirCromoImg('images/séniores paço de sousa/cromo-132-fcps.png')"><img src="images/séniores paço de sousa/cromo-132-fcps.png" style="width:100%;height:100%;object-fit:cover;border-radius:5px;"/></div></div></div><span class="num-pag num-pag-esq">11</span></div><div class="pag-dir" id="fcps-pag-12"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Séniores Futebol</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>133</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>134</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>135</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>136</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>137</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>138</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>139</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>140</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>141</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>142</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>143</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>144</span></div></div></div><span class="num-pag num-pag-dir">12</span></div><div class="pag-esq" id="fcps-pag-13"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Atletismo</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>145</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>146</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>147</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>148</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>149</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>150</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>151</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>152</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>153</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>154</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>155</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>156</span></div></div></div><span class="num-pag num-pag-esq">13</span></div><div class="pag-dir" id="fcps-pag-14"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Atletismo</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>157</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>158</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>159</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>160</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>161</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>162</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>163</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>164</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>165</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>166</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>167</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>168</span></div></div></div><span class="num-pag num-pag-dir">14</span></div><div class="pag-esq" id="fcps-pag-15"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Sub 18 Andebol</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>169</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>170</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>171</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>172</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>173</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>174</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>175</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>176</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>177</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>178</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>179</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>180</span></div></div></div><span class="num-pag num-pag-esq">15</span></div><div class="pag-dir" id="fcps-pag-16"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Sub 18 Andebol</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>181</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>182</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>183</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>184</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>185</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>186</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>187</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>188</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>189</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>190</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>191</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>192</span></div></div></div><span class="num-pag num-pag-dir">16</span></div><div class="pag-esq" id="fcps-pag-17"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Andebol Formação</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>193</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>194</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>195</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>196</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>197</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>198</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>199</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>200</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>201</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>202</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>203</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>204</span></div></div></div><span class="num-pag num-pag-esq">17</span></div><div class="pag-dir" id="fcps-pag-18"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo paço de sousa/emblema-fcps.png"/><div class="escalao-titulo fcps-titulo">Andebol Formação</div></div><div class="escalao-sub">FC Paço de Sousa · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>205</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>206</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>207</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>208</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>209</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>210</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>211</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>212</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>213</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>214</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>215</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>216</span></div></div></div><span class="num-pag num-pag-dir">18</span></div>
+          <div class="flip-overlay" id="fcps-flip-overlay"></div>
+        </div>
+      </div>
+      <button class="nav-btn" id="fcps-btn-next" onclick="navPagina('fcps',1)">›</button>
+    </div>
+  </div>
+</div>
+<div class="caderneta-modal" id="modal-ccrdsv" onclick="fecharModal('ccrdsv')">
+  <div onclick="event.stopPropagation()">
+    <div class="caderneta-wrapper">
+      <button class="nav-btn" id="ccrdsv-btn-prev" onclick="navPagina('ccrdsv',-1)" disabled>‹</button>
+      <div style="position:relative;">
+        <div class="caderneta-top-btns">
+          <button class="btn-topo" id="ccrdsv-btn-indice" onclick="navIndice('ccrdsv')" style="visibility:hidden;">← Índice</button>
+          <button class="btn-topo" onclick="fecharModal('ccrdsv')">✕ Fechar</button>
+        </div>
+        <div class="caderneta-aberta" id="caderneta-ccrdsv">
+          <div class="pag-esq ativa desktop-only" id="ccrdsv-pag-esq-indice">
+            <div class="pag-indice-esq ccrdsv-pag-cor">
+              <img class="pag-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/>
+              <div class="pag-linha"></div>
+              <div class="pag-clube-nome">CCRDSV<br>Irivo Penafiel</div>
+              <div class="pag-clube-anos">Fundado em 1965</div>
+            </div>
+            <span class="num-pag num-pag-esq">—</span>
+          </div>
+          <div class="pag-dir ativa pag-indice-wrapper" id="ccrdsv-pag-dir-indice">
+            <div class="pag-indice-dir">
+              <div class="pag-indice-titulo">Índice</div>
+              <div class="indice-item" onclick="irParaPagina('ccrdsv',1,1)"><div class="indice-left"><span class="indice-escalao ccrdsv-esc">Sub 7</span><span class="indice-pags">Pág. 1 — 2</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('ccrdsv',3,1)"><div class="indice-left"><span class="indice-escalao ccrdsv-esc">Sub 8</span><span class="indice-pags">Pág. 3 — 4</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('ccrdsv',5,1)"><div class="indice-left"><span class="indice-escalao ccrdsv-esc">Sub 9</span><span class="indice-pags">Pág. 5 — 6</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('ccrdsv',7,1)"><div class="indice-left"><span class="indice-escalao ccrdsv-esc">Sub 10</span><span class="indice-pags">Pág. 7 — 8</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('ccrdsv',9,1)"><div class="indice-left"><span class="indice-escalao ccrdsv-esc">Sub 11</span><span class="indice-pags">Pág. 9 — 10</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('ccrdsv',11,1)"><div class="indice-left"><span class="indice-escalao ccrdsv-esc">Sub 13</span><span class="indice-pags">Pág. 11 — 12</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('ccrdsv',13,1)"><div class="indice-left"><span class="indice-escalao ccrdsv-esc">Sub 15</span><span class="indice-pags">Pág. 13 — 14</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('ccrdsv',15,1)"><div class="indice-left"><span class="indice-escalao ccrdsv-esc">Sub 17</span><span class="indice-pags">Pág. 15 — 16</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('ccrdsv',17,1)"><div class="indice-left"><span class="indice-escalao ccrdsv-esc">Sub 19</span><span class="indice-pags">Pág. 17 — 18</span></div><span class="indice-seta">→</span></div><div class="indice-item" onclick="irParaPagina('ccrdsv',19,1)"><div class="indice-left"><span class="indice-escalao ccrdsv-esc">Seniores</span><span class="indice-pags">Pág. 19 — 20</span></div><span class="indice-seta">→</span></div>
+            </div>
+            <span class="num-pag num-pag-dir">—</span>
+          </div>
+          <div class="pag-esq" id="ccrdsv-pag-1"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 7</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>1</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>2</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>3</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>4</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>5</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>6</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>7</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>8</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>9</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>10</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>11</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>12</span></div></div></div><span class="num-pag num-pag-esq">1</span></div><div class="pag-dir" id="ccrdsv-pag-2"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 7</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot tem-cromo" onclick="abrirCromoImg('images/sub 7 irivo/cromo-13-ccrdsv.png')"><img src="images/sub 7 irivo/cromo-13-ccrdsv.png" style="width:100%;height:100%;object-fit:cover;border-radius:5px;"/></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>14</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>15</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>16</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>17</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>18</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>19</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>20</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>21</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>22</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>23</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>24</span></div></div></div><span class="num-pag num-pag-dir">2</span></div><div class="pag-esq" id="ccrdsv-pag-3"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 8</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>25</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>26</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>27</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>28</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>29</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>30</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>31</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>32</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>33</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>34</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>35</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>36</span></div></div></div><span class="num-pag num-pag-esq">3</span></div><div class="pag-dir" id="ccrdsv-pag-4"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 8</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>37</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>38</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>39</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>40</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>41</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>42</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>43</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>44</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>45</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>46</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>47</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>48</span></div></div></div><span class="num-pag num-pag-dir">4</span></div><div class="pag-esq" id="ccrdsv-pag-5"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 9</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>49</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>50</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>51</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>52</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>53</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>54</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>55</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>56</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>57</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>58</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>59</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>60</span></div></div></div><span class="num-pag num-pag-esq">5</span></div><div class="pag-dir" id="ccrdsv-pag-6"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 9</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>61</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>62</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>63</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>64</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>65</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>66</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>67</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>68</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>69</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>70</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>71</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>72</span></div></div></div><span class="num-pag num-pag-dir">6</span></div><div class="pag-esq" id="ccrdsv-pag-7"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 10</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>73</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>74</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>75</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>76</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>77</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>78</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>79</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>80</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>81</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>82</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>83</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>84</span></div></div></div><span class="num-pag num-pag-esq">7</span></div><div class="pag-dir" id="ccrdsv-pag-8"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 10</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>85</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>86</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>87</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>88</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>89</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>90</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>91</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>92</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>93</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>94</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>95</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>96</span></div></div></div><span class="num-pag num-pag-dir">8</span></div><div class="pag-esq" id="ccrdsv-pag-9"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 11</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>97</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>98</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>99</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>100</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>101</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>102</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>103</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>104</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>105</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>106</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>107</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>108</span></div></div></div><span class="num-pag num-pag-esq">9</span></div><div class="pag-dir" id="ccrdsv-pag-10"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 11</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>109</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>110</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>111</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>112</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>113</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>114</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>115</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>116</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>117</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>118</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>119</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>120</span></div></div></div><span class="num-pag num-pag-dir">10</span></div><div class="pag-esq" id="ccrdsv-pag-11"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 13</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>121</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>122</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>123</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>124</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>125</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>126</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>127</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>128</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>129</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>130</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>131</span></div><div class="cromo-slot tem-cromo" onclick="abrirCromoImg('images/séniores paço de sousa/cromo-132-fcps.png')"><img src="images/séniores paço de sousa/cromo-132-fcps.png" style="width:100%;height:100%;object-fit:cover;border-radius:5px;"/></div></div></div><span class="num-pag num-pag-esq">11</span></div><div class="pag-dir" id="ccrdsv-pag-12"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 13</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>133</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>134</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>135</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>136</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>137</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>138</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>139</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>140</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>141</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>142</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>143</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>144</span></div></div></div><span class="num-pag num-pag-dir">12</span></div><div class="pag-esq" id="ccrdsv-pag-13"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 15</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>145</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>146</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>147</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>148</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>149</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>150</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>151</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>152</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>153</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>154</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>155</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>156</span></div></div></div><span class="num-pag num-pag-esq">13</span></div><div class="pag-dir" id="ccrdsv-pag-14"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 15</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>157</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>158</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>159</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>160</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>161</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>162</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>163</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>164</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>165</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>166</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>167</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>168</span></div></div></div><span class="num-pag num-pag-dir">14</span></div><div class="pag-esq" id="ccrdsv-pag-15"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 17</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>169</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>170</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>171</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>172</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>173</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>174</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>175</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>176</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>177</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>178</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>179</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>180</span></div></div></div><span class="num-pag num-pag-esq">15</span></div><div class="pag-dir" id="ccrdsv-pag-16"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 17</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>181</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>182</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>183</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>184</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>185</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>186</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>187</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>188</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>189</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>190</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>191</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>192</span></div></div></div><span class="num-pag num-pag-dir">16</span></div><div class="pag-esq" id="ccrdsv-pag-17"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 19</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>193</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>194</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>195</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>196</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>197</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>198</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>199</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>200</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>201</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>202</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>203</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>204</span></div></div></div><span class="num-pag num-pag-esq">17</span></div><div class="pag-dir" id="ccrdsv-pag-18"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Sub 19</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>205</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>206</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>207</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>208</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>209</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>210</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>211</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>212</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>213</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>214</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>215</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>216</span></div></div></div><span class="num-pag num-pag-dir">18</span></div><div class="pag-esq" id="ccrdsv-pag-19"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Seniores</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>217</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>218</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>219</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>220</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>221</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>222</span></div><div class="cromo-slot tem-cromo" onclick="abrirCromoImg('images/séniores irivo/cromo-223-ccrdsv.png')"><img src="images/séniores irivo/cromo-223-ccrdsv.png" style="width:100%;height:100%;object-fit:cover;border-radius:5px;"/></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>224</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>225</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>226</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>227</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>228</span></div></div></div><span class="num-pag num-pag-esq">19</span></div><div class="pag-dir" id="ccrdsv-pag-20"><div class="pag-escalao"><div class="escalao-header"><img class="escalao-emblema" src="images/simbolo irivo/emblema-ccrdsv.png"/><div class="escalao-titulo ccrdsv-titulo">Seniores</div></div><div class="escalao-sub">CCRDSV Irivo · 2026/2027</div><div class="cromos-grid"><div class="cromo-slot" onclick="abrirCromo(null)"><span>229</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>230</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>231</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>232</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>233</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>234</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>235</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>236</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>237</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>238</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>239</span></div><div class="cromo-slot" onclick="abrirCromo(null)"><span>240</span></div></div></div><span class="num-pag num-pag-dir">20</span></div>
+          <div class="flip-overlay" id="ccrdsv-flip-overlay"></div>
+        </div>
+      </div>
+      <button class="nav-btn" id="ccrdsv-btn-next" onclick="navPagina('ccrdsv',1)">›</button>
+    </div>
+  </div>
+</div>
+<div class="cromo-modal" id="cromo-modal" onclick="fecharCromo()">
+  <div style="position:relative;" onclick="event.stopPropagation()">
+    <button class="cromo-modal-fechar" onclick="fecharCromo()">✕ Fechar</button>
+    <div class="cromo-grande">
+      <img id="cromo-grande-img" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:14px;"/>
+      <div class="cromo-grande-num" id="cromo-grande-num"></div>
+    </div>
+  </div>
+</div>
+<div class="modal-cad" id="modal-sem-moedas">
+  <div class="modal-cad-box">
+    <h2>Moedas Insuficientes</h2>
+    <p>Precisas de 250 moedas para desbloquear esta caderneta.</p>
+    <button class="modal-cad-btn" onclick="document.getElementById('modal-sem-moedas').classList.remove('show')">OK</button>
+  </div>
+</div>
+
+<!-- Modal Adicionar Amigo -->
+<div class="modal-amigo" id="modal-amigo" onclick="fecharModalAmigo()">
+  <div onclick="event.stopPropagation()" style="background:#16161e; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:28px; width:320px;">
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; color:#fff; letter-spacing:2px; margin-bottom:6px;">Adicionar Amigo</div>
+    <div style="font-size:12px; color:#555; margin-bottom:20px;">Insere o código do teu amigo</div>
+    <div class="modal-amigo-erro" id="erro-amigo"></div>
+    <div class="modal-amigo-sucesso" id="sucesso-amigo"></div>
+    <input class="modal-amigo-input" id="input-codigo-amigo" placeholder="Ex: AB12CD" maxlength="6"/>
+    <div class="modal-amigo-btns">
+      <button class="modal-amigo-btn confirmar" onclick="enviarPedidoAmizade()">Enviar Pedido</button>
+      <button class="modal-amigo-btn cancelar" onclick="fecharModalAmigo()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Chat overlay -->
 <div class="chat-overlay" id="chat-overlay" onclick="fecharChat()">
   <div onclick="event.stopPropagation()" class="chat-box">
     <div class="chat-header">
@@ -1115,23 +2072,12 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 
 <!-- Pack Overlay -->
 <div class="pack-overlay" id="pack-overlay">
-  <!-- Fase 1: Saqueta para clicar e abrir -->
+  <!-- Fase 1: Animação do pack -->
   <div class="pack-animacao" id="pack-fase1">
-    <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
-      <div class="pack-visual pack-visual-bg-std" id="pack-visual-el" onclick="abrirPackAnimacao()">
-        <div class="pack-visual-topo"></div>
-        <div class="pack-visual-borda"></div>
-        <div class="pack-visual-inner">
-          <div class="pack-visual-brand">Caderneta Digital</div>
-          <div class="pack-visual-icon" id="pack-visual-icon">⭐</div>
-          <div class="pack-visual-nome" id="pack-visual-nome">Pack Standard</div>
-          <div class="pack-visual-hint">Clica para abrir!</div>
-          <div class="pack-visual-footer">
-            <div class="pack-visual-ncromos">7 CROMOS</div>
-            <div class="pack-visual-cd">Cad. Digital</div>
-          </div>
-        </div>
-      </div>
+    <div class="pack-visual" onclick="abrirPackAnimacao()">
+      <div class="pack-visual-icon">📦</div>
+      <div class="pack-visual-nome">Pack Standard</div>
+      <div class="pack-visual-hint">Clica para abrir!</div>
     </div>
   </div>
   
@@ -1147,25 +2093,21 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
   </div>
 </div>
 
-<!-- Pack Overlay - Animação Rasgar -->
+<!-- Pack Overlay -->
 <div class="pack-rasgar-overlay" id="pack-overlay">
-
-  <!-- Fase 1: Pack a rasgar -->
-  <div id="pack-fase1" style="display:flex; flex-direction:column; align-items:center; gap:20px;">
+  <div id="pack-fase1" style="display:flex;flex-direction:column;align-items:center;gap:20px;">
     <div class="pack-rasgar-container" id="pack-rasgar-container">
       <div class="pack-rasgar-topo std" id="pack-rasgar-topo"></div>
       <div class="pack-rasgar-baixo std" id="pack-rasgar-baixo"></div>
     </div>
     <div class="pack-rasgar-hint" id="pack-rasgar-hint">Clica para rasgar o pack!</div>
   </div>
-
-  <!-- Fase 2: Cromos revelados -->
   <div class="cromos-revelados" id="pack-fase2">
     <div class="pack-resultado-titulo">Os teus cromos!</div>
-    <div class="pack-resultado-sub" id="pack-resultado-sub">7 novos cromos adicionados à tua coleção</div>
+    <div class="pack-resultado-sub" id="pack-resultado-sub">7 novos cromos adicionados!</div>
     <div class="cromos-grid-pack" id="cromos-grid-pack"></div>
     <div class="pack-resultado-btns">
-      <button class="pack-resultado-btn colecao" onclick="fecharPackOverlay(); mostrarPagina('colecao', document.querySelector('.nav-item[onclick*=colecao]')); carregarColecao()">Ver Coleção</button>
+      <button class="pack-resultado-btn colecao" onclick="fecharPackOverlay();mostrarPagina('colecao',document.querySelector('.nav-item[onclick*=colecao]'));carregarColecao()">Ver Coleção</button>
       <button class="pack-resultado-btn fechar" onclick="fecharPackOverlay()">Fechar</button>
     </div>
   </div>
