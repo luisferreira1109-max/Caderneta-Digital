@@ -562,6 +562,70 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 .chat-enviar:hover { background: #E8A83E; }
 .chat-vazio { text-align: center; color: #333; font-size: 13px; margin: auto; }
 
+
+/* ===== PACKS ===== */
+.packs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 10px; }
+
+.pack-card { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 1px solid rgba(201,148,58,0.3); border-radius: 16px; padding: 24px; text-align: center; position: relative; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; }
+.pack-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(201,148,58,0.2); }
+.pack-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(to right, #C9943A, #f5c842, #C9943A); }
+
+.pack-icon { font-size: 60px; margin-bottom: 12px; display: block; }
+.pack-nome { font-family: "Bebas Neue", sans-serif; font-size: 22px; color: #fff; letter-spacing: 3px; margin-bottom: 8px; }
+.pack-desc { font-size: 12px; color: #666; margin-bottom: 16px; line-height: 1.5; }
+.pack-cromos { display: flex; justify-content: center; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.pack-rarity { font-size: 10px; padding: 3px 10px; border-radius: 10px; font-weight: 600; }
+.pack-rarity.comum { background: rgba(150,150,150,0.2); color: #999; border: 1px solid #555; }
+.pack-rarity.raro { background: rgba(52,152,219,0.2); color: #3498db; border: 1px solid #3498db; }
+.pack-rarity.epico { background: rgba(155,89,182,0.2); color: #9b59b6; border: 1px solid #9b59b6; }
+.pack-rarity.lendario { background: rgba(241,196,15,0.2); color: #f1c40f; border: 1px solid #f1c40f; }
+.pack-preco { font-family: "Bebas Neue", sans-serif; font-size: 28px; color: #C9943A; margin-bottom: 16px; }
+.pack-btn { width: 100%; background: #C9943A; color: #111; border: none; border-radius: 20px; padding: 12px; font-family: "Inter", sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+.pack-btn:hover { background: #E8A83E; transform: scale(1.02); }
+.pack-sem-saldo { font-size: 11px; color: #555; margin-top: 8px; }
+
+/* Animação de abrir pack */
+.pack-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.97); z-index: 2000; align-items: center; justify-content: center; flex-direction: column; }
+.pack-overlay.show { display: flex; }
+
+.pack-animacao { position: relative; display: flex; align-items: center; justify-content: center; }
+
+.pack-visual { width: 200px; height: 280px; border-radius: 16px; background: linear-gradient(135deg, #1a1a2e, #2c1810); border: 2px solid #C9943A; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s; box-shadow: 0 0 60px rgba(201,148,58,0.4); }
+.pack-visual:hover { transform: scale(1.05); }
+.pack-visual-icon { font-size: 80px; }
+.pack-visual-nome { font-family: "Bebas Neue", sans-serif; font-size: 18px; color: #C9943A; letter-spacing: 3px; margin-top: 12px; }
+.pack-visual-hint { font-size: 11px; color: #555; margin-top: 8px; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* Cromos revelados */
+.cromos-revelados { display: none; flex-direction: column; align-items: center; gap: 20px; width: 100%; max-width: 700px; padding: 20px; }
+.cromos-revelados.show { display: flex; }
+.cromos-grid-pack { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.cromo-pack { width: 90px; aspect-ratio: 2/3; border-radius: 10px; position: relative; animation: revealCromo 0.5s ease forwards; opacity: 0; transform: scale(0.5) rotateY(90deg); cursor: pointer; }
+.cromo-pack:hover { transform: scale(1.1) !important; }
+@keyframes revealCromo { to { opacity: 1; transform: scale(1) rotateY(0deg); } }
+.cromo-pack-img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; border: 2px solid #333; }
+.cromo-pack-placeholder { width: 100%; height: 100%; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 11px; font-weight: 600; }
+.cromo-pack-placeholder.comum { background: linear-gradient(135deg, #2a2a2a, #1a1a1a); border: 2px solid #555; color: #999; }
+.cromo-pack-placeholder.raro { background: linear-gradient(135deg, #0a2a4a, #0d1f3c); border: 2px solid #3498db; color: #3498db; }
+.cromo-pack-placeholder.epico { background: linear-gradient(135deg, #2a0a4a, #1c0d3c); border: 2px solid #9b59b6; color: #9b59b6; }
+.cromo-pack-placeholder.lendario { background: linear-gradient(135deg, #3a2a00, #2a1a00); border: 2px solid #f1c40f; color: #f1c40f; box-shadow: 0 0 20px rgba(241,196,15,0.3); }
+.cromo-pack-num { font-size: 9px; color: #555; margin-top: 2px; }
+.cromo-pack-rarity-icon { font-size: 20px; }
+.cromo-pack-clube { font-size: 8px; }
+
+.pack-duplicado { position: absolute; top: -6px; right: -6px; background: #e74c3c; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border: 2px solid #0a0a0f; }
+
+.pack-resultado-btns { display: flex; gap: 12px; margin-top: 8px; }
+.pack-resultado-btn { padding: 12px 28px; border-radius: 20px; border: none; font-family: "Inter", sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.pack-resultado-btn.coleção { background: #C9943A; color: #111; }
+.pack-resultado-btn.coleção:hover { background: #E8A83E; }
+.pack-resultado-btn.fechar { background: rgba(255,255,255,0.08); color: #fff; }
+.pack-resultado-btn.fechar:hover { background: rgba(255,255,255,0.15); }
+.pack-resultado-titulo { font-family: "Bebas Neue", sans-serif; font-size: 28px; color: #fff; letter-spacing: 4px; }
+.pack-resultado-sub { font-size: 13px; color: #555; }
+
 </style>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#f59e0b">
@@ -795,10 +859,30 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
         <div class="em-breve"><div class="em-breve-icon">🃏</div><div class="em-breve-titulo">Os teus cromos aparecem aqui</div><div class="em-breve-sub">Quando os clubes confirmarem a participação, os cromos dos jogadores estarão disponíveis.</div></div>
       </div>
 
+      
       <!-- PACKS -->
       <div id="pagina-packs" style="display:none">
-        <div class="page-header"><p class="page-titulo">Packs</p><p class="page-sub">Abre packs e descobre novos cromos</p></div>
-        <div class="em-breve"><div class="em-breve-icon">📦</div><div class="em-breve-titulo">Packs em breve</div><div class="em-breve-sub">Brevemente poderás comprar packs com as tuas moedas e descobrir cromos novos e raros.</div></div>
+        <div class="page-header">
+          <p class="page-titulo">Packs</p>
+          <p class="page-sub">Abre packs e descobre novos cromos!</p>
+        </div>
+        <div class="packs-grid">
+          <!-- Pack Standard -->
+          <div class="pack-card" onclick="comprarPack('standard')">
+            <span class="pack-icon">📦</span>
+            <div class="pack-nome">Pack Standard</div>
+            <div class="pack-desc">7 cromos aleatórios das duas cadernetas</div>
+            <div class="pack-cromos">
+              <span class="pack-rarity comum">Comum 70%</span>
+              <span class="pack-rarity raro">Raro 20%</span>
+              <span class="pack-rarity epico">Épico 8%</span>
+              <span class="pack-rarity lendario">⭐ Lendário 2%</span>
+            </div>
+            <div class="pack-preco">1,50 €</div>
+            <button class="pack-btn">Comprar Pack</button>
+            <div class="pack-sem-saldo">Saldo: <span id="pack-saldo-display">0,00</span> €</div>
+          </div>
+        </div>
       </div>
 
       <!-- MERCADO -->
@@ -1287,6 +1371,220 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+
+// ===== PACKS =====
+
+// Cromos disponíveis com raridade
+const CROMOS_DISPONIVEIS = {
+  fcps: {
+    total: 216,
+    lendarios: [132], // Luís
+    epicos: [25, 50, 75, 100, 125, 150, 175, 200],
+    raros: [10,20,30,40,60,70,80,90,110,120,130,140,160,170,180,190,210],
+    clube: 'FC Paço de Sousa',
+    emblema: 'images/simbolo paço de sousa/emblema-fcps.png'
+  },
+  ccrdsv: {
+    total: 240,
+    lendarios: [13, 223], // Sobrinho e Irmão
+    epicos: [24, 48, 72, 96, 120, 144, 168, 192, 216],
+    raros: [12,36,60,84,108,132,156,180,204,228],
+    clube: 'CCRDSV Irivo',
+    emblema: 'images/simbolo irivo/emblema-ccrdsv.png'
+  }
+};
+
+// Imagens reais disponíveis
+const CROMOS_IMAGENS = {
+  'fcps-132': 'images/séniores paço de sousa/cromo-132-fcps.png',
+  'ccrdsv-13': 'images/sub 7 irivo/cromo-13-ccrdsv.png',
+  'ccrdsv-223': 'images/séniores irivo/cromo-223-ccrdsv.png'
+};
+
+function getRaridade(clube, num) {
+  const c = CROMOS_DISPONIVEIS[clube];
+  if (c.lendarios.includes(num)) return 'lendario';
+  if (c.epicos.includes(num)) return 'epico';
+  if (c.raros.includes(num)) return 'raro';
+  return 'comum';
+}
+
+function gerarCromo() {
+  // Escolher clube
+  const clube = Math.random() < 0.5 ? 'fcps' : 'ccrdsv';
+  const c = CROMOS_DISPONIVEIS[clube];
+  
+  // Raridade aleatória
+  const rand = Math.random() * 100;
+  let num;
+  
+  if (rand < 2) {
+    // Lendário
+    num = c.lendarios[Math.floor(Math.random() * c.lendarios.length)];
+  } else if (rand < 10) {
+    // Épico
+    num = c.epicos[Math.floor(Math.random() * c.epicos.length)];
+  } else if (rand < 30) {
+    // Raro
+    num = c.raros[Math.floor(Math.random() * c.raros.length)];
+  } else {
+    // Comum - qualquer número não lendário/épico/raro
+    do {
+      num = Math.floor(Math.random() * c.total) + 1;
+    } while ([...c.lendarios, ...c.epicos, ...c.raros].includes(num));
+  }
+  
+  return { clube, num, raridade: getRaridade(clube, num) };
+}
+
+async function comprarPack(tipo) {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  
+  // Verificar saldo
+  const { data: profile } = await sb.from('profiles').select('saldo').eq('id', user.id).single();
+  if (!profile || profile.saldo < 1.5) {
+    alert('Saldo insuficiente! Precisas de 1,50€ para comprar um pack.\nCarrega saldo em Início → + Carregar saldo');
+    return;
+  }
+  
+  // Debitar saldo
+  const novoSaldo = parseFloat((profile.saldo - 1.5).toFixed(2));
+  await sb.from('profiles').update({ saldo: novoSaldo }).eq('id', user.id);
+  
+  // Atualizar display saldo
+  document.getElementById('stat-saldo').textContent = novoSaldo.toFixed(2).replace('.', ',') + ' €';
+  const saldoTop = document.getElementById('user-saldo-top');
+  if (saldoTop) saldoTop.textContent = novoSaldo.toFixed(2).replace('.', ',');
+  document.getElementById('pack-saldo-display').textContent = novoSaldo.toFixed(2).replace('.', ',');
+  
+  // Gerar 7 cromos
+  const cromos = [];
+  for (let i = 0; i < 7; i++) {
+    cromos.push(gerarCromo());
+  }
+  
+  // Guardar na coleção
+  await guardarCromosColecao(user.id, cromos);
+  
+  // Mostrar animação
+  mostrarPackOverlay(cromos);
+}
+
+async function guardarCromosColecao(userId, cromos) {
+  for (const cromo of cromos) {
+    const key = `${cromo.clube}-${cromo.num}`;
+    // Verificar se já existe
+    const { data: existente } = await sb.from('colecao')
+      .select('quantidade')
+      .eq('user_id', userId)
+      .eq('clube', cromo.clube)
+      .eq('num_cromo', cromo.num)
+      .single();
+    
+    if (existente) {
+      await sb.from('colecao').update({ quantidade: existente.quantidade + 1 })
+        .eq('user_id', userId).eq('clube', cromo.clube).eq('num_cromo', cromo.num);
+    } else {
+      await sb.from('colecao').insert({ user_id: userId, clube: cromo.clube, num_cromo: cromo.num, raridade: cromo.raridade, quantidade: 1 });
+    }
+  }
+}
+
+function mostrarPackOverlay(cromos) {
+  document.getElementById('pack-overlay').classList.add('show');
+  document.getElementById('pack-fase1').style.display = 'flex';
+  document.getElementById('pack-fase2').style.display = 'none';
+  document.getElementById('pack-fase2').classList.remove('show');
+  
+  // Guardar cromos para revelar
+  window._cromosParaRevelar = cromos;
+}
+
+function abrirPackAnimacao() {
+  const fase1 = document.getElementById('pack-fase1');
+  const fase2 = document.getElementById('pack-fase2');
+  const pack = document.querySelector('.pack-visual');
+  
+  // Animação de abertura
+  pack.style.transition = 'transform 0.5s, opacity 0.5s';
+  pack.style.transform = 'scale(1.3) rotateY(90deg)';
+  pack.style.opacity = '0';
+  
+  setTimeout(() => {
+    fase1.style.display = 'none';
+    fase2.style.display = 'flex';
+    fase2.classList.add('show');
+    
+    // Revelar cromos um a um
+    const grid = document.getElementById('cromos-grid-pack');
+    grid.innerHTML = '';
+    
+    const cromos = window._cromosParaRevelar;
+    const raridades = { comum: 0, raro: 0, epico: 0, lendario: 0 };
+    
+    cromos.forEach((cromo, i) => {
+      raridades[cromo.raridade]++;
+      
+      setTimeout(() => {
+        const div = document.createElement('div');
+        div.className = 'cromo-pack';
+        div.style.animationDelay = `${i * 0.15}s`;
+        
+        const key = `${cromo.clube}-${cromo.num}`;
+        const img = CROMOS_IMAGENS[key];
+        
+        if (img) {
+          div.innerHTML = `<img class="cromo-pack-img" src="${img}"/>`;
+        } else {
+          const rarIcon = { comum: '⚪', raro: '🔵', epico: '🟣', lendario: '⭐' };
+          div.innerHTML = `
+            <div class="cromo-pack-placeholder ${cromo.raridade}">
+              <span class="cromo-pack-rarity-icon">${rarIcon[cromo.raridade]}</span>
+              <span>#${cromo.num}</span>
+              <span class="cromo-pack-clube">${cromo.clube === 'fcps' ? 'FCPS' : 'CCRDSV'}</span>
+            </div>`;
+        }
+        
+        // Efeito especial para lendários
+        if (cromo.raridade === 'lendario') {
+          div.style.filter = 'drop-shadow(0 0 15px #f1c40f)';
+          setTimeout(() => {
+            // Flash dourado
+            const flash = document.createElement('div');
+            flash.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(241,196,15,0.3);pointer-events:none;z-index:9999;animation:fadeOut 0.5s forwards;';
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 500);
+          }, 300);
+        }
+        
+        grid.appendChild(div);
+      }, i * 200);
+    });
+    
+    // Texto resultado
+    const lend = raridades.lendario;
+    const epic = raridades.epico;
+    let txt = '7 novos cromos adicionados à tua coleção!';
+    if (lend > 0) txt = `⭐ LENDÁRIO! ${lend} cromo lendário obtido!`;
+    else if (epic > 0) txt = `🟣 Épico! ${epic} cromo épico obtido!`;
+    document.getElementById('pack-resultado-sub').textContent = txt;
+    
+  }, 600);
+}
+
+function fecharPackOverlay() {
+  document.getElementById('pack-overlay').classList.remove('show');
+  document.querySelector('.pack-visual').style.transform = '';
+  document.querySelector('.pack-visual').style.opacity = '';
+}
+
+// Atualizar saldo no display dos packs
+function atualizarSaldoPacks(saldo) {
+  const el = document.getElementById('pack-saldo-display');
+  if (el) el.textContent = saldo.toFixed(2).replace('.', ',');
+}
+
 // ===== CADERNETAS =====
 const estadoCad = { fcps: 0, ccrdsv: 0 };
 const maxPagCad = { fcps: 18, ccrdsv: 20 };
@@ -1455,7 +1753,7 @@ async function carregarUtilizador() {
     const ini = nome.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
     document.getElementById('user-avatar').textContent = ini;
     const saldo = profile.saldo || 0;
-    document.getElementById('stat-saldo').textContent = saldo.toFixed(2).replace('.',',') + ' €';
+    document.getElementById('stat-saldo').textContent = saldo.toFixed(2).replace('.',',') + ' €'; atualizarSaldoPacks(saldo);
     const saldoTop = document.getElementById('user-saldo-top');
     if (saldoTop) saldoTop.textContent = saldo.toFixed(2).replace('.',',');
   }
@@ -1657,6 +1955,29 @@ setInterval(async () => {
     <div class="chat-input-area">
       <input class="chat-input" id="chat-input-msg" placeholder="Escreve uma mensagem..."/>
       <button class="chat-enviar" onclick="enviarMensagem()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- Pack Overlay -->
+<div class="pack-overlay" id="pack-overlay">
+  <!-- Fase 1: Animação do pack -->
+  <div class="pack-animacao" id="pack-fase1">
+    <div class="pack-visual" onclick="abrirPackAnimacao()">
+      <div class="pack-visual-icon">📦</div>
+      <div class="pack-visual-nome">Pack Standard</div>
+      <div class="pack-visual-hint">Clica para abrir!</div>
+    </div>
+  </div>
+  
+  <!-- Fase 2: Cromos revelados -->
+  <div class="cromos-revelados" id="pack-fase2">
+    <div class="pack-resultado-titulo">Os teus cromos!</div>
+    <div class="pack-resultado-sub" id="pack-resultado-sub">7 novos cromos adicionados à tua coleção</div>
+    <div class="cromos-grid-pack" id="cromos-grid-pack"></div>
+    <div class="pack-resultado-btns">
+      <button class="pack-resultado-btn coleção" onclick="fecharPackOverlay()">Ver Coleção</button>
+      <button class="pack-resultado-btn fechar" onclick="fecharPackOverlay()">Fechar</button>
     </div>
   </div>
 </div>
