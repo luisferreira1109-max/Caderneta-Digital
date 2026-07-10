@@ -1883,18 +1883,29 @@ async function guardarCromosColecao(userId,cromos){
   }
 }
 function mostrarPackOverlay(cromos,tipo){
-  const topo=document.getElementById('pack-rasgar-topo');
-  const baixo=document.getElementById('pack-rasgar-baixo');
-  const cls=tipo==='premium'?'pre':'std';
-  topo.className=`pack-rasgar-topo ${cls}`;
-  baixo.className=`pack-rasgar-baixo ${cls}`;
-  document.getElementById('pack-fase1').style.display='flex';
-  document.getElementById('pack-fase2').style.display='none';
-  document.getElementById('pack-fase2').classList.remove('show');
-  document.getElementById('pack-rasgar-hint').style.opacity='1';
-  document.getElementById('pack-overlay').classList.add('show');
+  const overlay=document.getElementById('pack-overlay');
+  if(!overlay) return;
+
+  const titulo=document.getElementById('pack-open-titulo');
+  const pack3d=document.getElementById('pack-open-3d');
+  const btn=document.getElementById('pack-open-btn');
+
+  if(titulo) titulo.textContent=tipo==='premium'?'Pack Premium':'Pack Standard';
+  if(pack3d) pack3d.className='pack-open-3d '+(tipo==='premium'?'pack-open-3d-pre':'pack-open-3d-std');
+
+  const icon=pack3d?pack3d.querySelector('.pack-open-3d-icon-emoji'):null;
+  if(icon) icon.textContent=tipo==='premium'?'💎':'🃏';
+  const nome=pack3d?pack3d.querySelector('.pack-open-3d-icon-nome'):null;
+  if(nome) nome.textContent=tipo==='premium'?'PREMIUM':'STANDARD';
+  if(btn) btn.className='pack-open-btn'+(tipo==='premium'?' pre':'');
+
+  const fase1=document.getElementById('pack-fase1');
+  const fase2=document.getElementById('pack-fase2');
+  if(fase1) fase1.style.display='flex';
+  if(fase2){fase2.style.display='none';fase2.classList.remove('show');}
+
+  overlay.classList.add('show');
   window._cromosParaRevelar=cromos;
-  document.getElementById('pack-rasgar-container').onclick=()=>abrirPackAnimacao();
 }
 function abrirPackAnimacao(){
   document.getElementById('pack-rasgar-container').onclick=null;
