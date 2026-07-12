@@ -694,10 +694,23 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 /* ===== ECRÃ DE ABERTURA ESTILO FIFA UT ===== */
 .pack-rasgar-overlay {
   display:none; position:fixed; top:0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,0.96);
+  background: radial-gradient(ellipse at center, #0d1a1a 0%, #050a0a 100%);
   z-index:2000; align-items:center; justify-content:center; flex-direction:column;
+  overflow:hidden;
 }
 .pack-rasgar-overlay.show { display:flex; }
+/* Partículas de fundo */
+.pack-rasgar-overlay::before {
+  content:'';
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle,rgba(200,168,75,0.15) 1px,transparent 1px),
+    radial-gradient(circle,rgba(255,255,255,0.05) 1px,transparent 1px);
+  background-size:40px 40px, 25px 25px;
+  background-position:0 0, 12px 12px;
+  animation: bgDrift 8s linear infinite;
+}
+@keyframes bgDrift { from{background-position:0 0,12px 12px} to{background-position:40px 40px,37px 37px} }
 
 /* Painel de abertura */
 .pack-open-panel {
@@ -792,20 +805,94 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 .pack-rasgar-hint { font-size:14px; color:#555; margin-top:20px; letter-spacing:2px; animation:blink 1.2s infinite; }
 @keyframes blink { 0%,100%{opacity:0.4} 50%{opacity:1} }
 
-/* Saqueta animada no overlay */
-.pack-anim-shine {
-  position:absolute;inset:0;z-index:4;pointer-events:none;
-  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.4) 50%,transparent 70%);
-  animation:shinePass 2.5s ease-in-out infinite;
+/* ── NOVO PACK 3D OVERLAY ── */
+#pack-anim-container {
+  perspective: 1200px;
 }
-/* Animação rasgar topo */
+#pack-anim-inner {
+  position:relative;
+  width:220px; height:310px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#0d3b3a 0%,#0a1f28 35%,#071418 60%,#0d2b2e 100%);
+  border:5px solid rgba(0,0,0,0.7);
+  box-shadow:0 20px 60px rgba(0,0,0,0.8), 0 0 60px rgba(200,168,75,0.2);
+  transform-style:preserve-3d;
+  overflow:hidden;
+  display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+  padding:20px 16px 18px;
+  animation: packFloat 3s ease-in-out infinite, packEntrance 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  cursor:pointer;
+  transition: box-shadow 0.3s;
+}
+#pack-anim-inner.premium-inner {
+  background:linear-gradient(135deg,#1a0a2e 0%,#16082a 35%,#0d0520 60%,#1a0a2e 100%);
+}
+#pack-anim-inner:hover {
+  box-shadow:0 30px 80px rgba(0,0,0,0.9), 0 0 80px rgba(200,168,75,0.4);
+}
+@keyframes packFloat {
+  0%,100%{transform:translateY(0) rotate(-1deg)}
+  50%{transform:translateY(-12px) rotate(-1deg)}
+}
+@keyframes packShake {
+  0%,100%{transform:rotate(-1deg)}
+  25%{transform:rotate(3deg) scale(1.02)}
+  50%{transform:rotate(-3deg) scale(1.02)}
+  75%{transform:rotate(2deg)}
+}
+@keyframes packEntrance {
+  from{opacity:0;transform:scale(0.5) rotateY(90deg)}
+  to{opacity:1;transform:scale(1) rotateY(0deg)}
+}
+/* Rasgar */
+#pack-anim-topo {
+  position:absolute;top:0;left:0;right:0;
+  height:50%;
+  background:inherit;
+  z-index:10;
+  transform-origin:top center;
+  transition:transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.5s;
+  overflow:hidden;
+  border-radius:22px 22px 0 0;
+  display:flex;align-items:center;justify-content:center;
+}
+#pack-anim-topo::after {
+  content:'✂ Clica para rasgar ✂';
+  font-size:8px;color:rgba(255,255,255,0.5);letter-spacing:2px;
+  font-family:Inter,sans-serif;font-weight:700;
+  position:absolute;bottom:10px;left:0;right:0;text-align:center;
+  animation:blink 1.2s infinite;
+}
 #pack-anim-topo.rasgando {
-  transform: rotate(-50deg) translateX(-80px) translateY(-50px) !important;
-  opacity: 0 !important;
+  transform: rotate(-55deg) translateX(-120px) translateY(-60px) !important;
+  opacity:0 !important;
+}
+#pack-anim-corpo {
+  position:absolute;bottom:0;left:0;right:0;
+  height:100%;
+  z-index:9;
+  transition:transform 0.5s ease-out;
+  border-radius:22px;
+  overflow:hidden;
 }
 #pack-anim-corpo.rasgando {
-  transform: translateY(15px);
-  transition: transform 0.4s ease-out;
+  transform:translateY(10px) scale(1.02);
+}
+/* Shine animado no overlay */
+.pack-anim-shine {
+  position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.35) 50%,transparent 70%);
+  animation:shinePass 2.5s ease-in-out infinite;
+}
+/* Partículas de explosão */
+@keyframes particle {
+  0%{transform:translate(0,0) scale(1);opacity:1}
+  100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}
+}
+.pack-particle {
+  position:fixed;width:8px;height:8px;border-radius:50%;
+  pointer-events:none;z-index:3000;
+  animation:particle 0.8s ease-out forwards;
 }
 
 .cromos-revelados { display:none; flex-direction:column; align-items:center; gap:20px; width:100%; max-width:700px; padding:20px; }
@@ -1820,35 +1907,78 @@ function mostrarPackOverlay(cromos,tipo){
   const overlay=document.getElementById('pack-overlay');
   if(!overlay) return;
 
-  // Configurar cores da saqueta
-  const topoBody=document.getElementById('pack-anim-topo-body');
-  const corpoBody=document.getElementById('pack-anim-corpo-body');
+  const inner=document.getElementById('pack-anim-inner');
   const badge=document.getElementById('pack-anim-badge');
-  const icon=document.getElementById('pack-anim-icon');
   const tipoEl=document.getElementById('pack-anim-tipo');
+  const tituloMain=document.getElementById('pack-anim-titulo-main');
   const topo=document.getElementById('pack-anim-topo');
   const corpo=document.getElementById('pack-anim-corpo');
 
-  const bgStd='conic-gradient(from 0deg at 50% 60%,#c0392b 0deg 60deg,#e67e22 60deg 120deg,#27ae60 120deg 180deg,#2980b9 180deg 240deg,#8e44ad 240deg 300deg,#c0392b 300deg 360deg)';
-  const bgPre='conic-gradient(from 0deg at 50% 60%,#9b59b6 0deg 60deg,#e056e0 60deg 120deg,#3498db 120deg 180deg,#1abc9c 180deg 240deg,#f39c12 240deg 300deg,#9b59b6 300deg 360deg)';
-  
-  if(topoBody) topoBody.style.background=tipo==='premium'?bgPre:bgStd;
-  if(corpoBody) corpoBody.style.background=tipo==='premium'?bgPre:bgStd;
-  if(badge) badge.style.background=tipo==='premium'?'#d980fa':'#C9943A';
-  if(icon) icon.textContent=tipo==='premium'?'💎':'🃏';
-  if(tipoEl) tipoEl.textContent=tipo==='premium'?'Premium':'Standard';
+  const isPre = tipo==='premium';
+  if(inner){
+    inner.style.background = isPre
+      ? 'linear-gradient(135deg,#1a0a2e 0%,#16082a 35%,#0d0520 60%,#1a0a2e 100%)'
+      : 'linear-gradient(135deg,#0d3b3a 0%,#0a1f28 35%,#071418 60%,#0d2b2e 100%)';
+    // forçar re-trigger da animação de entrada
+    inner.style.animation='none';
+    inner.offsetHeight;
+    inner.style.animation='packFloat 3s ease-in-out infinite, packEntrance 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards';
+  }
+  if(badge){ badge.style.background=isPre?'#d980fa':'#c8a84b'; badge.style.color=isPre?'#fff':'#06110d'; }
+  if(tipoEl){ tipoEl.textContent=isPre?'PREMIUM':'STANDARD'; }
+  if(tituloMain){ tituloMain.style.color=isPre?'#d980fa':'#c8a84b'; }
 
-  // Reset animação
   if(topo){topo.classList.remove('rasgando');topo.style.transform='';topo.style.opacity='';}
   if(corpo) corpo.classList.remove('rasgando');
+
+  const hint=document.getElementById('pack-hint-txt');
+  if(hint){hint.style.opacity='1';}
 
   const fase1=document.getElementById('pack-fase1');
   const fase2=document.getElementById('pack-fase2');
   if(fase1) fase1.style.display='flex';
   if(fase2){fase2.style.display='none';fase2.classList.remove('show');}
 
+  // Hover 3D no card do overlay
+  const container=document.getElementById('pack-anim-container');
+  if(container){
+    container.onmousemove=function(e){
+      const rect=container.getBoundingClientRect();
+      const px=(e.clientX-rect.left)/rect.width;
+      const py=(e.clientY-rect.top)/rect.height;
+      const ry=(px-0.5)*18; const rx=(0.5-py)*18;
+      if(inner){
+        inner.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg) scale(1.03)`;
+        inner.style.transition='transform 0.05s linear';
+      }
+      const shine=document.getElementById('pack-overlay-shine');
+      if(shine){shine.style.background=`radial-gradient(circle at ${px*100}% ${py*100}%,rgba(255,255,255,0.55),transparent 45%)`;shine.style.opacity='0.8';}
+    };
+    container.onmouseleave=function(){
+      if(inner){inner.style.transform='';inner.style.transition='transform 0.4s ease';}
+      const shine=document.getElementById('pack-overlay-shine');
+      if(shine){shine.style.opacity='0.4';}
+    };
+    container.onclick=()=>abrirPackAnimacao();
+  }
+
   overlay.classList.add('show');
   window._cromosParaRevelar=cromos;
+}
+
+function lancarParticulas(x,y,cor){
+  const cores=[cor,'#fff','#c8a84b','rgba(255,255,255,0.6)'];
+  for(let i=0;i<20;i++){
+    const p=document.createElement('div');
+    p.className='pack-particle';
+    const angle=Math.random()*360;
+    const dist=80+Math.random()*120;
+    const tx=Math.cos(angle*Math.PI/180)*dist+'px';
+    const ty=Math.sin(angle*Math.PI/180)*dist+'px';
+    p.style.cssText=`left:${x}px;top:${y}px;background:${cores[Math.floor(Math.random()*cores.length)]};--tx:${tx};--ty:${ty};width:${4+Math.random()*8}px;height:${4+Math.random()*8}px;`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),900);
+  }
 }
 
 function abrirPackAnimacao(){
@@ -1856,30 +1986,38 @@ function abrirPackAnimacao(){
   const corpo=document.getElementById('pack-anim-corpo');
   const hint=document.getElementById('pack-hint-txt');
   const container=document.getElementById('pack-anim-container');
-  
-  // Desativar clique
-  if(container) container.onclick=null;
+  const inner=document.getElementById('pack-anim-inner');
+
+  if(container){container.onclick=null;container.onmousemove=null;}
   if(hint) hint.style.opacity='0';
-  
-  // Rasgar o topo!
-  if(topo) topo.classList.add('rasgando');
-  if(corpo) corpo.classList.add('rasgando');
-  
-  // Flash
-  const flash=document.createElement('div');
-  flash.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,0.2);pointer-events:none;z-index:9999;transition:opacity 0.3s;';
-  document.body.appendChild(flash);
-  setTimeout(()=>{flash.style.opacity='0';setTimeout(()=>flash.remove(),300);},100);
-  
-  setTimeout(()=>{
-    const fase1=document.getElementById('pack-fase1');
-    const fase2=document.getElementById('pack-fase2');
-    if(fase1) fase1.style.display='none';
-    if(fase2){fase2.style.display='flex';fase2.classList.add('show');}
-    revelarCromos(window._cromosParaRevelar);
-    // Reativar clique para próxima vez
-    if(container) container.onclick=()=>abrirPackAnimacao();
-  },600);
+  if(inner){inner.style.transform='';inner.style.transition='transform 0.3s ease';}
+
+  // Shake antes de rasgar
+  if(inner){
+    inner.style.animation='packShake 0.3s ease';
+    inner.addEventListener('animationend',()=>{
+      inner.style.animation='';
+      // Rasgar!
+      if(topo) topo.classList.add('rasgando');
+      if(corpo) corpo.classList.add('rasgando');
+      // Flash de luz
+      const flash=document.createElement('div');
+      flash.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at center,rgba(200,168,75,0.4),transparent 70%);pointer-events:none;z-index:9999;transition:opacity 0.4s;';
+      document.body.appendChild(flash);
+      setTimeout(()=>{flash.style.opacity='0';setTimeout(()=>flash.remove(),400);},80);
+      // Partículas no centro do card
+      const rect=container.getBoundingClientRect();
+      lancarParticulas(rect.left+rect.width/2, rect.top+rect.height/2, '#c8a84b');
+      setTimeout(()=>{
+        const fase1=document.getElementById('pack-fase1');
+        const fase2=document.getElementById('pack-fase2');
+        if(fase1) fase1.style.display='none';
+        if(fase2){fase2.style.display='flex';fase2.classList.add('show');}
+        revelarCromos(window._cromosParaRevelar);
+        if(container) container.onclick=()=>abrirPackAnimacao();
+      },700);
+    },{once:true});
+  }
 }
 
 function revelarCromos(cromos){
