@@ -2293,11 +2293,40 @@ setInterval(async () => {
 function iniciarExplosao(){
   const wrapper=document.getElementById('pack-anim-wrapper'),card=document.getElementById('pack-anim-card');
   if(!card)return;wrapper.onclick=null;
-  card.style.animation='vibracao1 0.15s ease-in-out infinite, brilho1 0.8s ease-out forwards';
-  setTimeout(()=>{card.style.animation='vibracao2 0.1s ease-in-out infinite, brilho2 0.8s ease-out forwards';},800);
-  setTimeout(()=>{card.style.animation='vibracao3 0.07s ease-in-out infinite, brilho3 0.8s ease-out forwards';},1600);
+
+  // Vibração com JS puro (mais fiável)
+  let vibInterval=null;
+  function vibrar(intensidade){
+    if(vibInterval)clearInterval(vibInterval);
+    vibInterval=setInterval(()=>{
+      const x=(Math.random()-0.5)*intensidade;
+      const y=(Math.random()-0.5)*intensidade;
+      const r=(Math.random()-0.5)*intensidade*0.5;
+      card.style.transform=`translate(${x}px,${y}px) rotate(${r}deg)`;
+    },50);
+  }
+
+  // Fase 1: vibração leve + brilho
+  card.style.animation='none';
+  vibrar(4);
+  card.style.boxShadow='0 0 30px rgba(200,168,75,0.5),0 0 60px rgba(200,168,75,0.2)';
+  card.style.transition='box-shadow 0.8s ease';
+
+  // Fase 2: vibração média
   setTimeout(()=>{
-    wrapper.style.animation='none';card.style.animation='explodir 0.5s ease-out forwards';wrapper.style.animation='none';
+    vibrar(8);
+    card.style.boxShadow='0 0 60px rgba(200,168,75,0.8),0 0 120px rgba(200,168,75,0.5)';
+  },800);
+
+  // Fase 3: vibração intensa + brilho máximo
+  setTimeout(()=>{
+    vibrar(14);
+    card.style.boxShadow='0 0 100px rgba(255,220,100,1),0 0 200px rgba(200,168,75,0.9),0 0 300px rgba(200,168,75,0.5)';
+  },1600);
+  setTimeout(()=>{
+    if(vibInterval)clearInterval(vibInterval);
+    card.style.transform='';card.style.transition='none';
+    card.style.animation='explodir 0.5s ease-out forwards';
     const flash=document.createElement('div');flash.style.cssText='position:fixed;inset:0;background:white;pointer-events:none;z-index:9998;opacity:1;transition:opacity 0.5s;';document.body.appendChild(flash);setTimeout(()=>{flash.style.opacity='0';setTimeout(()=>flash.remove(),500);},80);
     const rect=card.getBoundingClientRect(),cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
     const onda=document.createElement('div');onda.style.cssText=`position:fixed;left:${cx}px;top:${cy}px;width:10px;height:10px;border-radius:50%;border:4px solid rgba(200,168,75,0.9);transform:translate(-50%,-50%);pointer-events:none;z-index:9997;animation:ondaChoque 0.7s ease-out forwards;`;document.body.appendChild(onda);setTimeout(()=>onda.remove(),800);
