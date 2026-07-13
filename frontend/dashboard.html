@@ -1233,7 +1233,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
           <p class="page-titulo">Packs</p>
           <p class="page-sub">Abre packs e descobre novos cromos!</p>
         </div>
-        <div style="display:flex;gap:80px;justify-content:center;flex-wrap:wrap;margin-top:30px;align-items:flex-end;">
+        <div class="packs-wrap">
 
           <!-- Pack Standard -->
           <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
@@ -2369,30 +2369,31 @@ setInterval(async () => {
 <div class="pack-rasgar-overlay" id="pack-overlay">
   <div id="pack-fase1" style="display:flex;flex-direction:column;align-items:center;gap:28px;">
     <div id="pack-anim-container" style="width:220px;height:310px;perspective:1200px;cursor:pointer;" onclick="abrirPackAnimacao()">
-      <div id="pack-anim-inner" style="position:relative;width:100%;height:100%;border-radius:22px;background:linear-gradient(135deg,#0d3b3a 0%,#0a1f28 35%,#071418 60%,#0d2b2e 100%);border:5px solid rgba(0,0,0,0.7);box-shadow:0 20px 60px rgba(0,0,0,0.8);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:20px 16px 18px;animation:packFloat 3s ease-in-out infinite;">
-        <div class="pack-holo"></div>
-        <div class="pack-border"></div>
-        <div class="pack-side"><span>CADERNETA DIGITAL</span></div>
-        <div style="text-align:center;position:relative;z-index:2;">
-          <div id="pack-anim-titulo-main" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#c8a84b;letter-spacing:1px;">Pack</div>
-          <div id="pack-anim-tipo" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:800;letter-spacing:5px;color:rgba(255,255,255,0.75);margin-top:2px;">STANDARD</div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:center;flex:1;position:relative;z-index:2;">
-          <img src="images/Logo/logo-icon.png" id="pack-anim-logo" class="pack-logo" />
-        </div>
-        <div class="pack-coins" style="position:relative;z-index:2;">
-          <div id="pack-anim-badge" class="pack-coin-badge">7</div>
-          <div class="pack-coin-txt">CROMOS</div>
-        </div>
-        <!-- Topo que rasga: só 15% do card -->
-        <div id="pack-anim-topo" style="position:absolute;top:0;left:0;right:0;height:15%;background:linear-gradient(160deg,#0f4040 0%,#0a2030 60%,#081520 100%);z-index:15;transform-origin:top left;border-radius:17px 17px 0 0;border-bottom:1px dashed rgba(255,255,255,0.2);overflow:hidden;">
+      <div id="pack-anim-inner" style="position:relative;width:100%;height:100%;border-radius:22px;background:linear-gradient(135deg,#0d3b3a 0%,#0a1f28 35%,#071418 60%,#0d2b2e 100%);border:5px solid rgba(0,0,0,0.7);box-shadow:0 12px 30px rgba(0,0,0,0.5);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:20px 16px 18px;transition:transform 0.4s ease,box-shadow 0.4s ease;animation:floatPack 3s ease-in-out infinite;">
+        <div style="position:absolute;inset:0;border-radius:22px;background:repeating-linear-gradient(115deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 2px,transparent 2px,transparent 10px);pointer-events:none;"></div>
+        <div style="position:absolute;inset:10px;border-radius:16px;border:2px solid rgba(255,255,255,0.15);pointer-events:none;"></div>
+        <div style="position:absolute;left:14px;top:0;bottom:0;display:flex;align-items:center;pointer-events:none;"><span style="writing-mode:vertical-rl;transform:rotate(180deg);font-family:Inter,sans-serif;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.3);font-weight:700;">CADERNETA DIGITAL</span></div>
+        <!-- Topo que rasga — cobre "Pack Standard" -->
+        <div id="pack-anim-topo" style="position:absolute;top:0;left:0;right:0;height:38%;background:linear-gradient(135deg,#0d3b3a 0%,#0a1f28 60%,#071418 100%);z-index:15;transform-origin:top left;border-radius:17px 17px 0 0;border-bottom:2px dashed rgba(255,255,255,0.3);overflow:hidden;transition:transform 1.4s cubic-bezier(0.4,0,0.2,1),opacity 1.2s ease;">
           <div style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 2px,transparent 2px,transparent 10px);"></div>
-          <div style="position:absolute;bottom:4px;left:0;right:0;text-align:center;"><span style="font-size:6px;color:rgba(255,255,255,0.4);letter-spacing:2px;font-family:'Inter',sans-serif;font-weight:700;animation:blink 1.2s infinite;">✂ CLICA PARA RASGAR ✂</span></div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
+            <div style="font-size:8px;color:rgba(255,255,255,0.5);letter-spacing:2px;font-family:Inter,sans-serif;font-weight:700;">✂ CLICA PARA RASGAR ✂</div>
+            <div id="pack-anim-titulo-main" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#c8a84b;letter-spacing:1px;text-shadow:0 0 20px rgba(200,168,75,0.5);">Pack</div>
+            <div id="pack-anim-tipo" style="font-family:Inter,sans-serif;font-size:11px;font-weight:800;letter-spacing:5px;color:rgba(255,255,255,0.75);">STANDARD</div>
+          </div>
+        </div>
+        <div style="height:38%;"></div>
+        <div style="display:flex;align-items:center;justify-content:center;flex:1;position:relative;z-index:2;">
+          <img src="images/Logo/logo-icon.png" style="width:110px;height:110px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,0.7)) drop-shadow(0 0 16px rgba(200,168,75,0.3));" />
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;position:relative;z-index:2;">
+          <div id="pack-anim-badge" style="width:18px;height:18px;border-radius:50%;background:#c8a84b;color:#06110d;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;">7</div>
+          <div style="font-family:Inter,sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,0.7);">CROMOS</div>
         </div>
         <div id="pack-anim-corpo" style="display:none;"></div>
       </div>
     </div>
-    <div id="pack-hint-txt" style="font-size:13px;color:rgba(200,168,75,0.7);letter-spacing:3px;animation:blink 1.2s infinite;font-family:'Inter',sans-serif;font-weight:600;">CLICA PARA RASGAR</div>
+    <div id="pack-hint-txt" style="font-size:13px;color:rgba(200,168,75,0.7);letter-spacing:3px;animation:blink 1.2s infinite;font-family:Inter,sans-serif;font-weight:600;">CLICA PARA RASGAR</div>
   </div>
   <div class="cromos-revelados" id="pack-fase2">
     <div class="pack-resultado-titulo">Os teus cromos!</div>
@@ -3641,23 +3642,23 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
         <div class="packs-wrap">
 
           <!-- Pack Standard -->
-          <div class="pack-3d-wrap">
-            <div class="pack-outer" id="pack-std-outer">
-              <div class="pack-inner" id="pack-std-inner">
-                <div class="pack-holo"></div>
-                <div class="pack-shine" id="pack-std-shine"></div>
-                <div class="pack-border"></div>
-                <div class="pack-side"><span>CADERNETA DIGITAL</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
+            <div id="pack-std-outer" style="width:220px;height:310px;perspective:1200px;cursor:pointer;animation:floatPack 3s ease-in-out infinite;">
+              <div id="pack-std-inner" style="position:relative;width:100%;height:100%;border-radius:22px;background:linear-gradient(135deg,#0d3b3a 0%,#0a1f28 35%,#071418 60%,#0d2b2e 100%);border:5px solid rgba(0,0,0,0.7);box-shadow:0 12px 30px rgba(0,0,0,0.5);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:20px 16px 18px;transition:transform 0.4s ease,box-shadow 0.4s ease;">
+                <div style="position:absolute;inset:0;border-radius:22px;background:repeating-linear-gradient(115deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 2px,transparent 2px,transparent 10px);pointer-events:none;"></div>
+                <div id="pack-std-shine" style="position:absolute;inset:0;pointer-events:none;opacity:0.4;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,0.55),transparent 45%);border-radius:22px;transition:opacity 0.3s;"></div>
+                <div style="position:absolute;inset:10px;border-radius:16px;border:2px solid rgba(255,255,255,0.15);pointer-events:none;"></div>
+                <div style="position:absolute;left:14px;top:0;bottom:0;display:flex;align-items:center;pointer-events:none;"><span style="writing-mode:vertical-rl;transform:rotate(180deg);font-family:Inter,sans-serif;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.3);font-weight:700;">CADERNETA DIGITAL</span></div>
                 <div style="text-align:center;position:relative;z-index:2;">
-                  <div class="pack-title-main">Pack</div>
-                  <div class="pack-title-sub">STANDARD</div>
+                  <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#c8a84b;letter-spacing:1px;text-shadow:0 0 20px rgba(200,168,75,0.5);">Pack</div>
+                  <div style="font-family:Inter,sans-serif;font-size:11px;font-weight:800;letter-spacing:5px;color:rgba(255,255,255,0.75);margin-top:2px;">STANDARD</div>
                 </div>
                 <div style="display:flex;align-items:center;justify-content:center;flex:1;position:relative;z-index:2;">
-                  <img src="images/Logo/logo-icon.png" class="pack-logo" />
+                  <img src="images/Logo/logo-icon.png" style="width:110px;height:110px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,0.7)) drop-shadow(0 0 16px rgba(200,168,75,0.3));" />
                 </div>
-                <div class="pack-coins" style="position:relative;z-index:2;">
-                  <div class="pack-coin-badge">7</div>
-                  <div class="pack-coin-txt">CROMOS</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:6px;position:relative;z-index:2;">
+                  <div style="width:18px;height:18px;border-radius:50%;background:#c8a84b;color:#06110d;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;">7</div>
+                  <div style="font-family:Inter,sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,0.7);">CROMOS</div>
                 </div>
               </div>
             </div>
@@ -3669,23 +3670,23 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
           </div>
 
           <!-- Pack Premium -->
-          <div class="pack-3d-wrap">
-            <div class="pack-outer premium-body" id="pack-pre-outer">
-              <div class="pack-inner premium-inner" id="pack-pre-inner">
-                <div class="pack-holo"></div>
-                <div class="pack-shine" id="pack-pre-shine"></div>
-                <div class="pack-border"></div>
-                <div class="pack-side"><span>CADERNETA DIGITAL</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
+            <div id="pack-pre-outer" style="width:220px;height:310px;perspective:1200px;cursor:pointer;animation:floatPackPre 3.5s ease-in-out infinite;">
+              <div id="pack-pre-inner" style="position:relative;width:100%;height:100%;border-radius:22px;background:linear-gradient(135deg,#1a0a2e 0%,#16082a 35%,#0d0520 60%,#1a0a2e 100%);border:5px solid rgba(0,0,0,0.7);box-shadow:0 12px 30px rgba(0,0,0,0.5);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:20px 16px 18px;transition:transform 0.4s ease,box-shadow 0.4s ease;">
+                <div style="position:absolute;inset:0;border-radius:22px;background:repeating-linear-gradient(115deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 2px,transparent 2px,transparent 10px);pointer-events:none;"></div>
+                <div id="pack-pre-shine" style="position:absolute;inset:0;pointer-events:none;opacity:0.4;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,0.55),transparent 45%);border-radius:22px;transition:opacity 0.3s;"></div>
+                <div style="position:absolute;inset:10px;border-radius:16px;border:2px solid rgba(255,255,255,0.15);pointer-events:none;"></div>
+                <div style="position:absolute;left:14px;top:0;bottom:0;display:flex;align-items:center;pointer-events:none;"><span style="writing-mode:vertical-rl;transform:rotate(180deg);font-family:Inter,sans-serif;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.3);font-weight:700;">CADERNETA DIGITAL</span></div>
                 <div style="text-align:center;position:relative;z-index:2;">
-                  <div class="pack-title-main pre">Pack</div>
-                  <div class="pack-title-sub">PREMIUM</div>
+                  <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#d980fa;letter-spacing:1px;text-shadow:0 0 20px rgba(217,128,250,0.5);">Pack</div>
+                  <div style="font-family:Inter,sans-serif;font-size:11px;font-weight:800;letter-spacing:5px;color:rgba(255,255,255,0.75);margin-top:2px;">PREMIUM</div>
                 </div>
                 <div style="display:flex;align-items:center;justify-content:center;flex:1;position:relative;z-index:2;">
-                  <img src="images/Logo/logo-icon.png" class="pack-logo pre" />
+                  <img src="images/Logo/logo-icon.png" style="width:110px;height:110px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,0.7)) drop-shadow(0 0 16px rgba(217,128,250,0.3));" />
                 </div>
-                <div class="pack-coins" style="position:relative;z-index:2;">
-                  <div class="pack-coin-badge pre">7</div>
-                  <div class="pack-coin-txt">CROMOS</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:6px;position:relative;z-index:2;">
+                  <div style="width:18px;height:18px;border-radius:50%;background:#d980fa;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;">7</div>
+                  <div style="font-family:Inter,sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,0.7);">CROMOS</div>
                 </div>
               </div>
             </div>
