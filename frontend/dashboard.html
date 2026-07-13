@@ -1856,7 +1856,7 @@ async function guardarCromosColecao(userId,cromos){
 function mostrarPackOverlay(cromos,tipo){
   const overlay=document.getElementById('pack-overlay');if(!overlay)return;
   const card=document.getElementById('pack-anim-card'),badge=document.getElementById('pack-anim-badge'),tituloMain=document.getElementById('pack-anim-titulo-main'),tipoEl=document.getElementById('pack-anim-tipo'),wrapper=document.getElementById('pack-anim-wrapper'),isPre=tipo==='premium';
-  if(card){card.style.background=isPre?'linear-gradient(135deg,#1a0a2e 0%,#16082a 35%,#0d0520 60%,#1a0a2e 100%)':'linear-gradient(135deg,#0d3b3a 0%,#0a1f28 35%,#071418 60%,#0d2b2e 100%)';card.style.animation='floatPack 3s ease-in-out infinite';card.style.boxShadow='0 12px 30px rgba(0,0,0,0.5)';card.style.opacity='1';card.style.transform='';}
+  if(card){card.style.background=isPre?'linear-gradient(135deg,#1a0a2e 0%,#16082a 35%,#0d0520 60%,#1a0a2e 100%)':'linear-gradient(135deg,#0d3b3a 0%,#0a1f28 35%,#071418 60%,#0d2b2e 100%)';card.style.animation='floatPack 3s ease-in-out infinite';card.style.boxShadow='0 12px 30px rgba(0,0,0,0.5)';card.style.opacity='1';card.style.transform='';card.dataset.tipo=tipo;}
   if(badge){badge.style.background=isPre?'#d980fa':'#c8a84b';badge.style.color=isPre?'#fff':'#06110d';}
   if(tituloMain)tituloMain.style.color=isPre?'#d980fa':'#c8a84b';
   if(tipoEl)tipoEl.textContent=isPre?'PREMIUM':'STANDARD';
@@ -2307,7 +2307,7 @@ function iniciarExplosao(){
   }
 
   // Cor consoante o tipo de pack
-  const isPre=card.style.background.includes('1a0a2e');
+  const isPre=card.dataset.tipo==='premium';
   const c1=isPre?'rgba(217,128,250,0.5)':'rgba(200,168,75,0.5)';
   const c2=isPre?'rgba(217,128,250,0.8)':'rgba(200,168,75,0.8)';
   const c3=isPre?'rgba(200,100,255,1)':'rgba(255,220,100,1)';
