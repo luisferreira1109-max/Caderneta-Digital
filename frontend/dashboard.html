@@ -1206,20 +1206,45 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
         </div>
         <div class="colecao-stats">
           <div class="colecao-stat"><span id="col-total">0</span>Cromos totais</div>
-          <div class="colecao-stat"><span id="col-unicos">0</span>Cromos únicos</div>
+        </div>
 
+        <!-- Barra de pesquisa -->
+        <div style="margin-bottom:14px;">
+          <input type="text" id="colecao-search" placeholder="Pesquisar por número ou nome do jogador..." oninput="renderColecao(_colecaoFiltro)" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#fff;font-size:13px;outline:none;"/>
         </div>
-        <div class="colecao-filtros">
+
+        <!-- Filtros -->
+        <div class="colecao-filtros" id="colecao-filtros-wrap">
           <button class="colecao-filtro ativo" onclick="filtrarColecao('todos', this)">Todos</button>
-          <button class="colecao-filtro" onclick="filtrarColecao('fcps', this)">FCPS</button>
-          <button class="colecao-filtro" onclick="filtrarColecao('ccrdsv', this)">CCRDSV</button>
-          
+          <button class="colecao-filtro" onclick="filtrarColecaoClubeEscalao('fcps', this)">FCPS</button>
+          <button class="colecao-filtro" onclick="filtrarColecaoClubeEscalao('ccrdsv', this)">CCRDSV</button>
         </div>
-        <div class="colecao-grid" id="colecao-grid">
+
+        <!-- Sub-filtros de escalão (aparecem ao clicar FCPS ou CCRDSV) -->
+        <div id="colecao-subfiltros" style="display:none;margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;"></div>
+
+        <div class="colecao-grid" id="colecao-grid" style="max-height:520px;overflow-y:auto;padding-right:4px;">
           <div class="colecao-vazio">
             <div class="colecao-vazio-icon">🃏</div>
             <p>Ainda não tens cromos!</p>
             <p style="font-size:12px;margin-top:8px;">Abre packs para começar a colecionar!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overlay detalhe cromo -->
+      <div id="cromo-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1500;align-items:center;justify-content:center;flex-direction:column;gap:20px;" onclick="fecharCromoOverlay(event)">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:16px;" onclick="event.stopPropagation()">
+          <div id="cromo-overlay-img" style="width:130px;height:185px;border-radius:12px;overflow:hidden;border:2px solid rgba(200,168,75,0.4);background:linear-gradient(135deg,#1a2a3a,#0d1a2a);display:flex;align-items:center;justify-content:center;"></div>
+          <div style="text-align:center;">
+            <div id="cromo-overlay-num" style="font-size:20px;font-weight:700;color:#fff;"></div>
+            <div id="cromo-overlay-info" style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:4px;"></div>
+            <div id="cromo-overlay-qty" style="font-size:12px;color:#c8a84b;margin-top:4px;"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;width:220px;">
+            <button onclick="colarNaCaderneta()" style="padding:12px;border-radius:10px;border:none;background:#1a4a2a;color:#5fc87a;font-size:13px;font-weight:600;cursor:pointer;">Colar na caderneta</button>
+            <button onclick="fecharCromoOverlay(null)" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.6);font-size:13px;cursor:pointer;">Vender / trocar no mercado</button>
+            <button onclick="fecharCromoOverlay(null)" style="padding:10px;border-radius:10px;border:none;background:transparent;color:rgba(255,255,255,0.3);font-size:12px;cursor:pointer;">Fechar</button>
           </div>
         </div>
       </div>
@@ -1739,6 +1764,47 @@ document.addEventListener('DOMContentLoaded', () => {
 // ===== COLEÇÃO =====
 let _colecaoTodos = [];
 let _colecaoFiltro = 'todos';
+let _colecaoEscalao = null;
+
+// Dados dos jogadores
+const JOGADORES = {
+  'fcps-132': { nome: 'Luís Ferreira', escalao: 'Séniores' },
+  'ccrdsv-13': { nome: 'Duarte Silva', escalao: 'Sub 7' },
+  'ccrdsv-223': { nome: 'Vítor Ferreira', escalao: 'Séniores' }
+};
+
+// Escalões por clube e intervalo de cromos
+const ESCALOES = {
+  fcps: [
+    { nome: 'Sub 9', min: 1, max: 24 },
+    { nome: 'Sub 11', min: 25, max: 48 },
+    { nome: 'Sub 13', min: 49, max: 72 },
+    { nome: 'Futsal Feminino', min: 73, max: 96 },
+    { nome: 'Futsal Masculino', min: 97, max: 120 },
+    { nome: 'Séniores', min: 121, max: 144 },
+    { nome: 'Atletismo', min: 145, max: 168 },
+    { nome: 'Sub 18 Andebol', min: 169, max: 192 },
+    { nome: 'Andebol Formação', min: 193, max: 216 }
+  ],
+  ccrdsv: [
+    { nome: 'Sub 7', min: 1, max: 24 },
+    { nome: 'Sub 8', min: 25, max: 48 },
+    { nome: 'Sub 9', min: 49, max: 72 },
+    { nome: 'Sub 10', min: 73, max: 96 },
+    { nome: 'Sub 11', min: 97, max: 120 },
+    { nome: 'Sub 13', min: 121, max: 144 },
+    { nome: 'Sub 15', min: 145, max: 168 },
+    { nome: 'Sub 17', min: 169, max: 192 },
+    { nome: 'Sub 19', min: 193, max: 216 },
+    { nome: 'Séniores', min: 217, max: 240 }
+  ]
+};
+
+function getEscalao(clube, num) {
+  const esc = ESCALOES[clube] || [];
+  const e = esc.find(e => num >= e.min && num <= e.max);
+  return e ? e.nome : '';
+}
 
 async function carregarColecao() {
   const { data: { user } } = await sb.auth.getUser();
@@ -1747,37 +1813,82 @@ async function carregarColecao() {
   const { data: cromos } = await sb.from('colecao')
     .select('*')
     .eq('user_id', user.id)
-    .order('raridade', { ascending: false })
     .order('num_cromo', { ascending: true });
   
   _colecaoTodos = cromos || [];
   
-  // Stats
   const total = _colecaoTodos.reduce((sum, c) => sum + c.quantidade, 0);
-  const unicos = _colecaoTodos.length;
-
-  
   document.getElementById('col-total').textContent = total;
-  document.getElementById('col-unicos').textContent = unicos;
-
   
   renderColecao(_colecaoFiltro);
 }
 
 function filtrarColecao(filtro, btn) {
   _colecaoFiltro = filtro;
+  _colecaoEscalao = null;
   document.querySelectorAll('.colecao-filtro').forEach(b => b.classList.remove('ativo'));
-  btn.classList.add('ativo');
+  if(btn) btn.classList.add('ativo');
+  document.getElementById('colecao-subfiltros').style.display = 'none';
   renderColecao(filtro);
 }
 
+function filtrarColecaoClubeEscalao(clube, btn) {
+  _colecaoFiltro = clube;
+  _colecaoEscalao = null;
+  document.querySelectorAll('.colecao-filtro').forEach(b => b.classList.remove('ativo'));
+  if(btn) btn.classList.add('ativo');
+  // Mostrar sub-filtros de escalão
+  const sub = document.getElementById('colecao-subfiltros');
+  sub.style.display = 'flex';
+  sub.innerHTML = '';
+  const esc = ESCALOES[clube] || [];
+  esc.forEach(e => {
+    const b = document.createElement('button');
+    b.className = 'colecao-filtro';
+    b.style.fontSize = '11px';
+    b.textContent = e.nome;
+    b.onclick = function() {
+      document.querySelectorAll('#colecao-subfiltros .colecao-filtro').forEach(x => x.classList.remove('ativo'));
+      b.classList.add('ativo');
+      _colecaoEscalao = e.nome;
+      renderColecao(clube);
+    };
+    sub.appendChild(b);
+  });
+  renderColecao(clube);
+}
+
+let _cromoselecionado = null;
+
 function renderColecao(filtro) {
   const grid = document.getElementById('colecao-grid');
+  const search = (document.getElementById('colecao-search')?.value || '').toLowerCase();
   
-  let cromos = _colecaoTodos;
+  let cromos = [..._colecaoTodos];
+  
+  // Filtro por clube
   if (filtro === 'fcps') cromos = cromos.filter(c => c.clube === 'fcps');
   else if (filtro === 'ccrdsv') cromos = cromos.filter(c => c.clube === 'ccrdsv');
-  else if (['lendario','epico','raro','comum'].includes(filtro)) cromos = cromos.filter(c => c.raridade === filtro);
+  
+  // Filtro por escalão
+  if (_colecaoEscalao) {
+    const esc = ESCALOES[filtro]?.find(e => e.nome === _colecaoEscalao);
+    if (esc) cromos = cromos.filter(c => c.num_cromo >= esc.min && c.num_cromo <= esc.max);
+  }
+  
+  // Pesquisa
+  if (search) {
+    cromos = cromos.filter(c => {
+      const key = `${c.clube}-${c.num_cromo}`;
+      const jogador = JOGADORES[key];
+      const numMatch = String(c.num_cromo).includes(search);
+      const nomeMatch = jogador ? jogador.nome.toLowerCase().includes(search) : false;
+      return numMatch || nomeMatch;
+    });
+  }
+  
+  // Ordenar por número
+  cromos.sort((a, b) => a.num_cromo - b.num_cromo);
   
   if (cromos.length === 0) {
     grid.innerHTML = '<div class="colecao-vazio"><div class="colecao-vazio-icon">🃏</div><p>Sem cromos nesta categoria!</p></div>';
@@ -1788,9 +1899,11 @@ function renderColecao(filtro) {
   cromos.forEach(cromo => {
     const key = `${cromo.clube}-${cromo.num_cromo}`;
     const img = CROMOS_IMAGENS[key];
+    const jogador = JOGADORES[key];
     const div = document.createElement('div');
     div.className = 'colecao-cromo';
-    div.title = `#${cromo.num_cromo} ${cromo.clube === 'fcps' ? 'FCPS' : 'CCRDSV'}`;
+    div.title = jogador ? `#${cromo.num_cromo} — ${jogador.nome}` : `#${cromo.num_cromo}`;
+    div.onclick = () => abrirCromoOverlay(cromo);
     if (img) {
       div.innerHTML = `<img src="${img}" alt="Cromo ${cromo.num_cromo}"/>`;
     } else {
@@ -1799,13 +1912,47 @@ function renderColecao(filtro) {
         <span class="colecao-num">${cromo.clube === 'fcps' ? 'FCPS' : 'CCRDSV'}</span>
       </div>`;
     }
-    
     if (cromo.quantidade > 1) {
       div.innerHTML += `<div class="colecao-qty">x${cromo.quantidade}</div>`;
     }
-    
     grid.appendChild(div);
   });
+}
+
+function abrirCromoOverlay(cromo) {
+  _cromoselecionado = cromo;
+  const key = `${cromo.clube}-${cromo.num_cromo}`;
+  const img = CROMOS_IMAGENS[key];
+  const jogador = JOGADORES[key];
+  const escalao = getEscalao(cromo.clube, cromo.num_cromo);
+  const clubeNome = cromo.clube === 'fcps' ? 'FCPS Paço de Sousa' : 'CCRDSV Irivo';
+  
+  const imgEl = document.getElementById('cromo-overlay-img');
+  if (img) {
+    imgEl.innerHTML = `<img src="${img}" style="width:100%;height:100%;object-fit:cover;"/>`;
+  } else {
+    imgEl.innerHTML = `<div style="text-align:center;color:rgba(255,255,255,0.3);font-size:13px;">#${cromo.num_cromo}</div>`;
+  }
+  
+  document.getElementById('cromo-overlay-num').textContent = jogador ? jogador.nome : `Cromo #${cromo.num_cromo}`;
+  document.getElementById('cromo-overlay-info').textContent = `${clubeNome} · ${escalao} · #${cromo.num_cromo}`;
+  document.getElementById('cromo-overlay-qty').textContent = cromo.quantidade > 1 ? `Tens ${cromo.quantidade} cópias` : 'Tens 1 cópia';
+  
+  const overlay = document.getElementById('cromo-overlay');
+  overlay.style.display = 'flex';
+}
+
+function fecharCromoOverlay(e) {
+  if (e && e.target !== document.getElementById('cromo-overlay')) return;
+  document.getElementById('cromo-overlay').style.display = 'none';
+  _cromoselecionado = null;
+}
+
+function colarNaCaderneta() {
+  if (!_cromoselecionado) return;
+  const clube = _cromoselecionado.clube === 'fcps' ? 'FCPS Paço de Sousa' : 'CCRDSV Irivo';
+  mostrarNotificacao(`Cromo #${_cromoselecionado.num_cromo} colado na caderneta ${clube}!`, 'sucesso');
+  fecharCromoOverlay(null);
 }
 
 // ===== PACKS =====
