@@ -1876,13 +1876,17 @@ function renderColecao(filtro) {
     if (esc) cromos = cromos.filter(c => c.num_cromo >= esc.min && c.num_cromo <= esc.max);
   }
   
-  // Pesquisa
+  // Pesquisa (ignora acentos)
+  function normalizar(str) {
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
   if (search) {
+    const searchNorm = normalizar(search);
     cromos = cromos.filter(c => {
       const key = `${c.clube}-${c.num_cromo}`;
       const jogador = JOGADORES[key];
-      const numMatch = String(c.num_cromo).includes(search);
-      const nomeMatch = jogador ? jogador.nome.toLowerCase().includes(search) : false;
+      const numMatch = String(c.num_cromo) === searchNorm || String(c.num_cromo).startsWith(searchNorm);
+      const nomeMatch = jogador ? normalizar(jogador.nome).includes(searchNorm) : false;
       return numMatch || nomeMatch;
     });
   }
