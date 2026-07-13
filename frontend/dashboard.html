@@ -2293,11 +2293,11 @@ setInterval(async () => {
 function iniciarExplosao(){
   const wrapper=document.getElementById('pack-anim-wrapper'),card=document.getElementById('pack-anim-card');
   if(!card)return;wrapper.onclick=null;
-  wrapper.style.animation='vibracao1 0.15s ease-in-out infinite';card.style.animation='brilho1 0.8s ease-out forwards';
-  setTimeout(()=>{wrapper.style.animation='vibracao2 0.1s ease-in-out infinite';card.style.animation='brilho2 0.8s ease-out forwards';},800);
-  setTimeout(()=>{wrapper.style.animation='vibracao3 0.07s ease-in-out infinite';card.style.animation='brilho3 0.8s ease-out forwards';},1600);
+  card.style.animation='vibracao1 0.15s ease-in-out infinite, brilho1 0.8s ease-out forwards';
+  setTimeout(()=>{card.style.animation='vibracao2 0.1s ease-in-out infinite, brilho2 0.8s ease-out forwards';},800);
+  setTimeout(()=>{card.style.animation='vibracao3 0.07s ease-in-out infinite, brilho3 0.8s ease-out forwards';},1600);
   setTimeout(()=>{
-    wrapper.style.animation='none';card.style.animation='explodir 0.5s ease-out forwards';
+    wrapper.style.animation='none';card.style.animation='explodir 0.5s ease-out forwards';wrapper.style.animation='none';
     const flash=document.createElement('div');flash.style.cssText='position:fixed;inset:0;background:white;pointer-events:none;z-index:9998;opacity:1;transition:opacity 0.5s;';document.body.appendChild(flash);setTimeout(()=>{flash.style.opacity='0';setTimeout(()=>flash.remove(),500);},80);
     const rect=card.getBoundingClientRect(),cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
     const onda=document.createElement('div');onda.style.cssText=`position:fixed;left:${cx}px;top:${cy}px;width:10px;height:10px;border-radius:50%;border:4px solid rgba(200,168,75,0.9);transform:translate(-50%,-50%);pointer-events:none;z-index:9997;animation:ondaChoque 0.7s ease-out forwards;`;document.body.appendChild(onda);setTimeout(()=>onda.remove(),800);
