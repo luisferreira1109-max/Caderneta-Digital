@@ -2862,18 +2862,6 @@ function selecionarCromoVenda(cromo) {
   };
 }
 
-async function publicarVenda() {
-  if (!_mercadoCromoSelecionado) return;
-  const preco = parseFloat(document.getElementById('mercado-preco').value);
-  if (!preco || preco < 0.01) { mostrarNotificacao('Define um preço válido!', 'erro'); return; }
-  const { data: { user } } = await sb.auth.getUser();
-  if (!user) return;
-  await sb.from('mercado_vendas').insert({ vendedor_id: user.id, clube: _mercadoCromoSelecionado.clube, num_cromo: _mercadoCromoSelecionado.num_cromo, preco });
-  mostrarNotificacao(`✅ Cromo colocado à venda por ${preco.toFixed(2)} €!`, 'sucesso');
-  document.getElementById('mercado-form-venda').style.display = 'none';
-  document.getElementById('mercado-preco').value = '';
-  _mercadoCromoSelecionado = null;
-}
 
 // ── TROCAS ──────────────────────────────
 async function carregarMinhaColecaoTroca() {
