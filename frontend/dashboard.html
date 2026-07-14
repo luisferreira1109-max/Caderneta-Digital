@@ -2657,6 +2657,15 @@ setInterval(async () => {
   function ip(o,i,s){const outer=document.getElementById(o),inner=document.getElementById(i),shine=document.getElementById(s);if(!outer||!inner)return;outer.addEventListener('mousemove',function(e){const r=outer.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;inner.style.transform=`rotateX(${(0.5-py)*22}deg) rotateY(${(px-0.5)*22}deg) scale(1.04)`;inner.style.transition='transform 0.05s linear';inner.style.boxShadow='0 30px 60px rgba(0,0,0,0.6),0 0 40px rgba(200,168,75,0.4)';if(shine){shine.style.background=`radial-gradient(circle at ${px*100}% ${py*100}%,rgba(255,255,255,0.55),transparent 45%)`;shine.style.opacity='0.9';}});outer.addEventListener('mouseleave',function(){inner.style.transform='rotateX(0) rotateY(0) scale(1)';inner.style.transition='transform 0.4s ease';inner.style.boxShadow='0 12px 30px rgba(0,0,0,0.5)';if(shine)shine.style.opacity='0.4';});}
   document.addEventListener('DOMContentLoaded',function(){ip('pack-std-outer','pack-std-inner','pack-std-shine');ip('pack-pre-outer','pack-pre-inner','pack-pre-shine');});
 })();
+function mostrarNotificacao(msg, tipo) {
+  const cor = tipo === 'erro' ? '#e74c3c' : tipo === 'sucesso' ? '#2ecc71' : '#c8a84b';
+  const toast = document.createElement('div');
+  toast.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:${cor};color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.4);animation:toastIn 0.3s ease;max-width:90vw;text-align:center;`;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.4s'; setTimeout(() => toast.remove(), 400); }, 3000);
+}
+
 function iniciarExplosao(){
   const wrapper=document.getElementById('pack-anim-wrapper'),card=document.getElementById('pack-anim-card');
   if(!card)return;wrapper.onclick=null;
