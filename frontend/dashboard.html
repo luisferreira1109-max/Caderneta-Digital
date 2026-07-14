@@ -2007,25 +2007,28 @@ async function colarNaCaderneta() {
 
   const clubeNome = cromo.clube === 'fcps' ? 'FCPS Paço de Sousa' : 'CCRDSV Irivo';
 
-  // Descontar da coleção na base de dados
+  // Descontar da coleção e guardar cromo colado no Supabase
   const { data: { user } } = await sb.auth.getUser();
   if (user) {
     if (cromo.quantidade > 1) {
-      // Reduzir quantidade em 1
       await sb.from('colecao')
         .update({ quantidade: cromo.quantidade - 1 })
         .eq('user_id', user.id)
         .eq('clube', cromo.clube)
         .eq('num_cromo', cromo.num_cromo);
     } else {
-      // Remover da coleção
       await sb.from('colecao')
         .delete()
         .eq('user_id', user.id)
         .eq('clube', cromo.clube)
         .eq('num_cromo', cromo.num_cromo);
     }
-    // Recarregar a coleção
+    // Guardar cromo colado
+    await sb.from('cromos_colados').upsert({
+      user_id: user.id,
+      clube: cromo.clube,
+      num_cromo: cromo.num_cromo
+    });
     await carregarColecao();
   }
 
@@ -2136,11 +2139,42 @@ let isAnimatingCad = false;
 let moedasAtual = 0;
 const cadDesbloqueadas = { fcps: false, ccrdsv: false };
 
-function abrirCaderneta(clube) {
+async function carregarCromosColados(clube) {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  const { data: colados } = await sb.from('cromos_colados')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('clube', clube);
+  if (!colados || colados.length === 0) return;
+  // Aplicar cada cromo colado ao slot correto
+  const slots = document.querySelectorAll(`[id^="${clube}-pag"] .cromo-slot`);
+  colados.forEach(c => {
+    for (const slot of slots) {
+      const span = slot.querySelector('span');
+      if (span && parseInt(span.textContent) === c.num_cromo) {
+        const key = `${clube}-${c.num_cromo}`;
+        const img = CROMOS_IMAGENS[key];
+        if (img) {
+          slot.innerHTML = `<img src="${img}" style="width:100%;height:100%;object-fit:cover;border-radius:5px;"/>`;
+          slot.classList.add('tem-cromo');
+          slot.onclick = () => abrirCromoImg(img);
+        } else {
+          slot.innerHTML = `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a2a3a,#0d1a2a);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#c8a84b;font-weight:700;">#${c.num_cromo}</div>`;
+          slot.classList.add('tem-cromo');
+        }
+        break;
+      }
+    }
+  });
+}
+
+async function abrirCaderneta(clube) {
   // Se já desbloqueada — abrir diretamente
   if (cadDesbloqueadas[clube]) {
     mostrarPaginasCad(clube, 0, false);
     document.getElementById('modal-' + clube).classList.add('show');
+    await carregarCromosColados(clube);
     return;
   }
   // Verificar moedas
