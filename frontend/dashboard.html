@@ -3039,7 +3039,7 @@ async function publicarVenda() {
   // Verificar quantidade atual na BD (evitar vender mais do que tem)
   const { data: cromoAtual } = await sb.from('colecao').select('quantidade').eq('user_id', user.id).eq('clube', cromo.clube).eq('num_cromo', cromo.num_cromo).single();
   if (!cromoAtual || cromoAtual.quantidade < 1) {
-    mostrarNotificacao('Já não tens este cromo disponível!', 'erro');
+    mostrarNotificacao('Já não tens mais cópias deste cromo disponíveis para vender!', 'erro');
     document.getElementById('mercado-form-venda').style.display = 'none';
     _mercadoCromoSelecionado = null;
     await carregarColecao();
