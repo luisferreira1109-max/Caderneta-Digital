@@ -1880,13 +1880,17 @@ function renderColecao(filtro) {
   function normalizar(str) {
     return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
-  if (search) {
-    const searchNorm = normalizar(search);
+  if (search && search.trim() !== '') {
+    const searchNorm = normalizar(search.trim());
     cromos = cromos.filter(c => {
       const key = `${c.clube}-${c.num_cromo}`;
       const jogador = JOGADORES[key];
-      const numMatch = String(c.num_cromo) === searchNorm || String(c.num_cromo).startsWith(searchNorm);
+      // Pesquisa por número exato ou início
+      const numStr = String(c.num_cromo);
+      const numMatch = numStr === searchNorm || numStr.startsWith(searchNorm);
+      // Pesquisa por nome só se o jogador existir
       const nomeMatch = jogador ? normalizar(jogador.nome).includes(searchNorm) : false;
+      // Só passa se houver correspondência real
       return numMatch || nomeMatch;
     });
   }
@@ -1952,11 +1956,71 @@ function fecharCromoOverlay(e) {
   _cromoselecionado = null;
 }
 
-function colarNaCaderneta() {
+async function colarNaCaderneta() {
   if (!_cromoselecionado) return;
-  const clube = _cromoselecionado.clube === 'fcps' ? 'FCPS Paço de Sousa' : 'CCRDSV Irivo';
-  mostrarNotificacao(`Cromo #${_cromoselecionado.num_cromo} colado na caderneta ${clube}!`, 'sucesso');
+  const cromo = _cromoselecionado;
+  const key = `${cromo.clube}-${cromo.num_cromo}`;
+  const img = CROMOS_IMAGENS[key];
+
+  // Encontrar o slot correto na caderneta pelo número do cromo
+  const slots = document.querySelectorAll('.cromo-slot');
+  let slotEncontrado = null;
+
+  for (const slot of slots) {
+    const span = slot.querySelector('span');
+    if (span && parseInt(span.textContent) === cromo.num_cromo) {
+      // Verificar se é o slot da caderneta certa (fcps ou ccrdsv)
+      const pag = slot.closest('[id]');
+      if (pag) {
+        const pagId = pag.id || '';
+        const clubeCorreto = cromo.clube === 'fcps' ? pagId.startsWith('fcps') : pagId.startsWith('ccrdsv');
+        if (clubeCorreto) {
+          slotEncontrado = slot;
+          break;
+        }
+      }
+    }
+  }
+
+  if (!slotEncontrado) {
+    mostrarNotificacao('Slot não encontrado na caderneta!', 'erro');
+    return;
+  }
+
+  // Colar o cromo no slot
+  if (img) {
+    slotEncontrado.innerHTML = `<img src="${img}" style="width:100%;height:100%;object-fit:cover;border-radius:5px;"/>`;
+  } else {
+    slotEncontrado.innerHTML = `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a2a3a,#0d1a2a);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#c8a84b;font-weight:700;">#${cromo.num_cromo}</div>`;
+  }
+  slotEncontrado.classList.add('tem-cromo');
+  slotEncontrado.onclick = null;
+
+  // Animação de sucesso no slot
+  slotEncontrado.style.transform = 'scale(1.15)';
+  slotEncontrado.style.boxShadow = '0 0 20px rgba(200,168,75,0.8)';
+  slotEncontrado.style.transition = 'all 0.3s ease';
+  setTimeout(() => {
+    slotEncontrado.style.transform = '';
+    slotEncontrado.style.boxShadow = '';
+  }, 500);
+
+  const clubeNome = cromo.clube === 'fcps' ? 'FCPS Paço de Sousa' : 'CCRDSV Irivo';
+  mostrarNotificacao(`✅ Cromo #${cromo.num_cromo} colado na caderneta ${clubeNome}!`, 'sucesso');
   fecharCromoOverlay(null);
+
+  // Navegar para a caderneta e abrir na página certa
+  setTimeout(() => {
+    const cadNav = document.querySelector('.nav-item[onclick*="cadernetas"]');
+    if (cadNav) mostrarPagina('cadernetas', cadNav);
+    // Abrir a caderneta certa
+    setTimeout(() => {
+      const btnCaderneta = cromo.clube === 'fcps'
+        ? document.querySelector('.caderneta-btn-fcps, [onclick*="abrirCaderneta"][onclick*="fcps"]')
+        : document.querySelector('.caderneta-btn-ccrdsv, [onclick*="abrirCaderneta"][onclick*="ccrdsv"]');
+      if (btnCaderneta) btnCaderneta.click();
+    }, 300);
+  }, 1000);
 }
 
 // ===== PACKS =====
