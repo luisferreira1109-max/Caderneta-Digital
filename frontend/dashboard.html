@@ -1275,8 +1275,103 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 
       <!-- MERCADO -->
       <div id="pagina-mercado" style="display:none">
-        <div class="page-header"><p class="page-titulo">Mercado</p><p class="page-sub">Compra e vende cromos com outros colecionadores</p></div>
-        <div class="em-breve"><div class="em-breve-icon">🏪</div><div class="em-breve-titulo">Mercado em breve</div><div class="em-breve-sub">Brevemente poderás comprar, vender e trocar cromos com outros colecionadores.</div></div>
+        <div class="page-header">
+          <p class="page-titulo">Mercado</p>
+          <p class="page-sub">Compra, vende e troca cromos com outros colecionadores</p>
+        </div>
+
+        <!-- Tabs -->
+        <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+          <button class="colecao-filtro ativo" id="tab-comprar" onclick="mudarTabMercado('comprar')">🛒 Comprar</button>
+          <button class="colecao-filtro" id="tab-vender" onclick="mudarTabMercado('vender')">💰 Vender</button>
+          <button class="colecao-filtro" id="tab-trocas" onclick="mudarTabMercado('trocas')">🔄 Trocas</button>
+          <button class="colecao-filtro" id="tab-historico" onclick="mudarTabMercado('historico')">📋 Histórico</button>
+          <button class="colecao-filtro" id="tab-minhas" onclick="mudarTabMercado('minhas')">📦 As minhas</button>
+        </div>
+
+        <!-- TAB COMPRAR -->
+        <div id="mercado-comprar">
+          <!-- Filtros -->
+          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
+            <input id="mercado-search" type="text" placeholder="Pesquisar cromo..." oninput="carregarMercado()" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#fff;font-size:12px;outline:none;width:180px;"/>
+            <select id="mercado-filtro-clube" onchange="carregarMercado()" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#1a1a2e;color:#fff;font-size:12px;outline:none;">
+              <option value="">Todos os clubes</option>
+              <option value="fcps">FCPS</option>
+              <option value="ccrdsv">CCRDSV</option>
+            </select>
+            <select id="mercado-filtro-ordem" onchange="carregarMercado()" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#1a1a2e;color:#fff;font-size:12px;outline:none;">
+              <option value="preco_asc">Preço ↑</option>
+              <option value="preco_desc">Preço ↓</option>
+              <option value="recente">Mais recente</option>
+            </select>
+          </div>
+          <div id="mercado-lista" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;max-height:500px;overflow-y:auto;"></div>
+        </div>
+
+        <!-- TAB VENDER -->
+        <div id="mercado-vender" style="display:none;">
+          <div style="background:rgba(200,168,75,0.08);border:1px solid rgba(200,168,75,0.2);border-radius:12px;padding:16px;margin-bottom:16px;font-size:13px;color:rgba(255,255,255,0.7);">
+            💡 A plataforma fica com <strong style="color:#c8a84b;">10%</strong> de cada venda. Recebes os restantes 90%.
+          </div>
+          <div style="margin-bottom:12px;font-size:13px;color:rgba(255,255,255,0.6);">Seleciona um cromo da tua coleção para vender:</div>
+          <div id="mercado-minha-colecao" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;max-height:300px;overflow-y:auto;margin-bottom:16px;"></div>
+          <!-- Form de venda -->
+          <div id="mercado-form-venda" style="display:none;background:rgba(255,255,255,0.04);border-radius:12px;padding:16px;">
+            <div style="display:flex;gap:16px;align-items:center;margin-bottom:14px;">
+              <div id="mercado-cromo-preview" style="width:70px;height:100px;border-radius:8px;background:linear-gradient(135deg,#1a2a3a,#0d1a2a);border:1px solid rgba(200,168,75,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;color:#c8a84b;flex-shrink:0;"></div>
+              <div>
+                <div id="mercado-cromo-info" style="font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;"></div>
+                <div id="mercado-cromo-sub" style="font-size:12px;color:rgba(255,255,255,0.5);"></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <input id="mercado-preco" type="number" min="0.10" step="0.01" placeholder="Preço (€)" style="padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:14px;outline:none;width:130px;"/>
+              <div style="font-size:12px;color:rgba(255,255,255,0.4);">Recebes: <span id="mercado-preco-vendedor" style="color:#c8a84b;font-weight:600;">---</span></div>
+            </div>
+            <button onclick="publicarVenda()" style="margin-top:12px;width:100%;padding:12px;border-radius:10px;border:none;background:#c8a84b;color:#111;font-size:13px;font-weight:700;cursor:pointer;">Colocar à venda</button>
+          </div>
+        </div>
+
+        <!-- TAB TROCAS -->
+        <div id="mercado-trocas" style="display:none;">
+          <div style="margin-bottom:12px;font-size:13px;color:rgba(255,255,255,0.6);">Propõe uma troca — escolhe o cromo que ofereces e o que queres:</div>
+          <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:start;margin-bottom:16px;">
+            <div>
+              <div style="font-size:12px;color:#c8a84b;font-weight:600;margin-bottom:8px;">OFEREÇO</div>
+              <div id="troca-oferta-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:6px;max-height:200px;overflow-y:auto;background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;"></div>
+              <div id="troca-oferta-sel" style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.4);"></div>
+            </div>
+            <div style="text-align:center;font-size:24px;color:rgba(255,255,255,0.3);padding-top:80px;">⇄</div>
+            <div>
+              <div style="font-size:12px;color:#d980fa;font-weight:600;margin-bottom:8px;">QUERO</div>
+              <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+                <select id="troca-pedido-clube" onchange="renderTrocaPedidoGrid()" style="padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:#1a1a2e;color:#fff;font-size:11px;outline:none;">
+                  <option value="fcps">FCPS</option>
+                  <option value="ccrdsv">CCRDSV</option>
+                </select>
+                <input id="troca-pedido-search" type="number" placeholder="Nº cromo" oninput="renderTrocaPedidoGrid()" style="padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#fff;font-size:11px;outline:none;width:80px;"/>
+              </div>
+              <div id="troca-pedido-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:6px;max-height:200px;overflow-y:auto;background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;"></div>
+              <div id="troca-pedido-sel" style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.4);"></div>
+            </div>
+          </div>
+          <button onclick="publicarTroca()" style="width:100%;padding:12px;border-radius:10px;border:none;background:#9b59b6;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Propor Troca</button>
+          <div style="margin-top:20px;">
+            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:10px;">Trocas disponíveis de outros utilizadores:</div>
+            <div id="trocas-lista" style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;"></div>
+          </div>
+        </div>
+
+        <!-- TAB HISTÓRICO -->
+        <div id="mercado-historico" style="display:none;">
+          <div id="historico-lista" style="display:flex;flex-direction:column;gap:8px;max-height:500px;overflow-y:auto;"></div>
+        </div>
+
+        <!-- TAB AS MINHAS -->
+        <div id="mercado-minhas" style="display:none;">
+          <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:12px;">Os teus anúncios ativos:</div>
+          <div id="minhas-vendas-lista" style="display:flex;flex-direction:column;gap:8px;max-height:500px;overflow-y:auto;"></div>
+        </div>
       </div>
 
       <!-- AMIGOS v2 -->
@@ -2614,5 +2709,348 @@ function iniciarExplosao(){
     setTimeout(()=>{wrapper.style.display='none';const f1=document.getElementById('pack-fase1'),f2=document.getElementById('pack-fase2');if(f1)f1.style.display='none';if(f2){f2.style.display='flex';f2.classList.add('show');}revelarCromos(window._cromosParaRevelar);},400);
   },2400);
 }
+</script>
+<script>
+// ═══════════════════════════════════════
+// MERCADO
+// ═══════════════════════════════════════
+let _mercadoCromoSelecionado = null;
+let _trocaOferta = null;
+let _trocaPedido = null;
+
+function mudarTabMercado(tab) {
+  ['comprar','vender','trocas','historico','minhas'].forEach(t => {
+    document.getElementById('mercado-' + t).style.display = 'none';
+    document.getElementById('tab-' + t)?.classList.remove('ativo');
+  });
+  document.getElementById('mercado-' + tab).style.display = '';
+  document.getElementById('tab-' + tab)?.classList.add('ativo');
+
+  if (tab === 'comprar') carregarMercado();
+  else if (tab === 'vender') carregarMinhaColecaoVenda();
+  else if (tab === 'trocas') { carregarTrocas(); carregarMinhaColecaoTroca(); }
+  else if (tab === 'historico') carregarHistorico();
+  else if (tab === 'minhas') carregarMinhasVendas();
+}
+
+// ── COMPRAR ──────────────────────────────
+async function carregarMercado() {
+  const grid = document.getElementById('mercado-lista');
+  const search = document.getElementById('mercado-search')?.value.toLowerCase() || '';
+  const clube = document.getElementById('mercado-filtro-clube')?.value || '';
+  const ordem = document.getElementById('mercado-filtro-ordem')?.value || 'preco_asc';
+  const { data: { user } } = await sb.auth.getUser();
+
+  let query = sb.from('mercado_vendas')
+    .select('*, profiles!vendedor_id(display_name, username)')
+    .eq('estado', 'ativo')
+    .neq('vendedor_id', user?.id);
+
+  if (clube) query = query.eq('clube', clube);
+  if (ordem === 'preco_asc') query = query.order('preco', { ascending: true });
+  else if (ordem === 'preco_desc') query = query.order('preco', { ascending: false });
+  else query = query.order('criado_em', { ascending: false });
+
+  const { data: vendas } = await query;
+  grid.innerHTML = '';
+
+  let lista = vendas || [];
+  if (search) lista = lista.filter(v => {
+    const key = `${v.clube}-${v.num_cromo}`;
+    const jogador = JOGADORES[key];
+    return String(v.num_cromo).includes(search) || (jogador && jogador.nome.toLowerCase().includes(search));
+  });
+
+  if (lista.length === 0) {
+    grid.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:20px;grid-column:1/-1;">Nenhum cromo à venda no momento.</div>';
+    return;
+  }
+
+  lista.forEach(v => {
+    const key = `${v.clube}-${v.num_cromo}`;
+    const img = CROMOS_IMAGENS[key];
+    const jogador = JOGADORES[key];
+    const vendedor = v.profiles?.display_name || v.profiles?.username || 'Utilizador';
+    const div = document.createElement('div');
+    div.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;';
+    div.innerHTML = `
+      <div style="width:100%;height:100px;border-radius:8px;overflow:hidden;background:linear-gradient(135deg,#1a2a3a,#0d1a2a);display:flex;align-items:center;justify-content:center;">
+        ${img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover;"/>` : `<span style="color:rgba(255,255,255,0.3);font-size:11px;">#${v.num_cromo}</span>`}
+      </div>
+      <div style="font-size:12px;font-weight:600;color:#fff;">${jogador ? jogador.nome : `#${v.num_cromo}`}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.4);">${v.clube === 'fcps' ? 'FCPS' : 'CCRDSV'} · #${v.num_cromo}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.3);">Vendido por: ${vendedor}</div>
+      <div style="font-size:16px;font-weight:700;color:#c8a84b;">${parseFloat(v.preco).toFixed(2)} €</div>
+      <button onclick="comprarCromo('${v.id}', ${v.preco}, '${v.vendedor_id}', '${v.clube}', ${v.num_cromo})" style="padding:8px;border-radius:8px;border:none;background:#c8a84b;color:#111;font-size:12px;font-weight:700;cursor:pointer;">Comprar</button>`;
+    grid.appendChild(div);
+  });
+}
+
+async function comprarCromo(vendaId, preco, vendedorId, clube, numCromo) {
+  if (!confirm(`Comprar este cromo por ${parseFloat(preco).toFixed(2)} €?`)) return;
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+
+  // Verificar saldo
+  const { data: perfil } = await sb.from('profiles').select('saldo').eq('id', user.id).single();
+  if (!perfil || perfil.saldo < preco) { mostrarNotificacao('Saldo insuficiente!', 'erro'); return; }
+
+  const precoVendedor = Math.round(preco * 0.90 * 100) / 100;
+  const precoPlataforma = Math.round(preco * 0.10 * 100) / 100;
+
+  // 1. Debitar comprador
+  await sb.from('profiles').update({ saldo: perfil.saldo - preco }).eq('id', user.id);
+  // 2. Creditar vendedor (90%)
+  const { data: perfilVendedor } = await sb.from('profiles').select('saldo').eq('id', vendedorId).single();
+  await sb.from('profiles').update({ saldo: (perfilVendedor?.saldo || 0) + precoVendedor }).eq('id', vendedorId);
+  // 3. Marcar venda como vendida
+  await sb.from('mercado_vendas').update({ estado: 'vendido', comprador_id: user.id, vendido_em: new Date().toISOString() }).eq('id', vendaId);
+  // 4. Adicionar cromo à coleção do comprador
+  const { data: cromoExiste } = await sb.from('colecao').select('quantidade').eq('user_id', user.id).eq('clube', clube).eq('num_cromo', numCromo).single();
+  if (cromoExiste) {
+    await sb.from('colecao').update({ quantidade: cromoExiste.quantidade + 1 }).eq('user_id', user.id).eq('clube', clube).eq('num_cromo', numCromo);
+  } else {
+    await sb.from('colecao').insert({ user_id: user.id, clube, num_cromo: numCromo, quantidade: 1 });
+  }
+  // 5. Histórico
+  await sb.from('mercado_historico').insert({ tipo: 'venda', user1_id: vendedorId, user2_id: user.id, clube1: clube, num_cromo1: numCromo, preco, preco_vendedor: precoVendedor, preco_plataforma: precoPlataforma });
+  // 6. Notificação
+  await sb.from('mensagens').insert({ de_user_id: user.id, para_user_id: vendedorId, mensagem: `O teu cromo #${numCromo} (${clube === 'fcps' ? 'FCPS' : 'CCRDSV'}) foi vendido por ${parseFloat(preco).toFixed(2)} €! Recebeste ${precoVendedor.toFixed(2)} €.`, lida: false });
+
+  mostrarNotificacao(`✅ Cromo comprado com sucesso!`, 'sucesso');
+  atualizarSaldoUI();
+  carregarMercado();
+}
+
+// ── VENDER ──────────────────────────────
+async function carregarMinhaColecaoVenda() {
+  const grid = document.getElementById('mercado-minha-colecao');
+  grid.innerHTML = '';
+  const cromos = _colecaoTodos || [];
+  if (cromos.length === 0) {
+    grid.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:12px;padding:10px;">Não tens cromos na coleção.</div>';
+    return;
+  }
+  cromos.forEach(c => {
+    const key = `${c.clube}-${c.num_cromo}`;
+    const img = CROMOS_IMAGENS[key];
+    const jogador = JOGADORES[key];
+    const div = document.createElement('div');
+    div.style.cssText = 'aspect-ratio:2/3;border-radius:6px;border:1.5px dashed rgba(255,255,255,0.15);overflow:hidden;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.03);';
+    div.title = jogador ? jogador.nome : `#${c.num_cromo}`;
+    div.innerHTML = img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover;"/>` : `<span style="font-size:9px;color:rgba(255,255,255,0.4);">#${c.num_cromo}</span>`;
+    if (c.quantidade > 1) div.innerHTML += `<div style="position:absolute;top:-4px;right:-4px;background:#c8a84b;color:#111;border-radius:50%;width:16px;height:16px;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;">x${c.quantidade}</div>`;
+    div.onclick = () => selecionarCromoVenda(c);
+    grid.appendChild(div);
+  });
+}
+
+function selecionarCromoVenda(cromo) {
+  _mercadoCromoSelecionado = cromo;
+  const key = `${cromo.clube}-${cromo.num_cromo}`;
+  const img = CROMOS_IMAGENS[key];
+  const jogador = JOGADORES[key];
+  const escalao = getEscalao(cromo.clube, cromo.num_cromo);
+  const preview = document.getElementById('mercado-cromo-preview');
+  preview.innerHTML = img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"/>` : `#${cromo.num_cromo}`;
+  document.getElementById('mercado-cromo-info').textContent = jogador ? jogador.nome : `Cromo #${cromo.num_cromo}`;
+  document.getElementById('mercado-cromo-sub').textContent = `${cromo.clube === 'fcps' ? 'FCPS' : 'CCRDSV'} · ${escalao} · #${cromo.num_cromo}`;
+  document.getElementById('mercado-form-venda').style.display = '';
+  document.getElementById('mercado-preco').oninput = function() {
+    const p = parseFloat(this.value) || 0;
+    document.getElementById('mercado-preco-vendedor').textContent = (p * 0.90).toFixed(2) + ' €';
+  };
+}
+
+async function publicarVenda() {
+  if (!_mercadoCromoSelecionado) return;
+  const preco = parseFloat(document.getElementById('mercado-preco').value);
+  if (!preco || preco < 0.01) { mostrarNotificacao('Define um preço válido!', 'erro'); return; }
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  await sb.from('mercado_vendas').insert({ vendedor_id: user.id, clube: _mercadoCromoSelecionado.clube, num_cromo: _mercadoCromoSelecionado.num_cromo, preco });
+  mostrarNotificacao(`✅ Cromo colocado à venda por ${preco.toFixed(2)} €!`, 'sucesso');
+  document.getElementById('mercado-form-venda').style.display = 'none';
+  document.getElementById('mercado-preco').value = '';
+  _mercadoCromoSelecionado = null;
+}
+
+// ── TROCAS ──────────────────────────────
+async function carregarMinhaColecaoTroca() {
+  const grid = document.getElementById('troca-oferta-grid');
+  grid.innerHTML = '';
+  (_colecaoTodos || []).forEach(c => {
+    const key = `${c.clube}-${c.num_cromo}`;
+    const img = CROMOS_IMAGENS[key];
+    const div = document.createElement('div');
+    div.style.cssText = 'aspect-ratio:2/3;border-radius:6px;border:1.5px dashed rgba(255,255,255,0.15);overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.03);';
+    div.innerHTML = img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover;"/>` : `<span style="font-size:8px;color:rgba(255,255,255,0.4);">#${c.num_cromo}</span>`;
+    div.onclick = () => {
+      _trocaOferta = c;
+      document.querySelectorAll('#troca-oferta-grid > div').forEach(d => d.style.border = '1.5px dashed rgba(255,255,255,0.15)');
+      div.style.border = '2px solid #c8a84b';
+      document.getElementById('troca-oferta-sel').textContent = `Selecionado: #${c.num_cromo} ${c.clube === 'fcps' ? 'FCPS' : 'CCRDSV'}`;
+    };
+    grid.appendChild(div);
+  });
+}
+
+function renderTrocaPedidoGrid() {
+  const clube = document.getElementById('troca-pedido-clube').value;
+  const search = document.getElementById('troca-pedido-search').value;
+  const grid = document.getElementById('troca-pedido-grid');
+  grid.innerHTML = '';
+  const max = clube === 'fcps' ? 216 : 240;
+  let nums = Array.from({length: max}, (_, i) => i + 1);
+  if (search) nums = nums.filter(n => String(n).includes(search));
+  nums.slice(0, 48).forEach(n => {
+    const key = `${clube}-${n}`;
+    const img = CROMOS_IMAGENS[key];
+    const div = document.createElement('div');
+    div.style.cssText = 'aspect-ratio:2/3;border-radius:6px;border:1.5px dashed rgba(255,255,255,0.15);overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.03);';
+    div.innerHTML = img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover;"/>` : `<span style="font-size:8px;color:rgba(255,255,255,0.4);">#${n}</span>`;
+    div.onclick = () => {
+      _trocaPedido = { clube, num_cromo: n };
+      document.querySelectorAll('#troca-pedido-grid > div').forEach(d => d.style.border = '1.5px dashed rgba(255,255,255,0.15)');
+      div.style.border = '2px solid #d980fa';
+      document.getElementById('troca-pedido-sel').textContent = `Selecionado: #${n} ${clube === 'fcps' ? 'FCPS' : 'CCRDSV'}`;
+    };
+    grid.appendChild(div);
+  });
+}
+
+async function publicarTroca() {
+  if (!_trocaOferta || !_trocaPedido) { mostrarNotificacao('Seleciona os dois cromos!', 'erro'); return; }
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  await sb.from('mercado_trocas').insert({ proponente_id: user.id, clube_oferta: _trocaOferta.clube, num_cromo_oferta: _trocaOferta.num_cromo, clube_pedido: _trocaPedido.clube, num_cromo_pedido: _trocaPedido.num_cromo });
+  mostrarNotificacao('✅ Proposta de troca publicada!', 'sucesso');
+  _trocaOferta = null; _trocaPedido = null;
+  carregarTrocas();
+}
+
+async function carregarTrocas() {
+  const lista = document.getElementById('trocas-lista');
+  lista.innerHTML = '';
+  const { data: { user } } = await sb.auth.getUser();
+  const { data: trocas } = await sb.from('mercado_trocas').select('*, profiles!proponente_id(display_name,username)').eq('estado', 'pendente').neq('proponente_id', user?.id).order('criado_em', { ascending: false });
+  if (!trocas || trocas.length === 0) { lista.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:10px;">Sem propostas de troca no momento.</div>'; return; }
+  trocas.forEach(t => {
+    const div = document.createElement('div');
+    div.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;';
+    const proponente = t.profiles?.display_name || t.profiles?.username || 'Utilizador';
+    div.innerHTML = `
+      <div style="font-size:12px;color:rgba(255,255,255,0.6);">${proponente} oferece <strong style="color:#c8a84b;">#${t.num_cromo_oferta} ${t.clube_oferta === 'fcps' ? 'FCPS' : 'CCRDSV'}</strong> por <strong style="color:#d980fa;">#${t.num_cromo_pedido} ${t.clube_pedido === 'fcps' ? 'FCPS' : 'CCRDSV'}</strong></div>
+      <button onclick="aceitarTroca('${t.id}','${t.proponente_id}','${t.clube_oferta}',${t.num_cromo_oferta},'${t.clube_pedido}',${t.num_cromo_pedido})" style="padding:8px 14px;border-radius:8px;border:none;background:#9b59b6;color:#fff;font-size:12px;font-weight:600;cursor:pointer;">Aceitar</button>`;
+    lista.appendChild(div);
+  });
+}
+
+async function aceitarTroca(trocaId, proponenteId, clubeOferta, numOferta, clubePedido, numPedido) {
+  if (!confirm('Aceitar esta troca?')) return;
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  // Verificar que tens o cromo pedido
+  const { data: temCromo } = await sb.from('colecao').select('quantidade').eq('user_id', user.id).eq('clube', clubePedido).eq('num_cromo', numPedido).single();
+  if (!temCromo) { mostrarNotificacao('Não tens esse cromo!', 'erro'); return; }
+  // Trocar cromos
+  // Tu perdes o cromo pedido
+  if (temCromo.quantidade > 1) await sb.from('colecao').update({ quantidade: temCromo.quantidade - 1 }).eq('user_id', user.id).eq('clube', clubePedido).eq('num_cromo', numPedido);
+  else await sb.from('colecao').delete().eq('user_id', user.id).eq('clube', clubePedido).eq('num_cromo', numPedido);
+  // Tu ganhas o cromo oferta
+  const { data: jaTemOferta } = await sb.from('colecao').select('quantidade').eq('user_id', user.id).eq('clube', clubeOferta).eq('num_cromo', numOferta).single();
+  if (jaTemOferta) await sb.from('colecao').update({ quantidade: jaTemOferta.quantidade + 1 }).eq('user_id', user.id).eq('clube', clubeOferta).eq('num_cromo', numOferta);
+  else await sb.from('colecao').insert({ user_id: user.id, clube: clubeOferta, num_cromo: numOferta, quantidade: 1 });
+  // Proponente perde o cromo oferta
+  const { data: proponenteOferta } = await sb.from('colecao').select('quantidade').eq('user_id', proponenteId).eq('clube', clubeOferta).eq('num_cromo', numOferta).single();
+  if (proponenteOferta) {
+    if (proponenteOferta.quantidade > 1) await sb.from('colecao').update({ quantidade: proponenteOferta.quantidade - 1 }).eq('user_id', proponenteId).eq('clube', clubeOferta).eq('num_cromo', numOferta);
+    else await sb.from('colecao').delete().eq('user_id', proponenteId).eq('clube', clubeOferta).eq('num_cromo', numOferta);
+  }
+  // Proponente ganha o cromo pedido
+  const { data: jaTemPedido } = await sb.from('colecao').select('quantidade').eq('user_id', proponenteId).eq('clube', clubePedido).eq('num_cromo', numPedido).single();
+  if (jaTemPedido) await sb.from('colecao').update({ quantidade: jaTemPedido.quantidade + 1 }).eq('user_id', proponenteId).eq('clube', clubePedido).eq('num_cromo', numPedido);
+  else await sb.from('colecao').insert({ user_id: proponenteId, clube: clubePedido, num_cromo: numPedido, quantidade: 1 });
+  // Marcar troca como aceite
+  await sb.from('mercado_trocas').update({ estado: 'aceite', resolvido_em: new Date().toISOString() }).eq('id', trocaId);
+  // Notificar proponente
+  await sb.from('mensagens').insert({ de_user_id: user.id, para_user_id: proponenteId, mensagem: `A tua proposta de troca (#${numOferta} por #${numPedido}) foi aceite!`, lida: false });
+  // Histórico
+  await sb.from('mercado_historico').insert({ tipo: 'troca', user1_id: proponenteId, user2_id: user.id, clube1: clubeOferta, num_cromo1: numOferta, clube2: clubePedido, num_cromo2: numPedido });
+  mostrarNotificacao('✅ Troca realizada com sucesso!', 'sucesso');
+  carregarTrocas();
+  carregarColecao();
+}
+
+// ── HISTÓRICO ──────────────────────────────
+async function carregarHistorico() {
+  const lista = document.getElementById('historico-lista');
+  lista.innerHTML = '';
+  const { data: { user } } = await sb.auth.getUser();
+  const { data: hist } = await sb.from('mercado_historico').select('*').or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`).order('criado_em', { ascending: false }).limit(50);
+  if (!hist || hist.length === 0) { lista.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:10px;">Sem histórico ainda.</div>'; return; }
+  hist.forEach(h => {
+    const div = document.createElement('div');
+    div.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;font-size:12px;color:rgba(255,255,255,0.6);';
+    const data = new Date(h.criado_em).toLocaleDateString('pt-PT');
+    if (h.tipo === 'venda') {
+      const fui_vendedor = h.user1_id === user.id;
+      div.innerHTML = fui_vendedor
+        ? `💰 Vendeste #${h.num_cromo1} ${h.clube1 === 'fcps' ? 'FCPS' : 'CCRDSV'} por <strong style="color:#c8a84b;">${parseFloat(h.preco).toFixed(2)} €</strong> (recebeste ${parseFloat(h.preco_vendedor).toFixed(2)} €) — ${data}`
+        : `🛒 Compraste #${h.num_cromo1} ${h.clube1 === 'fcps' ? 'FCPS' : 'CCRDSV'} por <strong style="color:#c8a84b;">${parseFloat(h.preco).toFixed(2)} €</strong> — ${data}`;
+    } else {
+      div.innerHTML = `🔄 Troca: #${h.num_cromo1} ${h.clube1 === 'fcps' ? 'FCPS' : 'CCRDSV'} ⇄ #${h.num_cromo2} ${h.clube2 === 'fcps' ? 'FCPS' : 'CCRDSV'} — ${data}`;
+    }
+    lista.appendChild(div);
+  });
+}
+
+// ── AS MINHAS VENDAS ──────────────────────────────
+async function carregarMinhasVendas() {
+  const lista = document.getElementById('minhas-vendas-lista');
+  lista.innerHTML = '';
+  const { data: { user } } = await sb.auth.getUser();
+  const { data: vendas } = await sb.from('mercado_vendas').select('*').eq('vendedor_id', user.id).eq('estado', 'ativo').order('criado_em', { ascending: false });
+  if (!vendas || vendas.length === 0) { lista.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:10px;">Não tens anúncios ativos.</div>'; return; }
+  vendas.forEach(v => {
+    const div = document.createElement('div');
+    div.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;';
+    const jogador = JOGADORES[`${v.clube}-${v.num_cromo}`];
+    div.innerHTML = `
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#fff;">${jogador ? jogador.nome : `Cromo #${v.num_cromo}`}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">${v.clube === 'fcps' ? 'FCPS' : 'CCRDSV'} · #${v.num_cromo}</div>
+        <div style="font-size:14px;font-weight:700;color:#c8a84b;margin-top:4px;">${parseFloat(v.preco).toFixed(2)} €</div>
+      </div>
+      <button onclick="cancelarVenda('${v.id}')" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,100,100,0.3);background:rgba(255,100,100,0.1);color:#ff6b6b;font-size:12px;cursor:pointer;">Cancelar</button>`;
+    lista.appendChild(div);
+  });
+}
+
+async function cancelarVenda(vendaId) {
+  if (!confirm('Cancelar este anúncio?')) return;
+  await sb.from('mercado_vendas').update({ estado: 'cancelado' }).eq('id', vendaId);
+  mostrarNotificacao('Anúncio cancelado!', 'sucesso');
+  carregarMinhasVendas();
+}
+
+async function atualizarSaldoUI() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  const { data: perfil } = await sb.from('profiles').select('saldo').eq('id', user.id).single();
+  if (perfil) {
+    const el = document.getElementById('topbar-saldo');
+    if (el) el.textContent = parseFloat(perfil.saldo).toFixed(2) + ' €';
+  }
+}
+
+// Inicializar mercado quando a página abre
+document.addEventListener('DOMContentLoaded', () => {
+  const navMercado = document.querySelector('.nav-item[onclick*="mercado"]');
+  if (navMercado) {
+    const orig = navMercado.getAttribute('onclick');
+    navMercado.setAttribute('onclick', orig + '; carregarMercado(); renderTrocaPedidoGrid();');
+  }
+});
 </script>
 </body>
