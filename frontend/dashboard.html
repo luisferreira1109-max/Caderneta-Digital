@@ -1243,7 +1243,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
           </div>
           <div style="display:flex;flex-direction:column;gap:10px;width:220px;">
             <button onclick="colarNaCaderneta()" style="padding:12px;border-radius:10px;border:none;background:#1a4a2a;color:#5fc87a;font-size:13px;font-weight:600;cursor:pointer;">Colar na caderneta</button>
-            <button onclick="fecharCromoOverlay(null)" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.6);font-size:13px;cursor:pointer;">Vender / trocar no mercado</button>
+            <button onclick="irParaMercadoVender()" style="padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.6);font-size:13px;cursor:pointer;">Vender / trocar no mercado</button>
             <button onclick="fecharCromoOverlay(null)" style="padding:10px;border-radius:10px;border:none;background:transparent;color:rgba(255,255,255,0.3);font-size:12px;cursor:pointer;">Fechar</button>
           </div>
         </div>
@@ -3022,16 +3022,69 @@ async function carregarMinhasVendas() {
         <div style="font-size:11px;color:rgba(255,255,255,0.4);">${v.clube === 'fcps' ? 'FCPS' : 'CCRDSV'} · #${v.num_cromo}</div>
         <div style="font-size:14px;font-weight:700;color:#c8a84b;margin-top:4px;">${parseFloat(v.preco).toFixed(2)} €</div>
       </div>
-      <button onclick="cancelarVenda('${v.id}')" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,100,100,0.3);background:rgba(255,100,100,0.1);color:#ff6b6b;font-size:12px;cursor:pointer;">Cancelar</button>`;
+      <button onclick="cancelarVenda('${v.id}', '${v.clube}', ${v.num_cromo})" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,100,100,0.3);background:rgba(255,100,100,0.1);color:#ff6b6b;font-size:12px;cursor:pointer;">Cancelar</button>`;
     lista.appendChild(div);
   });
 }
 
-async function cancelarVenda(vendaId) {
-  if (!confirm('Cancelar este anúncio?')) return;
+async function irParaMercadoVender() {
+  if (!_cromoselecionado) return;
+  const cromo = _cromoselecionado;
+  fecharCromoOverlay(null);
+  // Navegar para o mercado tab vender
+  const navMercado = document.querySelector('.nav-item[onclick*="mercado"]');
+  if (navMercado) mostrarPagina('mercado', navMercado);
+  setTimeout(() => {
+    mudarTabMercado('vender');
+    setTimeout(() => selecionarCromoVenda(cromo), 300);
+  }, 200);
+}
+
+async function publicarVenda() {
+  if (!_mercadoCromoSelecionado) return;
+  const preco = parseFloat(document.getElementById('mercado-preco').value);
+  if (!preco || preco < 0.01) { mostrarNotificacao('Define um preço válido!', 'erro'); return; }
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  const cromo = _mercadoCromoSelecionado;
+
+  // Publicar no mercado
+  await sb.from('mercado_vendas').insert({ vendedor_id: user.id, clube: cromo.clube, num_cromo: cromo.num_cromo, preco });
+
+  // Descontar da coleção enquanto está à venda
+  if (cromo.quantidade > 1) {
+    await sb.from('colecao').update({ quantidade: cromo.quantidade - 1 }).eq('user_id', user.id).eq('clube', cromo.clube).eq('num_cromo', cromo.num_cromo);
+  } else {
+    await sb.from('colecao').delete().eq('user_id', user.id).eq('clube', cromo.clube).eq('num_cromo', cromo.num_cromo);
+  }
+
+  mostrarNotificacao(`✅ Cromo colocado à venda por ${preco.toFixed(2)} €!`, 'sucesso');
+  document.getElementById('mercado-form-venda').style.display = 'none';
+  document.getElementById('mercado-preco').value = '';
+  _mercadoCromoSelecionado = null;
+  await carregarColecao();
+  await carregarMinhaColecaoVenda();
+}
+
+async function cancelarVenda(vendaId, clube, numCromo) {
+  if (!confirm('Cancelar este anúncio? O cromo volta à tua coleção.')) return;
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+
+  // Cancelar venda
   await sb.from('mercado_vendas').update({ estado: 'cancelado' }).eq('id', vendaId);
-  mostrarNotificacao('Anúncio cancelado!', 'sucesso');
-  carregarMinhasVendas();
+
+  // Devolver cromo à coleção
+  const { data: jaExiste } = await sb.from('colecao').select('quantidade').eq('user_id', user.id).eq('clube', clube).eq('num_cromo', numCromo).single();
+  if (jaExiste) {
+    await sb.from('colecao').update({ quantidade: jaExiste.quantidade + 1 }).eq('user_id', user.id).eq('clube', clube).eq('num_cromo', numCromo);
+  } else {
+    await sb.from('colecao').insert({ user_id: user.id, clube, num_cromo: numCromo, quantidade: 1 });
+  }
+
+  mostrarNotificacao('✅ Anúncio cancelado! Cromo devolvido à coleção.', 'sucesso');
+  await carregarMinhasVendas();
+  await carregarColecao();
 }
 
 async function atualizarSaldoUI() {
