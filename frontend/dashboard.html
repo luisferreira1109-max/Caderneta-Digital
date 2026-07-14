@@ -3036,12 +3036,23 @@ async function publicarVenda() {
   if (!user) return;
   const cromo = _mercadoCromoSelecionado;
 
+  // Verificar quantidade atual na BD (evitar vender mais do que tem)
+  const { data: cromoAtual } = await sb.from('colecao').select('quantidade').eq('user_id', user.id).eq('clube', cromo.clube).eq('num_cromo', cromo.num_cromo).single();
+  if (!cromoAtual || cromoAtual.quantidade < 1) {
+    mostrarNotificacao('Já não tens este cromo disponível!', 'erro');
+    document.getElementById('mercado-form-venda').style.display = 'none';
+    _mercadoCromoSelecionado = null;
+    await carregarColecao();
+    await carregarMinhaColecaoVenda();
+    return;
+  }
+
   // Publicar no mercado
   await sb.from('mercado_vendas').insert({ vendedor_id: user.id, clube: cromo.clube, num_cromo: cromo.num_cromo, preco });
 
-  // Descontar da coleção enquanto está à venda
-  if (cromo.quantidade > 1) {
-    await sb.from('colecao').update({ quantidade: cromo.quantidade - 1 }).eq('user_id', user.id).eq('clube', cromo.clube).eq('num_cromo', cromo.num_cromo);
+  // Descontar da coleção
+  if (cromoAtual.quantidade > 1) {
+    await sb.from('colecao').update({ quantidade: cromoAtual.quantidade - 1 }).eq('user_id', user.id).eq('clube', cromo.clube).eq('num_cromo', cromo.num_cromo);
   } else {
     await sb.from('colecao').delete().eq('user_id', user.id).eq('clube', cromo.clube).eq('num_cromo', cromo.num_cromo);
   }
