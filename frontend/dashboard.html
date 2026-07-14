@@ -244,6 +244,21 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 .em-breve-sub { font-size: 13px; color: rgba(255,255,255,0.3); max-width: 300px; line-height: 1.6; }
 
 
+/* ===== MERCADO DARK DESIGN ===== */
+.mercado-tab { padding:7px 18px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; border:none; background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.5); transition:all 0.2s; }
+.mercado-tab.ativo { background:#c8a84b; color:#111; }
+.mercado-tab:hover:not(.ativo) { background:rgba(255,255,255,0.12); color:rgba(255,255,255,0.8); }
+.mercado-card { background:#161b22; border:1px solid #30363d; border-radius:10px; padding:12px; display:flex; flex-direction:column; gap:8px; transition:border-color 0.2s; }
+.mercado-card:hover { border-color:#c8a84b44; }
+.mercado-card-img { height:80px; background:#0d1117; border-radius:6px; display:flex; align-items:center; justify-content:center; overflow:hidden; font-size:11px; color:#8b949e; }
+.mercado-card-img img { width:100%; height:100%; object-fit:cover; }
+.mercado-card-nome { font-size:12px; font-weight:600; color:#e6edf3; }
+.mercado-card-sub { font-size:11px; color:#8b949e; }
+.mercado-card-vendedor { font-size:10px; color:#6e7681; }
+.mercado-card-preco { font-size:16px; font-weight:700; color:#c8a84b; }
+.mercado-card-btn { background:#c8a84b; color:#111; border:none; border-radius:6px; padding:5px 12px; font-size:11px; font-weight:700; cursor:pointer; }
+.mercado-card-btn:hover { background:#e8c467; }
+
 /* ===== CADERNETAS 3D REALISTAS ===== */
 .cad-grid { display: flex; gap: 80px; justify-content: center; flex-wrap: wrap; align-items: flex-end; margin-top: 30px; }
 .cad-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
@@ -1282,11 +1297,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 
         <!-- Tabs -->
         <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
-          <button class="colecao-filtro ativo" id="tab-comprar" onclick="mudarTabMercado('comprar')">🛒 Comprar</button>
-          <button class="colecao-filtro" id="tab-vender" onclick="mudarTabMercado('vender')">💰 Vender</button>
-          <button class="colecao-filtro" id="tab-trocas" onclick="mudarTabMercado('trocas')">🔄 Trocas</button>
-          <button class="colecao-filtro" id="tab-historico" onclick="mudarTabMercado('historico')">📋 Histórico</button>
-          <button class="colecao-filtro" id="tab-minhas" onclick="mudarTabMercado('minhas')">📦 As minhas</button>
+          <button class="mercado-tab ativo" id="tab-comprar" onclick="mudarTabMercado('comprar')">🛒 Comprar</button>
+          <button class="mercado-tab" id="tab-vender" onclick="mudarTabMercado('vender')">💰 Vender</button>
+          <button class="mercado-tab" id="tab-trocas" onclick="mudarTabMercado('trocas')">🔄 Trocas</button>
+          <button class="mercado-tab" id="tab-historico" onclick="mudarTabMercado('historico')">📋 Histórico</button>
+          <button class="mercado-tab" id="tab-minhas" onclick="mudarTabMercado('minhas')">📦 As minhas</button>
         </div>
 
         <!-- TAB COMPRAR -->
@@ -2730,10 +2745,12 @@ let _trocaPedido = null;
 function mudarTabMercado(tab) {
   ['comprar','vender','trocas','historico','minhas'].forEach(t => {
     document.getElementById('mercado-' + t).style.display = 'none';
-    document.getElementById('tab-' + t)?.classList.remove('ativo');
+    const btn = document.getElementById('tab-' + t);
+    if(btn) btn.classList.remove('ativo');
   });
   document.getElementById('mercado-' + tab).style.display = '';
-  document.getElementById('tab-' + tab)?.classList.add('ativo');
+  const btn = document.getElementById('tab-' + tab);
+  if(btn) btn.classList.add('ativo');
 
   if (tab === 'comprar') carregarMercado();
   else if (tab === 'vender') carregarMinhaColecaoVenda();
@@ -2781,16 +2798,16 @@ async function carregarMercado() {
     const jogador = JOGADORES[key];
     const vendedor = v.profiles?.display_name || v.profiles?.username || 'Utilizador';
     const div = document.createElement('div');
-    div.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;';
+    div.className = 'mercado-card';
     div.innerHTML = `
-      <div style="width:100%;height:100px;border-radius:8px;overflow:hidden;background:linear-gradient(135deg,#1a2a3a,#0d1a2a);display:flex;align-items:center;justify-content:center;">
-        ${img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover;"/>` : `<span style="color:rgba(255,255,255,0.3);font-size:11px;">#${v.num_cromo}</span>`}
-      </div>
-      <div style="font-size:12px;font-weight:600;color:#fff;">${jogador ? jogador.nome : `#${v.num_cromo}`}</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.4);">${v.clube === 'fcps' ? 'FCPS' : 'CCRDSV'} · #${v.num_cromo}</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.3);">Vendido por: ${vendedor}</div>
-      <div style="font-size:16px;font-weight:700;color:#c8a84b;">${parseFloat(v.preco).toFixed(2)} €</div>
-      <button onclick="comprarCromo('${v.id}', ${v.preco}, '${v.vendedor_id}', '${v.clube}', ${v.num_cromo})" style="padding:8px;border-radius:8px;border:none;background:#c8a84b;color:#111;font-size:12px;font-weight:700;cursor:pointer;">Comprar</button>`;
+      <div class="mercado-card-img">${img ? `<img src="${img}" alt="cromo"/>` : `#${v.num_cromo}`}</div>
+      <div class="mercado-card-nome">${jogador ? jogador.nome : `Cromo #${v.num_cromo}`}</div>
+      <div class="mercado-card-sub">${v.clube === 'fcps' ? 'FCPS' : 'CCRDSV'} · #${v.num_cromo}</div>
+      <div class="mercado-card-vendedor">por: ${vendedor}</div>
+      <div class="mercado-card-footer">
+        <span class="mercado-card-preco">${parseFloat(v.preco).toFixed(2)} €</span>
+        <button class="mercado-card-btn" onclick="comprarCromo('${v.id}', ${v.preco}, '${v.vendedor_id}', '${v.clube}', ${v.num_cromo})">Comprar</button>
+      </div>`;
     grid.appendChild(div);
   });
 }
