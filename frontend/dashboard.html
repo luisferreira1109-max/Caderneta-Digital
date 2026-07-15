@@ -2773,11 +2773,8 @@ async function carregarMercado() {
     .neq('vendedor_id', user?.id);
 
   if (clube) query = query.eq('clube', clube);
-  if (ordem === 'preco_asc') query = query.order('preco', { ascending: true });
-  else if (ordem === 'preco_desc') query = query.order('preco', { ascending: false });
-  else query = query.order('criado_em', { ascending: false });
-
-  const { data: vendas } = await query;
+  
+  const { data: vendas } = await query.order('preco', { ascending: ordem !== 'preco_desc' }).order('criado_em', { ascending: false });
   grid.innerHTML = '';
 
   let lista = vendas || [];
