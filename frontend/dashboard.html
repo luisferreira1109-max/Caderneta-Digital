@@ -2938,10 +2938,27 @@ async function publicarTroca() {
   if (!_trocaOferta || !_trocaPedido) { mostrarNotificacao('Seleciona os dois cromos!', 'erro'); return; }
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
+
+  // Verificar quantidade real
+  const { data: cromoAtual } = await sb.from('colecao').select('quantidade').eq('user_id', user.id).eq('clube', _trocaOferta.clube).eq('num_cromo', _trocaOferta.num_cromo).single();
+  if (!cromoAtual || cromoAtual.quantidade < 1) { mostrarNotificacao('Já não tens este cromo disponível!', 'erro'); return; }
+
+  // Publicar troca
   await sb.from('mercado_trocas').insert({ proponente_id: user.id, clube_oferta: _trocaOferta.clube, num_cromo_oferta: _trocaOferta.num_cromo, clube_pedido: _trocaPedido.clube, num_cromo_pedido: _trocaPedido.num_cromo });
+
+  // Descontar da coleção
+  if (cromoAtual.quantidade > 1) {
+    await sb.from('colecao').update({ quantidade: cromoAtual.quantidade - 1 }).eq('user_id', user.id).eq('clube', _trocaOferta.clube).eq('num_cromo', _trocaOferta.num_cromo);
+  } else {
+    await sb.from('colecao').delete().eq('user_id', user.id).eq('clube', _trocaOferta.clube).eq('num_cromo', _trocaOferta.num_cromo);
+  }
+
   mostrarNotificacao('✅ Proposta de troca publicada!', 'sucesso');
   _trocaOferta = null; _trocaPedido = null;
+  await carregarColecao();
+  await carregarMinhaColecaoTroca();
   carregarTrocas();
+  carregarMinhasVendas();
 }
 
 async function carregarTrocas() {
@@ -3025,14 +3042,25 @@ async function carregarMinhasVendas() {
   const lista = document.getElementById('minhas-vendas-lista');
   lista.innerHTML = '';
   const { data: { user } } = await sb.auth.getUser();
+
+  // Vendas ativas
   const { data: vendas } = await sb.from('mercado_vendas').select('*').eq('vendedor_id', user.id).eq('estado', 'ativo').order('criado_em', { ascending: false });
-  if (!vendas || vendas.length === 0) { lista.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:10px;">Não tens anúncios ativos.</div>'; return; }
-  vendas.forEach(v => {
+  // Trocas pendentes
+  const { data: trocas } = await sb.from('mercado_trocas').select('*').eq('proponente_id', user.id).eq('estado', 'pendente').order('criado_em', { ascending: false });
+
+  if ((!vendas || vendas.length === 0) && (!trocas || trocas.length === 0)) {
+    lista.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:10px;">Não tens anúncios ativos.</div>';
+    return;
+  }
+
+  // Mostrar vendas
+  (vendas || []).forEach(v => {
     const div = document.createElement('div');
-    div.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;';
+    div.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;';
     const jogador = JOGADORES[`${v.clube}-${v.num_cromo}`];
     div.innerHTML = `
       <div>
+        <div style="font-size:11px;color:#c8a84b;font-weight:600;margin-bottom:4px;">💰 VENDA</div>
         <div style="font-size:13px;font-weight:600;color:#fff;">${jogador ? jogador.nome : `Cromo #${v.num_cromo}`}</div>
         <div style="font-size:11px;color:rgba(255,255,255,0.4);">${v.clube === 'fcps' ? 'FCPS' : 'CCRDSV'} · #${v.num_cromo}</div>
         <div style="font-size:14px;font-weight:700;color:#c8a84b;margin-top:4px;">${parseFloat(v.preco).toFixed(2)} €</div>
@@ -3040,6 +3068,34 @@ async function carregarMinhasVendas() {
       <button onclick="cancelarVenda('${v.id}', '${v.clube}', ${v.num_cromo})" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,100,100,0.3);background:rgba(255,100,100,0.1);color:#ff6b6b;font-size:12px;cursor:pointer;">Cancelar</button>`;
     lista.appendChild(div);
   });
+
+  // Mostrar trocas
+  (trocas || []).forEach(t => {
+    const div = document.createElement('div');
+    div.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;';
+    div.innerHTML = `
+      <div>
+        <div style="font-size:11px;color:#d980fa;font-weight:600;margin-bottom:4px;">🔄 TROCA</div>
+        <div style="font-size:12px;color:#fff;">Ofereço <strong style="color:#c8a84b;">#${t.num_cromo_oferta} ${t.clube_oferta === 'fcps' ? 'FCPS' : 'CCRDSV'}</strong></div>
+        <div style="font-size:12px;color:#fff;">Quero <strong style="color:#d980fa;">#${t.num_cromo_pedido} ${t.clube_pedido === 'fcps' ? 'FCPS' : 'CCRDSV'}</strong></div>
+      </div>
+      <button onclick="cancelarTroca('${t.id}', '${t.clube_oferta}', ${t.num_cromo_oferta})" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,100,100,0.3);background:rgba(255,100,100,0.1);color:#ff6b6b;font-size:12px;cursor:pointer;">Cancelar</button>`;
+    lista.appendChild(div);
+  });
+}
+
+async function cancelarTroca(trocaId, clube, numCromo) {
+  if (!confirm('Cancelar esta troca? O cromo volta à tua coleção.')) return;
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  await sb.from('mercado_trocas').update({ estado: 'cancelado' }).eq('id', trocaId);
+  // Devolver cromo
+  const { data: jaExiste } = await sb.from('colecao').select('quantidade').eq('user_id', user.id).eq('clube', clube).eq('num_cromo', numCromo).single();
+  if (jaExiste) await sb.from('colecao').update({ quantidade: jaExiste.quantidade + 1 }).eq('user_id', user.id).eq('clube', clube).eq('num_cromo', numCromo);
+  else await sb.from('colecao').insert({ user_id: user.id, clube, num_cromo: numCromo, quantidade: 1 });
+  mostrarNotificacao('✅ Troca cancelada! Cromo devolvido à coleção.', 'sucesso');
+  await carregarMinhasVendas();
+  await carregarColecao();
 }
 
 async function irParaMercadoVender() {
