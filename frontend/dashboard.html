@@ -2768,7 +2768,7 @@ async function carregarMercado() {
   const { data: { user } } = await sb.auth.getUser();
 
   let query = sb.from('mercado_vendas')
-    .select('*, profiles!vendedor_id(display_name, username)')
+    .select('*')
     .eq('estado', 'ativo')
     .neq('vendedor_id', user?.id);
 
@@ -2797,7 +2797,7 @@ async function carregarMercado() {
     const key = `${v.clube}-${v.num_cromo}`;
     const img = CROMOS_IMAGENS[key];
     const jogador = JOGADORES[key];
-    const vendedor = v.profiles?.display_name || v.profiles?.username || 'Utilizador';
+    const vendedor = 'Utilizador';
     const div = document.createElement('div');
     div.className = 'mercado-card';
     div.innerHTML = `
