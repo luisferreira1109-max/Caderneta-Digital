@@ -2774,7 +2774,11 @@ async function carregarMercado() {
 
   if (clube) query = query.eq('clube', clube);
   
-  const { data: vendas } = await query.order('preco', { ascending: ordem !== 'preco_desc' }).order('criado_em', { ascending: false });
+  if (ordem === 'preco_desc') query = query.order('preco', { ascending: false });
+  else if (ordem === 'recente') query = query.order('criado_em', { ascending: false });
+  else query = query.order('preco', { ascending: true });
+
+  const { data: vendas } = await query;
   grid.innerHTML = '';
 
   let lista = vendas || [];
