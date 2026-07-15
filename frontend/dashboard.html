@@ -2948,12 +2948,12 @@ async function carregarTrocas() {
   const lista = document.getElementById('trocas-lista');
   lista.innerHTML = '';
   const { data: { user } } = await sb.auth.getUser();
-  const { data: trocas } = await sb.from('mercado_trocas').select('*, profiles!proponente_id(display_name,username)').eq('estado', 'pendente').neq('proponente_id', user?.id).order('criado_em', { ascending: false });
+  const { data: trocas } = await sb.from('mercado_trocas').select('*').eq('estado', 'pendente').neq('proponente_id', user?.id).order('criado_em', { ascending: false });
   if (!trocas || trocas.length === 0) { lista.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:10px;">Sem propostas de troca no momento.</div>'; return; }
   trocas.forEach(t => {
     const div = document.createElement('div');
     div.style.cssText = 'background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;';
-    const proponente = t.profiles?.display_name || t.profiles?.username || 'Utilizador';
+    const proponente = 'Utilizador';
     div.innerHTML = `
       <div style="font-size:12px;color:rgba(255,255,255,0.6);">${proponente} oferece <strong style="color:#c8a84b;">#${t.num_cromo_oferta} ${t.clube_oferta === 'fcps' ? 'FCPS' : 'CCRDSV'}</strong> por <strong style="color:#d980fa;">#${t.num_cromo_pedido} ${t.clube_pedido === 'fcps' ? 'FCPS' : 'CCRDSV'}</strong></div>
       <button onclick="aceitarTroca('${t.id}','${t.proponente_id}','${t.clube_oferta}',${t.num_cromo_oferta},'${t.clube_pedido}',${t.num_cromo_pedido})" style="padding:8px 14px;border-radius:8px;border:none;background:#9b59b6;color:#fff;font-size:12px;font-weight:600;cursor:pointer;">Aceitar</button>`;
