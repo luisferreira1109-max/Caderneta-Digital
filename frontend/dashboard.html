@@ -154,7 +154,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 .mini-emblema.irivo { background: white; padding: 3px; }
 .mini-info { flex: 1; min-width: 0; }
 .mini-nome { font-size: 12px; font-weight: 600; color: white; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.mini-progress { height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+.mini-progress { height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; margin: 4px 0; }
 .mini-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg,#C9943A,#E8A83E); }
 .mini-pct { font-size: 10px; color: #C9943A; font-weight: 600; margin-top: 3px; }
 
@@ -1534,6 +1534,34 @@ function atualizarMiniColecoes() {
   if (miniFcps) miniFcps.style.display = cadDesbloqueadas.fcps ? 'flex' : 'none';
   if (miniCcrdsv) miniCcrdsv.style.display = cadDesbloqueadas.ccrdsv ? 'flex' : 'none';
   if (miniVazio) miniVazio.style.display = (cadDesbloqueadas.fcps || cadDesbloqueadas.ccrdsv) ? 'none' : 'block';
+  // Atualizar barras com cromos colados
+  atualizarBarrasProgresso();
+}
+
+async function atualizarBarrasProgresso() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  const { data: colados } = await sb.from('cromos_colados').select('clube').eq('user_id', user.id);
+  if (!colados) return;
+
+  const totalFcps = 216;
+  const totalCcrdsv = 240;
+  const coladosFcps = colados.filter(c => c.clube === 'fcps').length;
+  const coladosCcrdsv = colados.filter(c => c.clube === 'ccrdsv').length;
+  const pctFcps = Math.round((coladosFcps / totalFcps) * 100);
+  const pctCcrdsv = Math.round((coladosCcrdsv / totalCcrdsv) * 100);
+
+  // Atualizar FCPS
+  const fcpsFill = document.querySelector('#mini-colecao-fcps .mini-fill');
+  const fcpsPct = document.querySelector('#mini-colecao-fcps .mini-pct');
+  if (fcpsFill) fcpsFill.style.width = pctFcps + '%';
+  if (fcpsPct) fcpsPct.textContent = `${coladosFcps} / ${totalFcps} cromos colados · ${pctFcps}%`;
+
+  // Atualizar CCRDSV
+  const ccrdsvFill = document.querySelector('#mini-colecao-ccrdsv .mini-fill');
+  const ccrdsvPct = document.querySelector('#mini-colecao-ccrdsv .mini-pct');
+  if (ccrdsvFill) ccrdsvFill.style.width = pctCcrdsv + '%';
+  if (ccrdsvPct) ccrdsvPct.textContent = `${coladosCcrdsv} / ${totalCcrdsv} cromos colados · ${pctCcrdsv}%`;
 }
 
 async function carregarCadernetas() {
@@ -2151,6 +2179,7 @@ async function colarNaCaderneta() {
 
   mostrarNotificacao(`✅ Cromo #${cromo.num_cromo} colado na caderneta ${clubeNome}!`, 'sucesso');
   fecharCromoOverlay(null);
+  atualizarBarrasProgresso();
 
   // Navegar para a caderneta e abrir na página certa
   setTimeout(() => {
