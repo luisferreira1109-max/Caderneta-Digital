@@ -1472,6 +1472,17 @@ function irParaInicio() {
 
 
 
+// Função auxiliar para enviar notificação ao próprio utilizador
+async function notificarProprio(user_id, mensagem) {
+  await sb.from('mensagens').insert({
+    de_user_id: user_id,
+    para_user_id: user_id,
+    mensagem,
+    lida: false
+  });
+  atualizarContadorMensagens();
+}
+
 function mostrarDefinicoes() {
   // Preencher dados atuais
   const nome = document.getElementById('user-nome')?.textContent || '';
@@ -2941,8 +2952,10 @@ async function comprarCromo(vendaId, preco, vendedorId, clube, numCromo) {
   }
   // 5. Histórico
   await sb.from('mercado_historico').insert({ tipo: 'venda', user1_id: vendedorId, user2_id: user.id, clube1: clube, num_cromo1: numCromo, preco, preco_vendedor: precoVendedor, preco_plataforma: precoPlataforma });
-  // 6. Notificação
-  await sb.from('mensagens').insert({ de_user_id: user.id, para_user_id: vendedorId, mensagem: `O teu cromo #${numCromo} (${clube === 'fcps' ? 'FCPS' : 'CCRDSV'}) foi vendido por ${parseFloat(preco).toFixed(2)} €! Recebeste ${precoVendedor.toFixed(2)} €.`, lida: false });
+  // 6. Notificação ao vendedor
+  await sb.from('mensagens').insert({ de_user_id: user.id, para_user_id: vendedorId, mensagem: `💰 O teu cromo #${numCromo} (${clube === 'fcps' ? 'FCPS' : 'CCRDSV'}) foi vendido por ${parseFloat(preco).toFixed(2)} €! Recebeste ${precoVendedor.toFixed(2)} €.`, lida: false });
+  // 7. Notificação ao comprador
+  await notificarProprio(user.id, `🛒 Compraste o cromo #${numCromo} (${clube === 'fcps' ? 'FCPS' : 'CCRDSV'}) por ${parseFloat(preco).toFixed(2)} €!`);
 
   mostrarNotificacao(`✅ Cromo comprado com sucesso!`, 'sucesso');
   atualizarSaldoUI();
@@ -3072,6 +3085,7 @@ async function publicarTroca() {
   }
 
   mostrarNotificacao('✅ Proposta de troca publicada!', 'sucesso');
+  await notificarProprio(user.id, `🔄 Proposta de troca publicada: ofereces #${_trocaOferta.num_cromo} (${_trocaOferta.clube === 'fcps' ? 'FCPS' : 'CCRDSV'}) por #${_trocaPedido.num_cromo} (${_trocaPedido.clube === 'fcps' ? 'FCPS' : 'CCRDSV'}).`);
   _trocaOferta = null; _trocaPedido = null;
   await carregarColecao();
   await carregarMinhaColecaoTroca();
@@ -3124,7 +3138,9 @@ async function aceitarTroca(trocaId, proponenteId, clubeOferta, numOferta, clube
   // Marcar troca como aceite
   await sb.from('mercado_trocas').update({ estado: 'aceite', resolvido_em: new Date().toISOString() }).eq('id', trocaId);
   // Notificar proponente
-  await sb.from('mensagens').insert({ de_user_id: user.id, para_user_id: proponenteId, mensagem: `A tua proposta de troca (#${numOferta} por #${numPedido}) foi aceite!`, lida: false });
+  await sb.from('mensagens').insert({ de_user_id: user.id, para_user_id: proponenteId, mensagem: `🔄 A tua proposta de troca (#${numOferta} ${clubeOferta === 'fcps' ? 'FCPS' : 'CCRDSV'} por #${numPedido} ${clubePedido === 'fcps' ? 'FCPS' : 'CCRDSV'}) foi aceite!`, lida: false });
+  // Notificar utilizador que aceitou
+  await notificarProprio(user.id, `🔄 Aceitaste a troca: recebeste #${numOferta} (${clubeOferta === 'fcps' ? 'FCPS' : 'CCRDSV'}) e entregaste #${numPedido} (${clubePedido === 'fcps' ? 'FCPS' : 'CCRDSV'}).`);
   // Histórico
   await sb.from('mercado_historico').insert({ tipo: 'troca', user1_id: proponenteId, user2_id: user.id, clube1: clubeOferta, num_cromo1: numOferta, clube2: clubePedido, num_cromo2: numPedido });
   mostrarNotificacao('✅ Troca realizada com sucesso!', 'sucesso');
@@ -3259,6 +3275,7 @@ async function publicarVenda() {
   }
 
   mostrarNotificacao(`✅ Cromo colocado à venda por ${preco.toFixed(2)} €!`, 'sucesso');
+  await notificarProprio(user.id, `💰 Colocaste o cromo #${cromo.num_cromo} (${cromo.clube === 'fcps' ? 'FCPS' : 'CCRDSV'}) à venda por ${preco.toFixed(2)} €.`);
   document.getElementById('mercado-form-venda').style.display = 'none';
   document.getElementById('mercado-preco').value = '';
   _mercadoCromoSelecionado = null;
