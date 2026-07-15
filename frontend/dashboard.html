@@ -1023,11 +1023,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
     <div class="nav-item" onclick="mostrarPagina('amigos', this); carregarAmigos()">
       <i class="ti ti-users nav-icon"></i><span>Amigos</span>
     </div>
-    <div class="nav-item" onclick="mostrarPagina('perfil', this)">
-      <i class="ti ti-user nav-icon"></i><span>Perfil</span>
-    </div>
     <div class="sidebar-bottom">
       <div class="nav-divider"></div>
+      <div class="nav-item" onclick="mostrarPagina('definicoes', this); mostrarDefinicoes()">
+        <i class="ti ti-settings nav-icon"></i><span>Definições</span>
+      </div>
       <div class="nav-item logout" onclick="logout()">
         <i class="ti ti-logout nav-icon"></i><span>Log out</span>
       </div>
@@ -1422,9 +1422,54 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
       </div>
 
       <!-- PERFIL -->
-      <div id="pagina-perfil" style="display:none">
-        <div class="page-header"><p class="page-titulo">Perfil</p><p class="page-sub">As tuas estatísticas e conquistas</p></div>
-        <div class="em-breve"><div class="em-breve-icon">🏆</div><div class="em-breve-titulo">Perfil em breve</div><div class="em-breve-sub">Brevemente poderás ver as tuas conquistas, nível e estatísticas detalhadas.</div></div>
+      <div id="pagina-definicoes" style="display:none">
+        <div class="page-header">
+          <p class="page-titulo">Definições</p>
+          <p class="page-sub">Gere a tua conta e preferências</p>
+        </div>
+
+        <!-- Secção: Perfil -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px;margin-bottom:16px;">
+          <div style="font-size:13px;font-weight:600;color:#c8a84b;margin-bottom:16px;letter-spacing:1px;">👤 PERFIL</div>
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+            <div id="def-avatar" onclick="document.getElementById('def-foto-input').click()" style="width:64px;height:64px;border-radius:50%;background:rgba(200,168,75,0.15);border:2px solid #c8a84b;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;font-size:24px;">👤</div>
+            <div>
+              <div style="font-size:13px;color:#fff;font-weight:600;" id="def-nome-display">---</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;" id="def-email-display">---</div>
+              <div style="font-size:11px;color:#c8a84b;margin-top:4px;cursor:pointer;" onclick="document.getElementById('def-foto-input').click()">Alterar foto</div>
+            </div>
+            <input type="file" id="def-foto-input" accept="image/*" style="display:none" onchange="previewFotoDefinicoes(event)"/>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;">Nome de utilizador</div>
+              <input id="def-nome-input" type="text" placeholder="O teu nome..." style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;font-size:13px;outline:none;"/>
+            </div>
+            <div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;">Status personalizado</div>
+              <input id="def-status-input" type="text" placeholder="Ex: Colecionador profissional..." maxlength="60" style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;font-size:13px;outline:none;"/>
+            </div>
+            <button onclick="guardarDefinicoesPerfil()" style="padding:10px;border-radius:8px;border:none;background:#c8a84b;color:#111;font-size:13px;font-weight:700;cursor:pointer;margin-top:4px;">Guardar alterações</button>
+          </div>
+        </div>
+
+        <!-- Secção: Conta -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px;margin-bottom:16px;">
+          <div style="font-size:13px;font-weight:600;color:#c8a84b;margin-bottom:16px;letter-spacing:1px;">🔐 CONTA</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;">Nova password</div>
+              <input id="def-pass-input" type="password" placeholder="Nova password..." style="width:100%;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;font-size:13px;outline:none;"/>
+            </div>
+            <button onclick="alterarPassword()" style="padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,0.08);color:#fff;font-size:13px;font-weight:600;cursor:pointer;">Alterar password</button>
+          </div>
+        </div>
+
+        <!-- Secção: Danger Zone -->
+        <div style="background:rgba(226,75,74,0.05);border:1px solid rgba(226,75,74,0.15);border-radius:14px;padding:20px;">
+          <div style="font-size:13px;font-weight:600;color:#e24b4a;margin-bottom:12px;letter-spacing:1px;">⚠️ ZONA DE PERIGO</div>
+          <button onclick="logout()" style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(226,75,74,0.3);background:rgba(226,75,74,0.1);color:#e24b4a;font-size:13px;font-weight:600;cursor:pointer;">Terminar sessão</button>
+        </div>
       </div>
 
     </div>
@@ -1441,7 +1486,7 @@ const sb = createClient(
 
 const bgs = {
   inicio:'bg-inicio', cadernetas:'bg-cadernetas', colecao:'bg-colecao',
-  packs:'bg-packs', mercado:'bg-mercado', amigos:'bg-amigos', perfil:'bg-perfil'
+  packs:'bg-packs', mercado:'bg-mercado', amigos:'bg-amigos', definicoes:'bg-perfil'
 };
 
 function mostrarPagina(nome, el) {
@@ -1458,8 +1503,58 @@ function irParaInicio() {
 
 
 
-// ===== MENU PERFIL =====
-let fotoBase64 = null;
+function mostrarDefinicoes() {
+  // Preencher dados atuais
+  const nome = document.getElementById('user-nome')?.textContent || '';
+  const email = document.getElementById('user-email')?.textContent || '';
+  const status = document.getElementById('user-status')?.textContent || '';
+  document.getElementById('def-nome-display').textContent = nome;
+  document.getElementById('def-email-display').textContent = email;
+  document.getElementById('def-nome-input').value = nome;
+  document.getElementById('def-status-input').value = status;
+  // Foto
+  const fotoSrc = document.getElementById('user-avatar')?.querySelector('img')?.src;
+  if (fotoSrc) document.getElementById('def-avatar').innerHTML = `<img src="${fotoSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+}
+
+function previewFotoDefinicoes(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    fotoBase64 = ev.target.result;
+    document.getElementById('def-avatar').innerHTML = `<img src="${fotoBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+    const avatarTop = document.getElementById('user-avatar');
+    if(avatarTop) avatarTop.innerHTML = `<img src="${fotoBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function guardarDefinicoesPerfil() {
+  const nome = document.getElementById('def-nome-input').value.trim();
+  const status = document.getElementById('def-status-input').value.trim();
+  if (!nome) { mostrarNotificacao('O nome não pode estar vazio!', 'erro'); return; }
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  const updates = { display_name: nome, status_personalizado: status };
+  if (fotoBase64) updates.avatar_url = fotoBase64;
+  await sb.from('profiles').update(updates).eq('id', user.id);
+  // Atualizar UI
+  const nomeEl = document.getElementById('user-nome');
+  if(nomeEl) nomeEl.textContent = nome;
+  document.getElementById('def-nome-display').textContent = nome;
+  mostrarNotificacao('✅ Perfil atualizado!', 'sucesso');
+  fotoBase64 = null;
+}
+
+async function alterarPassword() {
+  const pass = document.getElementById('def-pass-input').value;
+  if (!pass || pass.length < 6) { mostrarNotificacao('A password deve ter pelo menos 6 caracteres!', 'erro'); return; }
+  const { error } = await sb.auth.updateUser({ password: pass });
+  if (error) { mostrarNotificacao('Erro ao alterar password!', 'erro'); return; }
+  mostrarNotificacao('✅ Password alterada com sucesso!', 'sucesso');
+  document.getElementById('def-pass-input').value = '';
+}
 
 function togglePerfilMenu(e) {
   e.stopPropagation();
