@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
@@ -618,6 +618,10 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
   cursor: default;
 }
 .pack-envelope:hover { filter: drop-shadow(0 28px 55px rgba(0,0,0,0.95)); }
+#pack-std-inner, #pack-pre-inner { background: none !important; }
+#pack-std-inner { background-image: url("images/pack-standard.png") !important; background-size: cover !important; background-position: center !important; }
+#pack-pre-inner { background-image: url("images/pack-premium.png") !important; background-size: cover !important; background-position: center !important; }
+#pack-std-inner > *:not(#pack-std-shine), #pack-pre-inner > *:not(#pack-pre-shine) { display: none !important; }
 .pack-envelope.premium-body { animation: floatPackPre 3.5s ease-in-out infinite; }
 
 @keyframes floatPack { 0%,100%{transform:translateY(0) rotate(-1.5deg)} 50%{transform:translateY(-16px) rotate(-1.5deg)} }
