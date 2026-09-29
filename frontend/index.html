@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
@@ -57,7 +57,9 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
 .emblema-wrap, .vs, .titulo-acoes { display: none !important; }
 .bg { background-image: url('images/fundo-estadio.jpg') !important; background-position: center 20% !important; }
 .overlay { background: linear-gradient(180deg, rgba(20,12,0,0.6), rgba(8,6,4,0.3) 40%, rgba(6,5,8,0.8) 100%) !important; }
-.center::before { content: ''; display: block; width: 140px; height: 140px; margin: 0 auto 24px auto; background-image: url('images/favicon.png'); background-size: cover; background-position: center; border-radius: 30px; box-shadow: 0 12px 30px rgba(0,0,0,0.6); animation: floatLogo 3.2s ease-in-out infinite; }
+.topbar { display: none !important; }
+.center::before { content: 'CADERNETA DIGITAL'; display: block; font-family: 'Anton', sans-serif; font-size: 34px; letter-spacing: 2px; text-align: center; background: linear-gradient(135deg,#FFE9A8,#FFD34D 35%,#F5A623 65%,#A85E00); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; }
+.emblemas { width: 140px; height: 140px; background-image: url('images/favicon.png'); background-size: cover; background-position: center; border-radius: 30px; box-shadow: 0 12px 30px rgba(0,0,0,0.6); animation: floatLogo 3.2s ease-in-out infinite; margin: 0 auto; }
 @keyframes floatLogo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
 .btn-inscrever:hover { background: #E8A83E; transform: translateY(-4px) scale(1.04); }
 .btn-login:hover { border-color: #C9943A; color: #C9943A; transform: translateY(-4px) scale(1.04); }
