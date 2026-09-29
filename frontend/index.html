@@ -162,13 +162,28 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
   </div>
 </div>
 
+<div class='modal-overlay' id='modal-novapass'>
+  <div class='modal'>
+    <button class='modal-fechar' onclick='fecharModal("novapass")'>X</button>
+    <div class='modal-logo'><img src='images/favicon.png' alt='Caderneta Digital' style='width:44px;height:44px;border-radius:10px;display:block;'></div>
+    <p class='modal-titulo'>Nova password</p>
+    <p class='modal-sub'>Escolhe uma password nova para a tua conta</p>
+    <div class='campo'><label>Nova password</label><input type='password' id='nova-pass1' placeholder='Minimo 6 caracteres'/></div>
+    <div class='campo'><label>Confirmar password</label><input type='password' id='nova-pass2' placeholder='Repete a password'/></div>
+    <div class='erro' id='erro-novapass'></div>
+    <button class='btn-modal' id='btn-nova-pass' onclick='guardarNovaPassword()'>Guardar nova password</button>
+  </div>
+</div>
 <script>
   var supabaseClient = supabase.createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY');
   var emailRegistoAtual = '';
 
   // Se já está autenticado vai direto ao dashboard
+  var isRecovery = window.location.hash.indexOf('type=recovery') !== -1;
   supabaseClient.auth.getSession().then(function(result) {
-    if (result.data.session && result.data.session.user.email_confirmed_at) {
+    if (isRecovery) {
+      abrirModal('novapass');
+    } else if (result.data.session && result.data.session.user.email_confirmed_at) {
       window.location.href = 'dashboard.html';
     } else if (result.data.session && !result.data.session.user.email_confirmed_at) {
       // Tem sessão mas email não confirmado — mostrar mensagem
@@ -273,6 +288,19 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
       if (r.error) { mostrarErro('erro-login', 'Erro ao enviar email. Verifica o email introduzido.'); }
       else { alert('Email de recuperação enviado para ' + email + '! Verifica a tua caixa de entrada.'); }
     });
+  }
+
+  async function guardarNovaPassword() {
+    var pass1 = document.getElementById('nova-pass1').value;
+    var pass2 = document.getElementById('nova-pass2').value;
+    if (pass1.length < 6) { mostrarErro('erro-novapass', 'A password deve ter no minimo 6 caracteres.'); return; }
+    if (pass1 !== pass2) { mostrarErro('erro-novapass', 'As passwords nao coincidem.'); return; }
+    var btn = document.getElementById('btn-nova-pass');
+    btn.disabled = true;
+    var r2 = await supabaseClient.auth.updateUser({ password: pass1 });
+    btn.disabled = false;
+    if (r2.error) { mostrarErro('erro-novapass', 'Erro ao guardar password. Tenta novamente.'); }
+    else { alert('Password alterada com sucesso!'); window.location.href = 'dashboard.html'; }
   }
 
   async function entrar() {
