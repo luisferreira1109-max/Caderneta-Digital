@@ -1,4 +1,4 @@
-var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+﻿var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
 var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 var deferredPrompt = null;
 
@@ -10,7 +10,7 @@ window.addEventListener('beforeinstallprompt', function(e) {
 if (!isStandalone) {
   var btn = document.createElement('button');
   btn.innerHTML = '📱 Instalar App';
-  btn.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#C9943A,#E8A83E);color:#0a0a0f;border:none;border-radius:50px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;z-index:9999;box-shadow:0 4px 20px rgba(201,148,58,0.4);';
+  btn.style.cssText = 'position:fixed;bottom:78px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#FFD34D,#C9943A);color:#1a1204;border:none;border-radius:50px;padding:12px 26px;font-size:14px;font-weight:600;cursor:pointer;z-index:9999;box-shadow:0 4px 16px rgba(201,148,58,0.35);letter-spacing:0.03em;';
   document.body.appendChild(btn);
   btn.addEventListener('click', instalarApp);
 }
