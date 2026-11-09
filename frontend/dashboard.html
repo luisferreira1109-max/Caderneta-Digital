@@ -264,10 +264,11 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 /* ===== CADERNETAS 3D REALISTAS ===== */
 .cad-grid { display: flex; gap: 80px; justify-content: center; flex-wrap: wrap; align-items: flex-end; margin-top: 30px; }
 .cad-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
-.book-container { width: 220px; height: 300px; position: relative; perspective: 1600px; cursor: pointer; transition: transform 0.3s; }
+.book-container { width: 240px; height: 300px; position: relative; perspective: 1600px; cursor: pointer; transition: transform 0.3s; }
 .book-container:not(.locked):hover { transform: translateY(-10px) scale(1.02); }
-.book-body { width: 220px; height: 300px; position: relative; transform: rotateY(-28deg) rotateX(7deg); transform-style: preserve-3d; filter: drop-shadow(-28px 32px 55px rgba(0,0,0,0.85)); transition: filter 0.4s; }
-.book-container:not(.locked):hover .book-body { filter: drop-shadow(-36px 42px 70px rgba(0,0,0,0.95)); }
+.book-body { width: 240px; height: 300px; position: relative; filter: drop-shadow(0 22px 30px rgba(0,0,0,0.7)); transition: filter 0.4s; }
+.caderneta-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.book-container:not(.locked):hover .book-body { filter: drop-shadow(0 30px 40px rgba(0,0,0,0.85)); }
 
 /* Páginas laterais finas estilo Panini */
 .book-pages { position: absolute; right: -10px; top: 4px; width: 11px; height: 292px; border-radius: 0 3px 3px 0;
@@ -309,7 +310,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 
 /* Lock overlay */
 .book-container.locked .book-body { filter: grayscale(85%) brightness(0.28); }
-.book-lock-overlay { display: none; position: absolute; top: 0; left: 0; width: 220px; height: 300px; z-index: 10; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+.book-lock-overlay { display: none; position: absolute; top: 0; left: 0; width: 240px; height: 300px; z-index: 10; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
 .book-container.locked .book-lock-overlay { display: flex; }
 .book-lock-icon { width: 54px; height: 54px; border-radius: 50%; background: rgba(0,0,0,0.65); border: 2px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 22px; }
 .book-lock-preco { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.8); border: 1px solid #C9943A; border-radius: 20px; padding: 6px 16px; }
@@ -1158,18 +1159,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
           <!-- FC PAÇO DE SOUSA -->
           <div class="cad-wrap">
             <div class="book-container locked" id="card-fcps" onclick="abrirCaderneta('fcps')">
-              <div class="book-body">
-                <div class="book-spine fcps"></div>
-                <div class="book-pages"></div>
-                <div class="book-back fcps"><img src="images/simbolo paço de sousa/emblema-fcps.png" alt="FCPS"/></div>
-                <div class="book-cover fcps"><div class="cover-border"></div>
-                  <span class="book-cover-epoca">2026 / 2027</span>
-                  <img class="book-cover-emblema" src="images/simbolo paço de sousa/emblema-fcps.png" alt="FCPS"/>
-                  <div class="book-cover-linha"></div>
-                  <div class="book-cover-nome">FC Paço<br>de Sousa</div>
-                  <span class="book-cover-cd">Caderneta Digital</span>
-                </div>
-              </div>
+              <div class="book-body"><img class="caderneta-img" src="images/caderneta-fcps.png" alt="FC Paço de Sousa"/></div>
               <div class="book-lock-overlay">
                 <div class="book-lock-icon">🔒</div>
                 <div class="book-lock-preco">
@@ -1188,18 +1178,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
           <!-- CCRDSV IRIVO -->
           <div class="cad-wrap">
             <div class="book-container locked" id="card-ccrdsv" onclick="abrirCaderneta('ccrdsv')">
-              <div class="book-body">
-                <div class="book-spine ccrdsv"></div>
-                <div class="book-pages"></div>
-                <div class="book-back ccrdsv"><img src="images/simbolo irivo/emblema-ccrdsv.png" alt="CCRDSV"/></div>
-                <div class="book-cover ccrdsv"><div class="cover-border"></div>
-                  <span class="book-cover-epoca">2026 / 2027</span>
-                  <img class="book-cover-emblema" src="images/simbolo irivo/emblema-ccrdsv.png" alt="CCRDSV"/>
-                  <div class="book-cover-linha"></div>
-                  <div class="book-cover-nome">CCRDSV<br>Irivo</div>
-                  <span class="book-cover-cd">Caderneta Digital</span>
-                </div>
-              </div>
+              <div class="book-body"><img class="caderneta-img" src="images/caderneta-ccrdsv.png" alt="CCRDSV Irivo"/></div>
               <div class="book-lock-overlay">
                 <div class="book-lock-icon">🔒</div>
                 <div class="book-lock-preco">
