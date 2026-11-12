@@ -12,10 +12,10 @@ import io
 AQUI = os.path.dirname(os.path.abspath(__file__))
 SAIDA = os.path.join(AQUI, '..', 'frontend', 'images', 'cromos')
 CLUBES = {
-  'fcps':   dict(total=216, nome='FC PAÇO DE SOUSA',       emb='emblemas/fcps.png',   box=(312, 30, 64, 80),
+  'fcps':   dict(total=216, nome='FC PAÇO DE SOUSA',       emb='emblemas/fcps.png',   box=(299, 28, 77, 96),
                  lend=[132], epic=[25,50,75,100,125,150,175,200],
                  raro=[10,20,30,40,60,70,80,90,110,120,130,140,160,170,180,190,210]),
-  'ccrdsv': dict(total=240, nome='CCRDSV IRIVO PENAFIEL',  emb='emblemas/ccrdsv.png', box=(292, 30, 84, 104),
+  'ccrdsv': dict(total=240, nome='CCRDSV IRIVO PENAFIEL',  emb='emblemas/ccrdsv.png', box=(275, 28, 101, 125),
                  lend=[13,223], epic=[24,48,72,96,120,144,168,192,216],
                  raro=[12,36,60,84,108,132,156,180,204,228]),
 }
@@ -59,15 +59,20 @@ def main():
     os.makedirs(SAIDA, exist_ok=True)
     tmp = os.path.join(AQUI, '_tmp.html')
     with sync_playwright() as p:
-        b = p.chromium.launch(); pg = b.new_page(viewport={'width': 640, 'height': 960}, device_scale_factor=1)
+        b = p.chromium.launch()
+        pg = {1: b.new_page(viewport={'width': 640, 'height': 960}, device_scale_factor=1),
+              2: b.new_page(viewport={'width': 640, 'height': 960}, device_scale_factor=2)}
         for clube, c in CLUBES.items():
             for n in range(1, c['total'] + 1):
                 k = f'{clube}-{n}'
                 if alvo and k not in alvo: continue
+                esc = 2 if estilo(clube, n) == 'lendario' else 1   # lendários em alta resolução
                 open(tmp, 'w', encoding='utf-8').write(gerar_html(modelo, clube, n, dados.get(k, {})))
-                pg.goto('file://' + tmp); pg.wait_for_timeout(60)
-                png = pg.screenshot(omit_background=True)
-                Image.open(io.BytesIO(png)).save(os.path.join(SAIDA, k + '.webp'), 'WEBP', quality=84, method=6)
+                pg[esc].goto('file://' + tmp); pg[esc].wait_for_timeout(60)
+                im = Image.open(io.BytesIO(pg[esc].screenshot(omit_background=True)))
+                # corta a margem transparente (proporção 2:3)
+                im = im.crop((20 * esc, 30 * esc, 620 * esc, 930 * esc))
+                im.save(os.path.join(SAIDA, k + '.webp'), 'WEBP', quality=86, method=6)
         b.close()
     os.remove(tmp)
     # dados dos jogadores para o site
