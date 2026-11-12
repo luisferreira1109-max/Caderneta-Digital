@@ -1,0 +1,6 @@
+{
+  "_ajuda": "Para cada cromo, preenche: nome, pos (ex. AV, DE, GR, MD), camisola (número) e escalao. Foto: coloca em fotos/<clube>-<numero>.png (recortada, fundo transparente). Cromos que não estiverem aqui ficam com silhueta.",
+  "fcps-132":   { "nome": "Luís Ferreira",  "pos": "AV", "camisola": "8", "escalao": "Séniores", "foto": "fotos/fcps-132.png",   "fx": 85,  "fy": 42, "fw": 230, "fh": 303 },
+  "ccrdsv-13":  { "nome": "Duarte Silva",   "pos": "DE", "camisola": "9", "escalao": "Sub 7",    "foto": "fotos/ccrdsv-13.png",  "fx": 105, "fy": 50, "fw": 190, "fh": 290 },
+  "ccrdsv-223": { "nome": "Vitor Ferreira", "pos": "AV", "camisola": "9", "escalao": "Séniores", "foto": "fotos/ccrdsv-223.png", "fx": 85,  "fy": 36, "fw": 230, "fh": 404 }
+}

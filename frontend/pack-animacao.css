@@ -1,0 +1,84 @@
+/* ===== ANIMAÇÃO DE ABERTURA DE PACKS (Caderneta Digital) ===== */
+#pa-layer{position:fixed;inset:0;z-index:3000;background:#000;overflow:hidden;font-family:"Inter",sans-serif;color:#fff;animation:paFadeIn .25s ease-out}
+@keyframes paFadeIn{from{opacity:0}to{opacity:1}}
+#pa-layer *{box-sizing:border-box}
+
+.pa-skip{position:absolute;top:18px;right:20px;z-index:20;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.75);font:600 12px "Inter",sans-serif;letter-spacing:2px;text-transform:uppercase;padding:9px 16px;border-radius:20px;cursor:pointer;transition:background .2s}
+.pa-skip:hover{background:rgba(255,255,255,.16)}
+
+/* ---------- Ecrã de loading (preto + ícone) ---------- */
+.pa-load{position:absolute;inset:0;background:#000;display:flex;align-items:flex-end;justify-content:center}
+.pa-load-icon{width:54px;height:54px;margin-bottom:34px;object-fit:contain;animation:paPulse 1.1s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(245,200,66,.55))}
+.pa-load-line{position:absolute;left:0;right:0;bottom:92px;height:1px;background:rgba(255,255,255,.08);overflow:hidden}
+.pa-load-line::after{content:"";position:absolute;top:0;bottom:0;width:22%;background:linear-gradient(90deg,transparent,rgba(245,200,66,.85),transparent);animation:paSweep 1.1s ease-in-out infinite}
+@keyframes paPulse{0%,100%{transform:scale(.88);opacity:.65}50%{transform:scale(1.06);opacity:1}}
+@keyframes paSweep{from{left:-25%}to{left:103%}}
+
+/* ---------- Abertura de estádio ---------- */
+.pa-stadium{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%,#1b1606 0%,#07070a 62%,#000 100%);opacity:0;animation:paStadiumIn .7s ease-out forwards}
+@keyframes paStadiumIn{to{opacity:1}}
+.pa-cam{position:absolute;inset:0;transform-origin:50% 44%;animation:paCam 5s ease-in forwards}
+@keyframes paCam{from{transform:scale(1)}to{transform:scale(1.2)}}
+
+.pa-wall{position:absolute;top:0;bottom:0;width:30%;background:repeating-linear-gradient(105deg,rgba(255,214,90,.55) 0 3px,rgba(60,42,0,.35) 3px 16px),linear-gradient(180deg,#8a6200,#3b2900 70%,#120d00);opacity:.9}
+.pa-wall.l{left:0;clip-path:polygon(0 0,100% 18%,100% 74%,0 100%)}
+.pa-wall.r{right:0;clip-path:polygon(0 18%,100% 0,100% 100%,0 74%)}
+.pa-wall::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.65),transparent 55%,rgba(0,0,0,.35))}
+.pa-wall.r::after{background:linear-gradient(270deg,rgba(0,0,0,.65),transparent 55%,rgba(0,0,0,.35))}
+
+/* ecrã dourado que se abre ao meio, como uma porta */
+.pa-screen{position:absolute;left:50%;top:44%;width:min(46vw,78vh);aspect-ratio:16/10;transform:translate(-50%,-50%);border-radius:10px;box-shadow:0 0 90px rgba(245,200,66,.38);transition:box-shadow .7s ease-out}
+.pa-screen.charge{box-shadow:0 0 150px 30px rgba(255,214,90,.75)}
+.pa-door-light{position:absolute;inset:0;border-radius:10px;background:radial-gradient(ellipse at 50% 50%,#fffbe6 0%,#ffe48a 38%,#c58f1f 78%,#5a3d00 100%);box-shadow:inset 0 0 80px rgba(255,255,255,.6)}
+.pa-door{position:absolute;top:0;bottom:0;width:50%;overflow:hidden;transition:transform 1.4s cubic-bezier(.65,0,.25,1);z-index:2}
+.pa-door.l{left:0;border-radius:10px 0 0 10px}
+.pa-door.r{right:0;border-radius:0 10px 10px 0}
+.pa-door-in{position:absolute;top:0;bottom:0;width:200%;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 40%,#f4c94a 0%,#b98a14 55%,#6e4f00 100%);box-shadow:inset 0 0 70px rgba(255,236,150,.4)}
+.pa-door.l .pa-door-in{left:0}
+.pa-door.r .pa-door-in{left:-100%}
+.pa-door-in::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.09) 0 2px,transparent 2px 5px)}
+.pa-door.l::after,.pa-door.r::after{content:"";position:absolute;top:0;bottom:0;width:4px;background:#fffbe0;box-shadow:0 0 14px 3px rgba(255,240,170,.95);z-index:3;opacity:0;transition:opacity .45s ease-out}
+.pa-door.l::after{right:0}
+.pa-door.r::after{left:0}
+.pa-screen.seam .pa-door::after{opacity:1}
+.pa-screen.open .pa-door.l{transform:translateX(-104%)}
+.pa-screen.open .pa-door.r{transform:translateX(104%)}
+.pa-shield{position:relative;z-index:2;height:82%;max-width:36%;object-fit:contain;opacity:0;transform:scale(.7);animation:paShield 1s .5s cubic-bezier(.2,.9,.3,1.2) forwards;filter:drop-shadow(0 6px 18px rgba(0,0,0,.55))}
+@keyframes paShield{to{opacity:1;transform:scale(1)}}
+.pa-shine{position:absolute;inset:0;border-radius:10px;overflow:hidden;pointer-events:none;z-index:4;transition:opacity .3s}
+.pa-shine::after{content:"";position:absolute;top:0;bottom:0;width:16%;left:0;background:linear-gradient(105deg,transparent,rgba(255,255,255,.35),transparent);animation:paShine 2.2s ease-in-out infinite}
+.pa-screen.seam .pa-shine{opacity:0}
+@keyframes paShine{from{left:-20%}to{left:110%}}
+
+.pa-floor{position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(180deg,transparent,#000 85%),repeating-radial-gradient(ellipse at 50% 0%,rgba(245,200,66,.2) 0 2px,transparent 2px 46px)}
+.pa-spot{position:absolute;top:-4%;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 18px 8px rgba(255,236,170,.85)}
+.pa-beam{position:absolute;top:-2%;width:8vmin;height:90vh;transform-origin:50% 0;background:linear-gradient(180deg,rgba(255,236,170,.34),transparent 78%);clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);animation:paBeam 2.6s ease-in-out infinite alternate}
+@keyframes paBeam{from{transform:rotate(var(--a0))}to{transform:rotate(var(--a1))}}
+
+.pa-dim{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 46%,rgba(0,0,0,0) 20%,rgba(0,0,0,.72) 100%);opacity:0;transition:opacity 1s ease-out;pointer-events:none}
+.pa-stadium.com-cromo .pa-dim{opacity:1}
+
+/* cromo lendário, na parede amarela */
+.pa-cardwrap{position:absolute;left:50%;top:43%;z-index:5;width:min(70vw,calc(min(62vh,640px) / 1.5));aspect-ratio:2/3;margin-left:calc(min(70vw,calc(min(62vh,640px) / 1.5)) / -2);margin-top:calc(min(70vw,calc(min(62vh,640px) / 1.5)) * -0.75);transform:scale(.3);opacity:0;filter:drop-shadow(0 0 26px rgba(255,214,90,.95)) drop-shadow(0 0 70px rgba(255,190,40,.6))}
+.pa-cardwrap.in{animation:paCardIn 1s cubic-bezier(.2,.9,.3,1.1) forwards,paGlow 1.5s 1s ease-in-out infinite alternate}
+@keyframes paCardIn{to{transform:scale(1);opacity:1}}
+@keyframes paGlow{from{filter:drop-shadow(0 0 22px rgba(255,214,90,.8)) drop-shadow(0 0 50px rgba(255,190,40,.45))}to{filter:drop-shadow(0 0 40px rgba(255,236,150,1)) drop-shadow(0 0 100px rgba(255,200,60,.8))}}
+.pa-front{position:absolute;inset:0}
+.pa-front img{width:100%;height:100%;display:block;object-fit:contain}
+
+.pa-info{position:absolute;left:0;right:0;top:77%;z-index:6;text-align:center;opacity:0;transform:translateY(14px);transition:opacity .7s ease-out,transform .7s ease-out;text-shadow:0 2px 14px rgba(0,0,0,.65)}
+.pa-info.show{opacity:1;transform:none}
+.pa-badge{display:inline-block;font:700 11px "Inter",sans-serif;letter-spacing:5px;color:#2b1d00;background:linear-gradient(90deg,#ffe58a,#f5c842);padding:5px 16px;border-radius:20px;margin-bottom:6px;text-shadow:none}
+.pa-nome{font-family:"Bebas Neue",sans-serif;font-size:min(6vh,50px);letter-spacing:4px;line-height:1}
+.pa-sub{font:600 min(2.4vh,15px) "Inter",sans-serif;letter-spacing:3px;color:#fff1c2;margin-top:6px;text-transform:uppercase}
+.pa-cont{position:absolute;bottom:1.4vh;left:0;right:0;text-align:center;z-index:6;font:600 12px "Inter",sans-serif;letter-spacing:4px;color:rgba(255,255,255,.75);text-transform:uppercase;opacity:0;transition:opacity .6s}
+.pa-cont.show{opacity:1;animation:paBlink 1.4s ease-in-out infinite}
+@keyframes paBlink{50%{opacity:.35}}
+
+
+/* ---------- Cromos finais em fila ---------- */
+.cromos-revelados{max-width:1180px}
+.cromo-pack{aspect-ratio:2/3;width:min(135px,12vw);border-radius:0}
+.cromo-pack img{object-fit:contain;border:none;border-radius:0}
+.cromos-grid-pack{flex-wrap:nowrap;gap:clamp(6px,1.2vw,14px);align-items:center}
+@media(max-width:760px){.cromos-grid-pack{flex-wrap:wrap}.cromo-pack{width:26vw}}

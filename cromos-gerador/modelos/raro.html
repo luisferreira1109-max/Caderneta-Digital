@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;padding:0}body{width:640px;height:960px;background:transparent}svg{display:block;width:640px;height:960px}text{font-family:Poppins,Inter,sans-serif}
+</style></head><body>
+<svg viewBox="-20 -20 440 640"><defs>
+<linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".25" stop-color="#f2c744"/><stop offset=".5" stop-color="#a8740f"/><stop offset=".75" stop-color="#f7dd7f"/><stop offset="1" stop-color="#9a6a0c"/></linearGradient>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0a0"/><stop offset=".5" stop-color="#f3cf59"/><stop offset="1" stop-color="#d9a92c"/></linearGradient>
+<clipPath id="c"><path d="M50,10 H350 Q390,10 390,50 V428 Q390,508 200,586 Q10,508 10,428 V50 Q10,10 50,10Z"/></clipPath>
+<filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#5a3d00" flood-opacity=".45"/></filter></defs>
+<path d="M44,0 H356 Q400,0 400,44 V430 Q400,520 200,600 Q0,520 0,430 V44 Q0,0 44,0Z" fill="url(#gold)"/>
+<g clip-path="url(#c)"><rect width="400" height="600" fill="url(#g)"/>
+<g id="an"></g>
+<polygon points="-20,330 250,120 330,110 40,350" fill="#fff" opacity=".42"/><polygon points="-20,380 330,170 420,170 420,200 120,420" fill="#fff" opacity=".18"/>
+<rect y="340" width="400" height="260" fill="#fff3b0" opacity=".35"/><rect y="340" width="400" height="3" fill="#b98a14" opacity=".5"/>
+<clipPath id="cp"><rect x="0" y="0" width="400" height="340"/></clipPath>
+<image href="luis_cut.png" x="85" y="42" width="230" height="303" clip-path="url(#cp)" filter="url(#sh)"/>
+<rect y="339" width="400" height="3" fill="#b98a14" opacity=".6"/>
+<text x="80" y="104" text-anchor="middle" font-size="58" font-weight="800" fill="#5a3d00" filter="url(#sh)">AV</text>
+<text x="80" y="152" text-anchor="middle" font-size="46" font-weight="700" fill="#3a2600">8</text>
+<image href="fcps.png" x="312" y="30" width="64" height="80" preserveAspectRatio="xMaxYMin meet" filter="url(#sh)"/>
+<text x="200" y="426" text-anchor="middle" font-size="34" font-weight="800" fill="#3a2600" letter-spacing="2">LUÍS FERREIRA</text>
+<text x="200" y="456" text-anchor="middle" font-size="12" font-weight="600" fill="#7a5300" letter-spacing="4">FC PAÇO DE SOUSA</text>
+<text x="200" y="544" text-anchor="middle" font-size="14" font-weight="700" fill="#7a5300" letter-spacing="3">Nº 132</text></g></svg>
+<script>
+const a=document.getElementById('an');let h='';
+for(let i=0;i<6;i++)h+=`<circle cx="${70+i*45}" cy="${70+(i%2)*40}" r="${50+i*3}" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="2"/>`;
+for(let i=0;i<5;i++)h+=`<circle cx="${30+i*80}" cy="${190+(i%2)*26}" r="34" fill="none" stroke="#b98a14" stroke-opacity=".28" stroke-width="2"/>`;
+a.innerHTML=h;
+</script></body></html>
