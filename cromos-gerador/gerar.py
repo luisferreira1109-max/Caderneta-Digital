@@ -12,10 +12,10 @@ import io
 AQUI = os.path.dirname(os.path.abspath(__file__))
 SAIDA = os.path.join(AQUI, '..', 'frontend', 'images', 'cromos')
 CLUBES = {
-  'fcps':   dict(total=216, nome='FC PAÇO DE SOUSA',       emb='emblemas/fcps.png',   box=(282, 26, 98, 122),
+  'fcps':   dict(total=216, nome='FC PAÇO DE SOUSA',       emb='emblemas/fcps.png',   box=(298, 28, 80, 100),
                  lend=[132], epic=[25,50,75,100,125,150,175,200],
                  raro=[10,20,30,40,60,70,80,90,110,120,130,140,160,170,180,190,210]),
-  'ccrdsv': dict(total=240, nome='CCRDSV IRIVO PENAFIEL',  emb='emblemas/ccrdsv.png', box=(252, 26, 128, 124),
+  'ccrdsv': dict(total=240, nome='CCRDSV IRIVO PENAFIEL',  emb='emblemas/ccrdsv.png', box=(274, 28, 104, 101),
                  lend=[13,223], epic=[24,48,72,96,120,144,168,192,216],
                  raro=[12,36,60,84,108,132,156,180,204,228]),
 }
@@ -45,9 +45,9 @@ def gerar_html(modelo, clube, n, j):
     emb = f'<image href="{c["emb"]}" x="{x}" y="{y}" width="{w}" height="{hh}" preserveAspectRatio="xMaxYMin meet" filter="url(#sh)"/>'
     if est == 'lendario' and clube == 'ccrdsv':
         # luz clara atrás do emblema (o verde/preto perde-se no azul)
-        cx, cy, r = x + w / 2, y + hh / 2, max(w, hh) * 0.62
-        emb = (f'<defs><radialGradient id="egl"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>'
-               f'<stop offset=".62" stop-color="#eef4ff" stop-opacity=".78"/><stop offset="1" stop-color="#cfe0ff" stop-opacity="0"/></radialGradient></defs>'
+        cx, cy, r = x + w / 2, y + hh / 2, max(w, hh) * 0.60
+        emb = (f'<defs><radialGradient id="egl"><stop offset="0" stop-color="#ffffff" stop-opacity="1"/>'
+               f'<stop offset=".72" stop-color="#ffffff" stop-opacity=".97"/><stop offset=".9" stop-color="#eaf2ff" stop-opacity=".55"/><stop offset="1" stop-color="#cfe0ff" stop-opacity="0"/></radialGradient></defs>'
                f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="url(#egl)"/>') + emb
     h = re.sub(r'<image href="luis_cut\.png"[^>]*/>', lambda m: photo, h)
     h = re.sub(r'<image href="fcps\.png"[^>]*/>', lambda m: emb, h)
