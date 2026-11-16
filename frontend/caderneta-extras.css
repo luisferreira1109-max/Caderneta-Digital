@@ -125,3 +125,10 @@
 .cx-slot-emblema .cx-ghost { width: 55%; height: auto; object-fit: contain; opacity: .25; filter: grayscale(.4); }
 .cx-slot-emblema > span { color: rgba(255,255,255,.9) !important; font-family: "Bebas Neue", sans-serif; letter-spacing: 3px; font-size: clamp(11px, 1.3vw, 18px) !important; text-align: center; }
 .cx-slot-emblema .cx-nome { color: rgba(255,255,255,.65); }
+
+/* --- Livro fechado: só a capa, sem moldura vazia --- */
+@media (min-width: 701px) {
+  .caderneta-aberta { transition: box-shadow .5s ease; }
+  .caderneta-aberta.cx-fechada { box-shadow: none !important; }
+  .caderneta-aberta.cx-fechada .cx-capa-frente { box-shadow: 0 50px 90px rgba(0,0,0,.85), 0 18px 30px rgba(0,0,0,.5), 6px 0 0 #e9e3d6, 8px 2px 0 #cfc8bb; }
+}
