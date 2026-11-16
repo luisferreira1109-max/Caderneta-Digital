@@ -155,3 +155,19 @@
 }
 
 .caderneta-aberta.cx-fechada-dir .pag-dir { visibility: hidden; }
+
+/* --- Fundo com ambiente (em vez de caixa preta) --- */
+.caderneta-modal { background: radial-gradient(ellipse 75% 70% at 50% 46%, rgba(120,84,60,.50) 0%, rgba(38,26,22,.86) 52%, rgba(6,4,4,.95) 100%) !important; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+/* Sem linha da lombada com o livro fechado */
+.caderneta-aberta::after { transition: opacity .5s ease; }
+.caderneta-aberta.cx-fechada::after { opacity: 0; }
+
+/* --- Pilha de folhas igual dos dois lados --- */
+@media (min-width: 701px) {
+  .caderneta-aberta {
+    box-shadow:
+      1px 1px 0 #f3efe7, 2px 2px 0 #d8d1c4, 3px 3px 0 #f5f1ea, 4px 4px 0 #d3ccbf, 5px 5px 0 #f3efe7, 6px 6px 0 #cdc6b9, 7px 7px 0 #efe9df, 8px 8px 0 #c4bdaf,
+      -1px 1px 0 #f3efe7, -2px 2px 0 #d8d1c4, -3px 3px 0 #f5f1ea, -4px 4px 0 #d3ccbf, -5px 5px 0 #f3efe7, -6px 6px 0 #cdc6b9, -7px 7px 0 #efe9df, -8px 8px 0 #c4bdaf,
+      0 60px 90px -10px rgba(0,0,0,.65), 0 24px 40px rgba(0,0,0,.4) !important;
+  }
+}
