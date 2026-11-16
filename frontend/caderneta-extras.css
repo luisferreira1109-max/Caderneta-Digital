@@ -132,3 +132,26 @@
   .caderneta-aberta.cx-fechada { box-shadow: none !important; }
   .caderneta-aberta.cx-fechada .cx-capa-frente { box-shadow: 0 50px 90px rgba(0,0,0,.85), 0 18px 30px rgba(0,0,0,.5), 6px 0 0 #e9e3d6, 8px 2px 0 #cfc8bb; }
 }
+
+
+/* --- Capa = mesma imagem do menu (sem recorte, sem cantos retos) --- */
+.cx-capa-frente { border-radius: 0 !important; box-shadow: none !important; background-size: 100% 100% !important; background-color: transparent !important; overflow: visible; }
+.cx-capa-frente::before, .cx-capa-frente::after { display: none !important; }
+.cx-capa-face { overflow: visible; }
+.cx-capa-frente { filter: drop-shadow(0 30px 40px rgba(0,0,0,.75)); }
+.caderneta-aberta.cx-fechada .cx-capa-frente { box-shadow: none !important; }
+.cx-capa-sombra { display: none; }
+
+/* --- Cantos arredondados no livro aberto --- */
+@media (min-width: 701px) {
+  .caderneta-aberta { border-radius: 20px !important; }
+  .caderneta-aberta .pag-esq { border-radius: 20px 0 0 20px !important; }
+  .caderneta-aberta .pag-dir { border-radius: 0 20px 20px 0 !important; }
+  .caderneta-aberta .pag-esq .pag-indice-esq { border-radius: 20px 0 0 20px; }
+  .cx-flip.fwd .cx-face.frente, .cx-flip.bwd .cx-face.verso { border-radius: 0 20px 20px 0; }
+  .cx-flip.bwd .cx-face.frente, .cx-flip.fwd .cx-face.verso { border-radius: 20px 0 0 20px; }
+  .cx-estatica.esq .cx-clone { border-radius: 20px 0 0 20px !important; }
+  .cx-estatica.dir .cx-clone { border-radius: 0 20px 20px 0 !important; }
+}
+
+.caderneta-aberta.cx-fechada-dir .pag-dir { visibility: hidden; }

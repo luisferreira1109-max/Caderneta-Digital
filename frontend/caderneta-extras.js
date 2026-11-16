@@ -30,16 +30,17 @@
     capa.className = 'cx-capa';
     const frente = document.createElement('div');
     frente.className = 'cx-capa-face cx-capa-frente ' + clube;
-    frente.style.backgroundImage = 'url(images/capa-' + clube + '.png)';
-    frente.innerHTML = '<div class="cx-capa-brilho"></div><div class="cx-capa-sombra"></div>';
+    frente.style.backgroundImage = 'url(images/caderneta-' + clube + '.png)';
+    frente.innerHTML = '<div class="cx-capa-sombra"></div>';
     const verso = document.createElement('div');
     verso.className = 'cx-capa-face cx-capa-verso';
     verso.appendChild(clonePag(esq));
     capa.appendChild(frente); capa.appendChild(verso);
     wrap.appendChild(capa);
     livro.appendChild(wrap);
-    livro.classList.add('cx-abrindo', 'cx-fechada');
+    livro.classList.add('cx-abrindo', 'cx-fechada', 'cx-fechada-dir');
     isAnimatingCad = true;
+    setTimeout(() => livro.classList.remove('cx-fechada-dir'), 950);
     setTimeout(() => livro.classList.remove('cx-fechada'), 1200);
     setTimeout(() => {
       wrap.remove();
