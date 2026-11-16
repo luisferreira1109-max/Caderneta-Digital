@@ -1,0 +1,75 @@
+/* ===== Caderneta extras: capa que abre, virar página, slots com nome, brilhos ===== */
+
+/* --- Capa --- */
+.caderneta-aberta.cx-abrindo { animation: cxEntrar .45s ease-out both, cxCentrar 1.2s .6s cubic-bezier(.4,0,.2,1) both !important; }
+@keyframes cxEntrar {
+  from { transform: perspective(1400px) rotateX(6deg) rotateY(2deg) scale(.85) translateY(24px); opacity: 0; }
+  to   { transform: perspective(1400px) rotateX(6deg) rotateY(2deg) scale(1) translateY(0); opacity: 1; }
+}
+@keyframes cxCentrar { from { translate: -25% 0; } to { translate: 0 0; } }
+.caderneta-aberta.cx-fechada .pag-esq { visibility: hidden; }
+.cx-capa-wrap { position: absolute; inset: 0; z-index: 30; perspective: 1800px; pointer-events: none; }
+.cx-capa { position: absolute; top: 0; right: 0; width: 50%; height: 100%; transform-origin: left center; transform-style: preserve-3d; animation: cxCapaAbrir 1.2s .6s cubic-bezier(.45,.05,.2,1) both; }
+@keyframes cxCapaAbrir { from { transform: rotateY(0deg); } to { transform: rotateY(-180deg); } }
+.cx-capa-face { position: absolute; inset: 0; backface-visibility: hidden; overflow: hidden; }
+.cx-capa-frente { border-radius: 2px 16px 16px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+.cx-capa-frente.fcps { background: linear-gradient(160deg, #c0392b 0%, #922b21 60%, #7b241c 100%); }
+.cx-capa-frente.ccrdsv { background: linear-gradient(160deg, #27ae60 0%, #1e8449 60%, #196f3d 100%); }
+.cx-capa-frente::before { content: ""; position: absolute; inset: 14px; border: 2px solid rgba(232,196,104,.85); border-radius: 4px 12px 12px 4px; pointer-events: none; }
+.cx-capa-frente::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 7%; background: linear-gradient(to right, rgba(0,0,0,.35), rgba(0,0,0,.05) 70%, transparent); pointer-events: none; }
+.cx-capa-titulo { font-family: "Bebas Neue", sans-serif; letter-spacing: 6px; font-size: clamp(16px, 2.6vw, 26px); color: #e8c468; text-shadow: 0 2px 6px rgba(0,0,0,.4); }
+.cx-capa-emblema { width: 42%; max-height: 38%; object-fit: contain; filter: drop-shadow(0 8px 18px rgba(0,0,0,.5)); }
+.cx-capa-nome { font-family: "Bebas Neue", sans-serif; letter-spacing: 4px; font-size: clamp(14px, 2.2vw, 22px); color: #fff; text-align: center; line-height: 1.2; }
+.cx-capa-brilho { position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.22) 50%, transparent 65%); animation: cxCapaBrilho 1.6s .1s ease-in-out both; }
+@keyframes cxCapaBrilho { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+.cx-capa-verso { transform: rotateY(180deg); border-radius: 16px 2px 2px 16px; }
+.cx-capa-verso .cx-clone { border-radius: inherit; }
+.cx-capa-sombra { position: absolute; inset: 0; background: #000; opacity: 0; animation: cxCapaSombra 1.2s .6s ease-in-out both; pointer-events: none; }
+@keyframes cxCapaSombra { 0% { opacity: 0; } 45% { opacity: .35; } 100% { opacity: 0; } }
+
+/* --- Virar página --- */
+.cx-flip { position: absolute; top: 0; width: 50%; height: 100%; transform-style: preserve-3d; }
+.cx-flip.fwd { right: 0; transform-origin: left center; animation: cxFlipF .9s cubic-bezier(.6,.05,.3,1) forwards; }
+.cx-flip.bwd { left: 0; transform-origin: right center; animation: cxFlipB .9s cubic-bezier(.6,.05,.3,1) forwards; }
+@keyframes cxFlipF { from { transform: rotateY(0deg); } to { transform: rotateY(-180deg); } }
+@keyframes cxFlipB { from { transform: rotateY(0deg); } to { transform: rotateY(180deg); } }
+.cx-face { position: absolute; inset: 0; backface-visibility: hidden; overflow: hidden; background: #f8f5f0; }
+.cx-face.verso { transform: rotateY(180deg); }
+.cx-flip.fwd .cx-face.frente { border-radius: 0 16px 16px 0; }
+.cx-flip.bwd .cx-face.frente { border-radius: 4px 0 0 4px; }
+.cx-flip.fwd .cx-face.verso { border-radius: 4px 0 0 4px; }
+.cx-flip.bwd .cx-face.verso { border-radius: 0 16px 16px 0; }
+.cx-clone { position: absolute !important; inset: 0; width: 100% !important; height: 100% !important; display: flex !important; margin: 0 !important; }
+.cx-sombra { position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,.5), rgba(0,0,0,.05)); opacity: 0; pointer-events: none; animation: cxShade .9s ease-in-out both; }
+.cx-flip.bwd .cx-sombra { background: linear-gradient(to left, rgba(0,0,0,.5), rgba(0,0,0,.05)); }
+@keyframes cxShade { 0%, 100% { opacity: 0; } 50% { opacity: .55; } }
+.cx-estatica { position: absolute; top: 0; width: 50%; height: 100%; overflow: hidden; }
+.cx-estatica { z-index: 0; isolation: isolate; }
+.cx-flip { z-index: 2; }
+.cx-estatica.esq { left: 0; }
+.cx-estatica.dir { right: 0; }
+.cx-estatica::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.28); animation: cxEstatica .9s ease-in both; pointer-events: none; }
+@keyframes cxEstatica { from { opacity: 0; } 50% { opacity: .9; } to { opacity: 0; } }
+
+/* --- Slots vazios com número + nome --- */
+.cromo-slot:not(.tem-cromo) { flex-direction: column; gap: 4px; }
+.cromo-slot:not(.tem-cromo) > span { font-family: "Bebas Neue", sans-serif; font-size: clamp(16px, 2.4vw, 24px); color: #b4aea2; letter-spacing: 1px; line-height: 1; }
+.cx-nome { font-style: normal; font-size: clamp(6px, .85vw, 8px); letter-spacing: .5px; text-transform: uppercase; color: #8a847a; text-align: center; padding: 0 4px; line-height: 1.15; font-weight: 600; }
+
+/* --- Colar cromo: voo + brilhos --- */
+.cx-voo { position: fixed; z-index: 3000; pointer-events: none; will-change: transform; filter: drop-shadow(0 18px 30px rgba(0,0,0,.6)); }
+.cx-voo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.cx-brilho-slot { position: absolute; inset: 0; overflow: hidden; pointer-events: none; border-radius: 6px; }
+.cx-brilho-slot::after { content: ""; position: absolute; top: -20%; bottom: -20%; width: 45%; background: linear-gradient(105deg, transparent, rgba(255,255,255,.85), transparent); animation: cxVarrer .9s ease-out both; }
+@keyframes cxVarrer { from { left: -60%; } to { left: 120%; } }
+.cx-estrela { position: fixed; z-index: 3100; pointer-events: none; background: radial-gradient(circle, #fff7d6 0%, #f2cf6b 55%, #d4a72c 100%); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); }
+.cx-anel { position: fixed; z-index: 3050; pointer-events: none; border-radius: 12px; border: 3px solid #f2cf6b; box-shadow: 0 0 24px 4px rgba(242,207,107,.8); }
+.cromo-slot.cx-colado { animation: cxCarimbo .5s cubic-bezier(.34,1.56,.64,1); }
+@keyframes cxCarimbo { 0% { transform: scale(1.35); } 100% { transform: scale(1); } }
+
+/* --- Páginas: 4 colunas x 3 linhas, slots na proporção real do cromo (2:3) --- */
+@media (min-width: 701px) {
+  .caderneta-aberta .cromos-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); align-items: center; justify-items: center; }
+  .caderneta-aberta .cromo-slot { height: 100%; width: auto; max-width: 100%; aspect-ratio: 2 / 3; }
+  .caderneta-aberta .cromo-slot.tem-cromo img { object-fit: contain !important; }
+}

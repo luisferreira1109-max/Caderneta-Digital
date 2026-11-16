@@ -1006,6 +1006,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}</script>
 <script src="jogadores-dados.js"></script>
 <link rel="stylesheet" href="pack-animacao.css">
+<link rel="stylesheet" href="caderneta-extras.css">
 </head>
 <body>
 
@@ -2266,8 +2267,10 @@ const CROMOS_DISPONIVEIS = {
   fcps:{total:216,lendarios:[132],epicos:[25,50,75,100,125,150,175,200],raros:[10,20,30,40,60,70,80,90,110,120,130,140,160,170,180,190,210]},
   ccrdsv:{total:240,lendarios:[13,223],epicos:[24,48,72,96,120,144,168,192,216],raros:[12,36,60,84,108,132,156,180,204,228]}
 };
+// Mudar este valor sempre que as imagens dos cromos forem atualizadas (evita imagens antigas em cache)
+const CROMOS_VERSAO = '20261113a';
 const CROMOS_IMAGENS = {};
-['fcps','ccrdsv'].forEach(cl=>{for(let n=1;n<=CROMOS_DISPONIVEIS[cl].total;n++)CROMOS_IMAGENS[`${cl}-${n}`]=`images/cromos/${cl}-${n}.webp`;});
+['fcps','ccrdsv'].forEach(cl=>{for(let n=1;n<=CROMOS_DISPONIVEIS[cl].total;n++)CROMOS_IMAGENS[`${cl}-${n}`]=`images/cromos/${cl}-${n}.webp?v=${CROMOS_VERSAO}`;});
 function getRaridade(clube,num){const c=CROMOS_DISPONIVEIS[clube];if(c.lendarios.includes(num))return'lendario';if(c.epicos.includes(num))return'epico';if(c.raros.includes(num))return'raro';return'comum';}
 function gerarCromo(tipoPack){
   const clube=Math.random()<0.5?'fcps':'ccrdsv';
@@ -3321,4 +3324,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script src="pack-animacao.js"></script>
+<script src="caderneta-extras.js"></script>
 </body>
