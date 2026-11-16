@@ -30,11 +30,8 @@
     capa.className = 'cx-capa';
     const frente = document.createElement('div');
     frente.className = 'cx-capa-face cx-capa-frente ' + clube;
-    frente.innerHTML =
-      '<div class="cx-capa-titulo">CADERNETA</div>' +
-      '<img class="cx-capa-emblema" src="' + (emb ? emb.getAttribute('src') : '') + '"/>' +
-      '<div class="cx-capa-nome">' + (nome ? nome.innerHTML : '') + '</div>' +
-      '<div class="cx-capa-brilho"></div><div class="cx-capa-sombra"></div>';
+    frente.style.backgroundImage = 'url(images/capa-' + clube + '.png)';
+    frente.innerHTML = '<div class="cx-capa-brilho"></div><div class="cx-capa-sombra"></div>';
     const verso = document.createElement('div');
     verso.className = 'cx-capa-face cx-capa-verso';
     verso.appendChild(clonePag(esq));
@@ -69,6 +66,41 @@
   });
 
   /* ---------- 2. VIRAR PÁGINA ---------- */
+  function criarFolha(overlay, fwd, frenteEl, versoEl) {
+    const W = overlay.offsetWidth / 2, H = overlay.offsetHeight;
+    const N = 12, w = W / N;
+    const dur = 1.05;
+    const leaf = document.createElement('div');
+    leaf.className = 'cx-flip ' + (fwd ? 'fwd' : 'bwd');
+    leaf.style.animationDuration = dur + 's';
+    let pai = leaf;
+    for (let i = 0; i < N; i++) {
+      const st = document.createElement('div');
+      st.className = 'cx-strip';
+      st.style.width = (w + 1) + 'px';
+      st.style.height = H + 'px';
+      st.style.animationDelay = (i * 0.012) + 's';
+      st.style.animationDuration = dur + 's';
+      st.style.setProperty('--d', (fwd ? 1 : -1) * 4.2 + 'deg');
+      if (i === 0) { st.style.left = fwd ? '0' : (W - w) + 'px'; }
+      else { st.style.left = fwd ? w + 'px' : (-w) + 'px'; }
+      st.style.transformOrigin = fwd ? 'left center' : 'right center';
+      const f = document.createElement('div'); f.className = 'cx-sface frente';
+      const v = document.createElement('div'); v.className = 'cx-sface verso';
+      const cf = frenteEl.cloneNode(true), cv = versoEl.cloneNode(true);
+      [cf, cv].forEach(c => { c.classList.remove('cx-clone'); c.classList.add('cx-sclone'); c.style.width = W + 'px'; c.style.height = H + 'px'; });
+      cf.style.left = (fwd ? -(i * w) : -(W - (i + 1) * w)) + 'px';
+      cv.style.left = (fwd ? -(W - (i + 1) * w) : -(i * w)) + 'px';
+      f.appendChild(cf); v.appendChild(cv);
+      const sf = document.createElement('div'); sf.className = 'cx-sombra-s'; f.appendChild(sf);
+      const sv = document.createElement('div'); sv.className = 'cx-sombra-s v'; v.appendChild(sv);
+      st.appendChild(f); st.appendChild(v);
+      pai.appendChild(st);
+      pai = st;
+    }
+    return leaf;
+  }
+
   window.animarFlipCad = function (clube, dir, cb) {
     if (isMobileCad() || isAnimatingCad) { cb(); return; }
     const overlay = document.getElementById(clube + '-flip-overlay');
@@ -87,22 +119,13 @@
     const est = document.createElement('div');
     est.className = 'cx-estatica ' + (fwd ? 'esq' : 'dir');
     est.appendChild(estaticaCl);
-
-    const flip = document.createElement('div');
-    flip.className = 'cx-flip ' + (fwd ? 'fwd' : 'bwd');
-    const f = document.createElement('div'); f.className = 'cx-face frente';
-    f.appendChild(frenteCl);
-    const fs = document.createElement('div'); fs.className = 'cx-sombra'; f.appendChild(fs);
-    const v = document.createElement('div'); v.className = 'cx-face verso';
-    v.appendChild(versoCl);
-    flip.appendChild(f); flip.appendChild(v);
-
     overlay.appendChild(est);
-    overlay.appendChild(flip);
+    const folha = criarFolha(overlay, fwd, frenteCl, versoCl);
+    overlay.appendChild(folha);
     setTimeout(() => {
-      est.remove(); flip.remove();
+      est.remove(); folha.remove();
       isAnimatingCad = false;
-    }, 940);
+    }, 1150);
   };
 
   /* ---------- 3. SLOTS COM NÚMERO + NOME ---------- */
@@ -123,8 +146,20 @@
       }
     });
   }
+  function slotEmblema() {
+    ['fcps', 'ccrdsv'].forEach(clube => {
+      const pag = document.querySelector('#' + clube + '-pag-esq-indice .pag-indice-esq');
+      if (!pag || pag.querySelector('.cx-slot-emblema')) return;
+      const emb = pag.querySelector('.pag-emblema');
+      const slot = document.createElement('div');
+      slot.className = 'cromo-slot cx-slot-emblema';
+      slot.innerHTML = '<img class="cx-ghost" src="' + (emb ? emb.getAttribute('src') : '') + '"/><span>EMBLEMA</span>';
+      if (emb) { emb.style.display = 'none'; emb.before(slot); } else pag.prepend(slot);
+    });
+  }
   window.decorarSlotsCad = decorarSlots;
   decorarSlots();
+  slotEmblema();
 
   /* ---------- 4. COLAR COM ANIMAÇÃO ---------- */
   function sparkles(cx, cy, n, raio, grande) {

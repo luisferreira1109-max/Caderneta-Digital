@@ -13,9 +13,10 @@
 @keyframes cxCapaAbrir { from { transform: rotateY(0deg); } to { transform: rotateY(-180deg); } }
 .cx-capa-face { position: absolute; inset: 0; backface-visibility: hidden; overflow: hidden; }
 .cx-capa-frente { border-radius: 2px 16px 16px 2px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
-.cx-capa-frente.fcps { background: linear-gradient(160deg, #c0392b 0%, #922b21 60%, #7b241c 100%); }
-.cx-capa-frente.ccrdsv { background: linear-gradient(160deg, #27ae60 0%, #1e8449 60%, #196f3d 100%); }
-.cx-capa-frente::before { content: ""; position: absolute; inset: 14px; border: 2px solid rgba(232,196,104,.85); border-radius: 4px 12px 12px 4px; pointer-events: none; }
+.cx-capa-frente { background-size: 100% 100%; background-repeat: no-repeat; }
+.cx-capa-frente.fcps-x { background: linear-gradient(160deg, #c0392b 0%, #922b21 60%, #7b241c 100%); }
+.cx-capa-frente.ccrdsv-x { background: linear-gradient(160deg, #27ae60 0%, #1e8449 60%, #196f3d 100%); }
+.cx-capa-frente::before { display: none; content: ""; position: absolute; inset: 14px; border: 2px solid rgba(232,196,104,.85); border-radius: 4px 12px 12px 4px; pointer-events: none; }
 .cx-capa-frente::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 7%; background: linear-gradient(to right, rgba(0,0,0,.35), rgba(0,0,0,.05) 70%, transparent); pointer-events: none; }
 .cx-capa-titulo { font-family: "Bebas Neue", sans-serif; letter-spacing: 6px; font-size: clamp(16px, 2.6vw, 26px); color: #e8c468; text-shadow: 0 2px 6px rgba(0,0,0,.4); }
 .cx-capa-emblema { width: 42%; max-height: 38%; object-fit: contain; filter: drop-shadow(0 8px 18px rgba(0,0,0,.5)); }
@@ -73,3 +74,54 @@
   .caderneta-aberta .cromo-slot { height: 100%; width: auto; max-width: 100%; aspect-ratio: 2 / 3; }
   .caderneta-aberta .cromo-slot.tem-cromo img { object-fit: contain !important; }
 }
+
+/* --- Caderneta aberta quase em ecrã inteiro (desktop) --- */
+@media (min-width: 701px) {
+  .caderneta-aberta { width: min(calc((100vh - 170px) * 1.5), calc(100vw - 210px)) !important; height: auto !important; aspect-ratio: 3 / 2; }
+  .caderneta-aberta .cromos-grid { gap: clamp(6px, 1vw, 14px); }
+  .caderneta-aberta .escalao-titulo { font-size: clamp(20px, 2.4vw, 40px); }
+  .caderneta-aberta .escalao-sub { font-size: clamp(9px, 1vw, 14px); }
+  .caderneta-aberta .escalao-emblema { width: clamp(24px, 2.8vw, 46px); height: clamp(24px, 2.8vw, 46px); }
+  .caderneta-aberta .cromo-slot:not(.tem-cromo) > span { font-size: clamp(18px, 2.6vw, 40px); }
+  .caderneta-aberta .cx-nome { font-size: clamp(7px, .8vw, 12px); }
+  .caderneta-aberta .num-pag { font-size: clamp(11px, 1vw, 15px); }
+}
+
+
+/* --- Virar página com curvatura (tiras) --- */
+.cx-flip { transform-style: preserve-3d; }
+.cx-flip.fwd { animation: cxFlipF 1.05s cubic-bezier(.55,.05,.3,1) forwards; }
+.cx-flip.bwd { animation: cxFlipB 1.05s cubic-bezier(.55,.05,.3,1) forwards; }
+.cx-strip { position: absolute; top: 0; transform-style: preserve-3d; animation: cxCurva 1.05s ease-in-out both; }
+@keyframes cxCurva {
+  0%   { transform: rotateY(0deg); }
+  35%  { transform: rotateY(var(--d)); }
+  70%  { transform: rotateY(calc(var(--d) * -.7)); }
+  100% { transform: rotateY(0deg); }
+}
+.cx-sface { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; background: #f8f5f0; }
+.cx-sface.verso { transform: rotateY(180deg); }
+.cx-sclone { position: absolute !important; top: 0; inset-inline: auto; display: flex !important; margin: 0 !important; }
+.cx-sombra-s { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; animation: cxShadeS 1.05s ease-in-out both; }
+.cx-sombra-s.v { animation-name: cxShadeSV; }
+@keyframes cxShadeS { 0% { opacity: 0; } 50% { opacity: .35; } 100% { opacity: .5; } }
+@keyframes cxShadeSV { 0% { opacity: .5; } 50% { opacity: .25; } 100% { opacity: 0; } }
+
+/* --- Pilha de folhas finas nas bordas --- */
+@media (min-width: 701px) {
+  .caderneta-aberta {
+    box-shadow:
+      1px 1px 0 #f3efe7, 2px 2px 0 #d8d1c4, 3px 3px 0 #f5f1ea, 4px 4px 0 #d3ccbf, 5px 5px 0 #f3efe7, 6px 6px 0 #cdc6b9, 7px 7px 0 #efe9df, 8px 8px 0 #c4bdaf,
+      -1px 1px 0 #f3efe7, -2px 2px 0 #d8d1c4, -3px 3px 0 #f5f1ea, -4px 4px 0 #cfc8bb,
+      0 70px 120px rgba(0,0,0,.9), 0 24px 50px rgba(0,0,0,.5) !important;
+  }
+  .caderneta-aberta .pag-esq, .caderneta-aberta .pag-dir { background-image: linear-gradient(to right, rgba(0,0,0,.03), transparent 3%, transparent 97%, rgba(0,0,0,.035)); }
+}
+
+/* --- Slot do cromo do emblema (página do índice) --- */
+.cx-slot-emblema { width: 44% !important; height: auto !important; aspect-ratio: 2 / 3; border: 2px dashed rgba(255,255,255,.55) !important; background: rgba(255,255,255,.1) !important; z-index: 2; flex-direction: column; gap: 6px; cursor: default; }
+.cx-slot-emblema:hover { transform: none; box-shadow: none; }
+.cx-slot-emblema.tem-cromo { border: none !important; background: transparent !important; }
+.cx-slot-emblema .cx-ghost { width: 55%; height: auto; object-fit: contain; opacity: .25; filter: grayscale(.4); }
+.cx-slot-emblema > span { color: rgba(255,255,255,.9) !important; font-family: "Bebas Neue", sans-serif; letter-spacing: 3px; font-size: clamp(11px, 1.3vw, 18px) !important; text-align: center; }
+.cx-slot-emblema .cx-nome { color: rgba(255,255,255,.65); }
