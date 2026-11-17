@@ -128,7 +128,7 @@
 
 /* Páginas interiores: painel escuro sobre o fundo claro */
 #pagina-cadernetas,#pagina-colecao,#pagina-packs,#pagina-definicoes,.mz-painel{
-  background:rgba(12,14,24,.9);padding:24px 26px;margin-top:14px;
+  background:rgba(255,255,255,.96);color:var(--mz-azul);padding:24px 26px;margin-top:14px;
   box-shadow:0 10px 34px rgba(20,30,90,.28);min-height:calc(100vh - 182px);
 }
 .mz-voltar{
@@ -490,3 +490,34 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
   .cm-esq{max-height:260px;}
   .cm-conversa{height:420px;}
 }
+
+/* ===================== Coleção · Cadernetas · Packs · Definições (claro) ===================== */
+.mz-painel .mz-voltar,#pagina-colecao .mz-voltar,#pagina-cadernetas .mz-voltar,#pagina-packs .mz-voltar,#pagina-definicoes .mz-voltar{color:var(--mz-azul);border-color:rgba(23,57,154,.3);}
+#pagina-colecao .mz-voltar:hover,#pagina-cadernetas .mz-voltar:hover,#pagina-packs .mz-voltar:hover,#pagina-definicoes .mz-voltar:hover{background:rgba(23,57,154,.07);}
+#pagina-colecao .page-titulo,#pagina-cadernetas .page-titulo,#pagina-packs .page-titulo,#pagina-definicoes .page-titulo{font-family:var(--mz-fonte);font-weight:700;font-size:32px;letter-spacing:.03em;text-transform:uppercase;color:var(--mz-azul);}
+#pagina-colecao .page-sub,#pagina-cadernetas .page-sub,#pagina-packs .page-sub,#pagina-definicoes .page-sub{color:#6a77a8;font-size:13px;}
+
+/* Coleção */
+#pagina-colecao .colecao-stat{background:#eef1fd;border:0;border-radius:0;color:#6a77a8;}
+#pagina-colecao .colecao-stat span{color:var(--mz-azul);font-family:var(--mz-fonte);font-weight:700;font-size:26px;}
+#colecao-search{background:#f3f5fd !important;border:1px solid #cfd6f0 !important;border-radius:0 !important;color:var(--mz-azul) !important;font-family:var(--mz-fonte) !important;font-weight:600 !important;font-size:17px !important;}
+#colecao-search::placeholder{color:#8a96c2;font-weight:500;}
+#pagina-colecao .colecao-filtro{background:#eef1fd;border:0;border-radius:0;color:var(--mz-azul);font-family:var(--mz-fonte);font-weight:700;font-size:17px;letter-spacing:.06em;text-transform:uppercase;padding:8px 20px;}
+#pagina-colecao .colecao-filtro:hover,#pagina-colecao .colecao-filtro.ativo{background:var(--mz-azul);color:#fff;font-weight:700;border:0;}
+#colecao-subfiltros button{border-radius:0 !important;}
+#pagina-colecao .colecao-vazio{color:#6a77a8;}
+#pagina-colecao .colecao-cromo:hover{filter:drop-shadow(0 8px 14px rgba(20,30,90,.35));}
+#pagina-colecao .colecao-num{color:#6a77a8;}
+
+/* Cadernetas */
+#pagina-cadernetas .cad-label-nome{font-family:var(--mz-fonte);font-weight:700;font-size:20px;letter-spacing:.08em;color:var(--mz-azul);}
+#pagina-cadernetas .cad-label-sub{font-size:12px;color:#6a77a8;}
+
+/* Packs */
+#pagina-packs .pack-info-preco{font-family:var(--mz-fonte);font-weight:700;color:var(--mz-azul);font-size:38px;}
+#pagina-packs .pack-info-preco.pre{color:var(--mz-azul);}
+#pagina-packs .pack-info-btn{border-radius:0;background:var(--mz-azul-vivo);color:#fff;font-family:var(--mz-fonte);font-weight:700;font-size:19px;letter-spacing:.08em;text-transform:uppercase;}
+#pagina-packs .pack-info-btn:hover,#pagina-packs .pack-info-btn.pre:hover{background:#3a6df0;transform:none;}
+#pagina-packs .pack-info-btn.pre{background:var(--mz-azul-vivo);}
+#pagina-packs .pack-info div,#pagina-packs .pack-info span{color:#6a77a8;}
+#pagina-packs .pack-info b,#pagina-packs .pack-info strong{color:var(--mz-azul);}

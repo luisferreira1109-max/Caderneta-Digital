@@ -1,14 +1,19 @@
 /* ===== ANIMAÇÃO DE ABERTURA DE PACKS (Caderneta Digital) =====
-   Pack normal:  loading  ->  cromos em fila
-   Pack lendário: loading -> abertura de estádio -> cromo dourado -> revelação -> loading -> cromos em fila
+   Pack normal:  loading -> abertura de estádio com o logo do site -> cromos em fila
+   Pack lendário: loading -> abertura de estádio com o emblema do clube -> cromo dourado -> revelação -> loading -> cromos em fila
    Se sair mais do que um lendário, mostra-se o de número mais baixo. */
 (function () {
   var ICONE = 'images/Logo/logo-icon.png';
 
   var LENDARIOS = {
-    'fcps-132':   { nome: 'Luís Ferreira', pos: 'AV', posNome: 'Avançado', clube: 'FC Paço de Sousa',      emblema: 'images/simbolo paço de sousa/emblema-fcps.png' },
+    'fcps-133':   { nome: 'Luís Ferreira', pos: 'AV', posNome: 'Avançado', clube: 'FC Paço de Sousa',      emblema: 'images/simbolo paço de sousa/emblema-fcps.png' },
     'ccrdsv-13':  { nome: 'Duarte Silva',  pos: 'DE', posNome: 'Defesa',   clube: 'CCRDSV Irivo Penafiel', emblema: 'images/simbolo irivo/emblema-ccrdsv.png' },
-    'ccrdsv-223': { nome: 'Vitor Ferreira', pos: 'AV', posNome: 'Avançado', clube: 'CCRDSV Irivo Penafiel', emblema: 'images/simbolo irivo/emblema-ccrdsv.png' }
+    'ccrdsv-224': { nome: 'Vitor Ferreira', pos: 'AV', posNome: 'Avançado', clube: 'CCRDSV Irivo Penafiel', emblema: 'images/simbolo irivo/emblema-ccrdsv.png' }
+  };
+
+  var CLUBES = {
+    fcps:   { nome: 'FC Paço de Sousa',      emblema: 'images/simbolo paço de sousa/emblema-fcps.png' },
+    ccrdsv: { nome: 'CCRDSV Irivo Penafiel', emblema: 'images/simbolo irivo/emblema-ccrdsv.png' }
   };
 
   var layer = null, cancelado = false, timers = [], esperaClique = null;
@@ -59,7 +64,8 @@
   }
 
   async function momentoLendario(cromo, info) {
-    var imgSrc = (typeof CROMOS_IMAGENS !== 'undefined' && CROMOS_IMAGENS[cromo.clube + '-' + cromo.num]) || '';
+    var normal = !cromo;   // pack sem lendário: mesma abertura, com o logo do site e sem cromo dourado
+    var imgSrc = normal ? '' : ((typeof CROMOS_IMAGENS !== 'undefined' && CROMOS_IMAGENS[cromo.clube + '-' + cromo.num]) || '');
     var s = el('div', 'pa-stadium');
     var cam = el('div', 'pa-cam');
     cam.appendChild(el('div', 'pa-wall l'));
@@ -80,13 +86,27 @@
     cam.appendChild(scr);
     s.appendChild(cam);
 
+    if (normal) {
+      s.appendChild(el('div', 'pa-dim'));
+      layer.appendChild(s);
+      layer.querySelectorAll('.pa-load').forEach(function (n) { n.remove(); });
+      await esperar(2100);
+      scr.classList.add('charge');
+      await esperar(600);
+      scr.classList.add('seam');
+      await esperar(500);
+      scr.classList.add('open');
+      await esperar(1300);
+      return;
+    }
+
     // cromo lendário: aparece na parede amarela, quando a porta abre
     var wrap = el('div', 'pa-cardwrap');
     wrap.appendChild(el('div', 'pa-front', imgSrc ? '<img src="' + imgSrc + '" alt="' + info.nome + '">' : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#fff;color:#333;font:700 28px Inter,sans-serif">#' + cromo.num + '</div>'));
     var inf = el('div', 'pa-info',
       '<div class="pa-badge">CROMO LENDÁRIO</div>' +
       '<div class="pa-nome">' + info.nome + '</div>' +
-      '<div class="pa-sub">' + info.clube + ' &middot; ' + info.pos + ' &middot; ' + info.posNome + '</div>');
+      '<div class="pa-sub">' + [info.clube, info.pos, info.posNome].filter(Boolean).join(' &middot; ') + '</div>');
     var cont = el('div', 'pa-cont', 'Toca para continuar');
     s.appendChild(el('div', 'pa-dim'));
     s.appendChild(wrap); s.appendChild(inf); s.appendChild(cont);
@@ -146,13 +166,18 @@
 
       var lend = escolherLendario(cromos);
       if (lend) {
-        var info = LENDARIOS[lend.clube + '-' + lend.num] || { nome: 'Cromo #' + lend.num, pos: '', posNome: '', clube: lend.clube === 'fcps' ? 'FC Paço de Sousa' : 'CCRDSV Irivo Penafiel', emblema: ICONE };
+        var cl = CLUBES[lend.clube] || { nome: lend.clube, emblema: ICONE };
+        var jog = (typeof JOGADORES !== 'undefined' && JOGADORES[lend.clube + '-' + lend.num]) || null;
+        var info = LENDARIOS[lend.clube + '-' + lend.num] || { nome: lend.num === 1 ? 'Emblema do clube' : (jog && jog.nome) || 'Cromo #' + lend.num, pos: '', posNome: '', clube: cl.nome, emblema: cl.emblema };
         await momentoLendario(lend, info);
         if (cancelado) return;
         // volta ao ecrã preto com loading
         layer.querySelectorAll('.pa-stadium').forEach(function (n) { n.remove(); });
         mostrarLoading();
         await esperar(1300);
+        if (cancelado) return;
+      } else {
+        await momentoLendario(null, { emblema: ICONE });
         if (cancelado) return;
       }
       terminar();

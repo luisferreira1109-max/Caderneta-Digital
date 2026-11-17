@@ -197,3 +197,9 @@
 .cromo-slot.cx-tecnico:not(.tem-cromo) > span { color: #b98f2f; }
 .cromo-slot.cx-tecnico:not(.tem-cromo) .cx-nome { color: #a9822b; }
 .cx-slot-emblema > span { font-size: clamp(18px, 2.4vw, 34px) !important; letter-spacing: 1px; }
+
+/* --- Sem "salto" inclinado ao abrir: a animação antiga (openBook) inclinava o livro por instantes --- */
+@media (min-width: 701px) {
+  @keyframes openBook { from { transform: scale(.88) translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .caderneta-aberta { transform: none !important; }
+}
