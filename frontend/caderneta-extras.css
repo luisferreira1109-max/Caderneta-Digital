@@ -191,3 +191,9 @@
 @media (min-width: 701px) {
   .caderneta-aberta { width: min(calc((100vh - 120px) * 1.55), calc(100vw - 170px)) !important; aspect-ratio: 31 / 20; }
 }
+
+/* --- Equipa técnica: espaço com traço dourado --- */
+.cromo-slot.cx-tecnico:not(.tem-cromo) { border-color: #c9a24b; background: linear-gradient(180deg, #fffaf0, #fbf3de); }
+.cromo-slot.cx-tecnico:not(.tem-cromo) > span { color: #b98f2f; }
+.cromo-slot.cx-tecnico:not(.tem-cromo) .cx-nome { color: #a9822b; }
+.cx-slot-emblema > span { font-size: clamp(18px, 2.4vw, 34px) !important; letter-spacing: 1px; }

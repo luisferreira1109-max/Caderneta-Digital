@@ -141,7 +141,9 @@
       if (!span || !pag) return;
       const clube = pag.id.startsWith('fcps') ? 'fcps' : (pag.id.startsWith('ccrdsv') ? 'ccrdsv' : null);
       if (!clube) return;
-      const j = (typeof JOGADORES !== 'undefined') ? JOGADORES[clube + '-' + parseInt(span.textContent)] : null;
+      const num = parseInt(span.textContent);
+      if (num >= 2 && (num - 2) % 24 >= 21) slot.classList.add('cx-tecnico');
+      const j = (typeof JOGADORES !== 'undefined') ? JOGADORES[clube + '-' + num] : null;
       if (j && j.nome) {
         const em = document.createElement('em');
         em.className = 'cx-nome';
@@ -157,7 +159,7 @@
       const emb = pag.querySelector('.pag-emblema');
       const slot = document.createElement('div');
       slot.className = 'cromo-slot cx-slot-emblema';
-      slot.innerHTML = '<img class="cx-ghost" src="' + (emb ? emb.getAttribute('src') : '') + '"/><span>EMBLEMA</span>';
+      slot.innerHTML = '<img class="cx-ghost" src="' + (emb ? emb.getAttribute('src') : '') + '"/><span>1</span><em class="cx-nome">EMBLEMA</em>';
       if (emb) { emb.style.display = 'none'; emb.before(slot); } else pag.prepend(slot);
     });
   }
@@ -235,7 +237,7 @@
     if (cadNav) mostrarPagina('cadernetas', cadNav);
     const m = document.getElementById('modal-' + clube);
     const n = parseInt(achado.pagId.split('-pag-')[1]);
-    const esqN = isMobileCad() ? n : (n % 2 === 1 ? n : n - 1);
+    const esqN = isNaN(n) ? 0 : (isMobileCad() ? n : (n % 2 === 1 ? n : n - 1));
     mostrarPaginasCad(clube, esqN, false);
     m.classList.add('show');
     await carregarCromosColados(clube);
