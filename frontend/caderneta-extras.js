@@ -54,6 +54,9 @@
       const el = m.target;
       const antes = (m.oldValue || '').split(/\s+/).includes('show');
       const agora = el.classList.contains('show');
+      // esconde o botão "Instalar App" enquanto a caderneta está aberta
+      const botaoInstalar = [...document.querySelectorAll('body > button')].find(b => b.textContent.includes('Instalar App'));
+      if (botaoInstalar) botaoInstalar.style.display = agora ? 'none' : '';
       if (agora && !antes && el.id && el.id.startsWith('modal-')) {
         const clube = el.id.replace('modal-', '');
         if (window._cadSemCapa) return;
@@ -261,7 +264,7 @@
 
     // Preencher slot
     if (img) {
-      slot.innerHTML = '<img src="' + img + '" style="width:100%;height:100%;object-fit:contain;"/>';
+      slot.innerHTML = '<img src="' + img.replace('/cromos/', '/cromos-mini/') + '" style="width:100%;height:100%;object-fit:contain;"/>';
     } else {
       slot.innerHTML = '<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a2a3a,#0d1a2a);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#c8a84b;font-weight:700;">#' + cromo.num_cromo + '</div>';
     }

@@ -7,7 +7,7 @@
   to   { transform: perspective(1400px) rotateX(6deg) rotateY(2deg) scale(1) translateY(0); opacity: 1; }
 }
 @keyframes cxCentrar { from { translate: -25% 0; } to { translate: 0 0; } }
-.caderneta-aberta.cx-fechada .pag-esq { visibility: hidden; }
+.caderneta-aberta.cx-fechada > .pag-esq { visibility: hidden; }
 .cx-capa-wrap { position: absolute; inset: 0; z-index: 30; perspective: 1800px; pointer-events: none; }
 .cx-capa { position: absolute; top: 0; right: 0; width: 50%; height: 100%; transform-origin: left center; transform-style: preserve-3d; animation: cxCapaAbrir 1.2s .6s cubic-bezier(.45,.05,.2,1) both; }
 @keyframes cxCapaAbrir { from { transform: rotateY(0deg); } to { transform: rotateY(-180deg); } }
@@ -154,7 +154,7 @@
   .cx-estatica.dir .cx-clone { border-radius: 0 20px 20px 0 !important; }
 }
 
-.caderneta-aberta.cx-fechada-dir .pag-dir { visibility: hidden; }
+.caderneta-aberta.cx-fechada-dir > .pag-dir { visibility: hidden; }
 
 /* --- Fundo com ambiente (em vez de caixa preta) --- */
 .caderneta-modal { background: radial-gradient(ellipse 75% 70% at 50% 46%, rgba(120,84,60,.50) 0%, rgba(38,26,22,.86) 52%, rgba(6,4,4,.95) 100%) !important; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
@@ -170,4 +170,24 @@
       -1px 1px 0 #f3efe7, -2px 2px 0 #d8d1c4, -3px 3px 0 #f5f1ea, -4px 4px 0 #d3ccbf, -5px 5px 0 #f3efe7, -6px 6px 0 #cdc6b9, -7px 7px 0 #efe9df, -8px 8px 0 #c4bdaf,
       0 60px 90px -10px rgba(0,0,0,.65), 0 24px 40px rgba(0,0,0,.4) !important;
   }
+}
+
+/* --- Sem filtro/sombra na capa: sem caixa escura e a animação roda bem --- */
+.cx-capa-frente, .cx-capa-face { filter: none !important; }
+
+/* --- Livro plano (sem inclinação 3D): cromos e textos nítidos, cantos direitos --- */
+@media (min-width: 701px) {
+  .caderneta-modal .caderneta-aberta { transform: none; }
+  .caderneta-modal .caderneta-aberta.cx-abrindo { animation: cxEntrarPlano .45s ease-out both, cxCentrar 1.2s .6s cubic-bezier(.4,0,.2,1) both !important; }
+  @keyframes cxEntrarPlano { from { transform: scale(.88) translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .caderneta-aberta .cromo-slot.tem-cromo img { image-rendering: auto; }
+}
+
+/* --- Popup do cromo na caderneta: só o cromo, sem retângulo preto --- */
+.cromo-grande { width: min(310px, 72vw) !important; background: transparent !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; overflow: visible !important; }
+.cromo-grande img { object-fit: contain !important; border-radius: 0 !important; }
+
+/* --- Caderneta ainda maior --- */
+@media (min-width: 701px) {
+  .caderneta-aberta { width: min(calc((100vh - 120px) * 1.55), calc(100vw - 170px)) !important; aspect-ratio: 31 / 20; }
 }
