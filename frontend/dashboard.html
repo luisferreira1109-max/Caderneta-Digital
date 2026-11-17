@@ -1066,10 +1066,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
         <div class="perfil-menu" id="perfil-menu" onclick="event.stopPropagation()">
           <div id="pm-lista">
             <div class="pm-item" onclick="pmAlterarFoto()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5h3l1.5-2.5h7L17 8.5h3V18H4z"/><circle cx="12" cy="13" r="3.2"/></svg>Alterar foto de perfil
-            </div>
-            <div class="pm-item" onclick="pmAlterarNome()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>Alterar nome
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5h3l1.5-2.5h7L17 8.5h3V18H4z"/><circle cx="12" cy="13" r="3.2"/></svg>Alterar foto e nome
             </div>
             <div class="pm-item" onclick="window.location.href='carregar.html'">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="M3.5 10h17M7 15h3"/></svg>Carregar conta
@@ -1350,112 +1347,70 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
         <div id="mercado-painel" class="mz-painel" style="display:none">
           <div class="mz-voltar" onclick="mzMercadoHub()">← Voltar</div>
 
-        <div class="page-header">
-          <p class="page-titulo">Mercado</p>
-          <p class="page-sub">Compra, vende e troca cromos com outros colecionadores</p>
-        </div>
-
-        <!-- Tabs -->
-        <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
-          <button class="mercado-tab ativo" id="tab-comprar" onclick="mudarTabMercado('comprar')">🛒 Comprar</button>
-          <button class="mercado-tab" id="tab-vender" onclick="mudarTabMercado('vender')">💰 Vender</button>
-          <button class="mercado-tab" id="tab-trocas" onclick="mudarTabMercado('trocas')">🔄 Trocas</button>
-          <button class="mercado-tab" id="tab-historico" onclick="mudarTabMercado('historico')">📋 Histórico</button>
-          <button class="mercado-tab" id="tab-minhas" onclick="mudarTabMercado('minhas')">📦 As minhas</button>
-        </div>
-
-        <!-- TAB COMPRAR -->
-        <div id="mercado-comprar">
-          <!-- Filtros -->
-          <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
-            <input id="mercado-search" type="text" placeholder="Pesquisar cromo..." oninput="carregarMercado()" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#fff;font-size:12px;outline:none;width:180px;"/>
-            <select id="mercado-filtro-clube" onchange="carregarMercado()" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#1a1a2e;color:#fff;font-size:12px;outline:none;">
-              <option value="">Todos os clubes</option>
-              <option value="fcps">FCPS</option>
-              <option value="ccrdsv">CCRDSV</option>
-            </select>
-            <select id="mercado-filtro-ordem" onchange="carregarMercado()" style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:#1a1a2e;color:#fff;font-size:12px;outline:none;">
-              <option value="preco_asc">Preço ↑</option>
-              <option value="preco_desc">Preço ↓</option>
-              <option value="recente">Mais recente</option>
-            </select>
+          <!-- COMPRAR -->
+          <div id="mercado-comprar">
+            <div class="mz-filtros">
+              <input id="mercado-search" type="text" placeholder="Pesquisar cromo..." oninput="carregarMercado()"/>
+              <select id="mercado-filtro-clube" onchange="carregarMercado()">
+                <option value="">Todos os clubes</option>
+                <option value="fcps">FC Paço de Sousa</option>
+                <option value="ccrdsv">CCRDSV Irivo</option>
+              </select>
+              <select id="mercado-filtro-raridade" onchange="carregarMercado()">
+                <option value="">Todas as raridades</option>
+                <option value="comum">Comum</option>
+                <option value="raro">Raro</option>
+                <option value="epico">Épico</option>
+                <option value="lendario">Lendário</option>
+              </select>
+              <select id="mercado-filtro-ordem" onchange="carregarMercado()">
+                <option value="preco_asc">Preço ↑</option>
+                <option value="preco_desc">Preço ↓</option>
+                <option value="recente">Mais recente</option>
+              </select>
+            </div>
+            <div class="ml-cab"><span></span><span>Jogador</span><span>Raridade</span><span>Escalão</span><span>Vendedor</span><span>Preço</span><span>Proposta</span><span></span></div>
+            <div id="mercado-lista" class="ml-lista"></div>
           </div>
-          <div class="ml-cab"><span></span><span>Jogador</span><span>Raridade</span><span>Escalão</span><span>Vendedor</span><span>Preço</span><span></span></div>
-          <div id="mercado-lista" class="ml-lista"></div>
-        </div>
 
-        <!-- TAB VENDER -->
-        <div id="mercado-vender" style="display:none;">
-          <div style="background:rgba(200,168,75,0.08);border:1px solid rgba(200,168,75,0.2);border-radius:12px;padding:16px;margin-bottom:16px;font-size:13px;color:rgba(255,255,255,0.7);">
-            💡 A plataforma fica com <strong style="color:#c8a84b;">10%</strong> de cada venda. Recebes os restantes 90%.
-          </div>
-          <div style="margin-bottom:12px;font-size:13px;color:rgba(255,255,255,0.6);">Seleciona um cromo da tua coleção para vender:</div>
-          <div id="mercado-minha-colecao" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;max-height:300px;overflow-y:auto;margin-bottom:16px;"></div>
-          <!-- Form de venda -->
-          <div id="mercado-form-venda" style="display:none;background:rgba(255,255,255,0.04);border-radius:12px;padding:16px;">
-            <div style="display:flex;gap:16px;align-items:center;margin-bottom:14px;">
-              <div id="mercado-cromo-preview" style="width:70px;height:100px;border-radius:8px;background:linear-gradient(135deg,#1a2a3a,#0d1a2a);border:1px solid rgba(200,168,75,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;color:#c8a84b;flex-shrink:0;"></div>
-              <div>
-                <div id="mercado-cromo-info" style="font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;"></div>
-                <div id="mercado-cromo-sub" style="font-size:12px;color:rgba(255,255,255,0.5);"></div>
+          <!-- VENDER -->
+          <div id="mercado-vender" style="display:none;">
+            <h4 class="mw-tit">Os teus cromos</h4>
+            <p class="mw-sub">Escolhe o cromo que queres pôr à venda.</p>
+            <div id="mercado-minha-colecao" class="mw-grid"></div>
+            <div id="mercado-form-venda" class="mw-venda" style="display:none;">
+              <div class="mw-venda-topo">
+                <div id="mercado-cromo-preview" class="mw-prev"></div>
+                <div>
+                  <div id="mercado-cromo-info" class="mw-venda-nome"></div>
+                  <div id="mercado-cromo-sub" class="mw-venda-sub"></div>
+                </div>
               </div>
-            </div>
-            <div style="display:flex;gap:10px;align-items:center;">
-              <input id="mercado-preco" type="number" min="0.10" step="0.01" placeholder="Preço (€)" style="padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:14px;outline:none;width:130px;"/>
-              <div style="font-size:12px;color:rgba(255,255,255,0.4);">Recebes: <span id="mercado-preco-vendedor" style="color:#c8a84b;font-weight:600;">---</span></div>
-            </div>
-            <button onclick="publicarVenda()" style="margin-top:12px;width:100%;padding:12px;border-radius:10px;border:none;background:#c8a84b;color:#111;font-size:13px;font-weight:700;cursor:pointer;">Colocar à venda</button>
-          </div>
-        </div>
-
-        <!-- TAB TROCAS -->
-        <div id="mercado-trocas" style="display:none;">
-          <div style="margin-bottom:12px;font-size:13px;color:rgba(255,255,255,0.6);">Propõe uma troca — escolhe o cromo que ofereces e o que queres:</div>
-          <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:start;margin-bottom:16px;">
-            <div>
-              <div style="font-size:12px;color:#c8a84b;font-weight:600;margin-bottom:8px;">OFEREÇO</div>
-              <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
-                <select id="troca-oferta-clube" onchange="renderTrocaOfertaGrid()" style="padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:#1a1a2e;color:#fff;font-size:11px;outline:none;">
-                  <option value="fcps">FCPS</option>
-                  <option value="ccrdsv">CCRDSV</option>
-                </select>
-                <input id="troca-oferta-search" type="number" placeholder="Nº cromo" oninput="renderTrocaOfertaGrid()" style="padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#fff;font-size:11px;outline:none;width:80px;"/>
-              </div>
-              <div id="troca-oferta-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:6px;max-height:200px;overflow-y:auto;background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;"></div>
-              <div id="troca-oferta-sel" style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.4);"></div>
-            </div>
-            <div style="text-align:center;font-size:24px;color:rgba(255,255,255,0.3);padding-top:80px;">⇄</div>
-            <div>
-              <div style="font-size:12px;color:#d980fa;font-weight:600;margin-bottom:8px;">QUERO</div>
-              <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
-                <select id="troca-pedido-clube" onchange="renderTrocaPedidoGrid()" style="padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:#1a1a2e;color:#fff;font-size:11px;outline:none;">
-                  <option value="fcps">FCPS</option>
-                  <option value="ccrdsv">CCRDSV</option>
-                </select>
-                <input id="troca-pedido-search" type="number" placeholder="Nº cromo" oninput="renderTrocaPedidoGrid()" style="padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#fff;font-size:11px;outline:none;width:80px;"/>
-              </div>
-              <div id="troca-pedido-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:6px;max-height:200px;overflow-y:auto;background:rgba(255,255,255,0.03);border-radius:8px;padding:8px;"></div>
-              <div id="troca-pedido-sel" style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.4);"></div>
+              <div class="mw-linha"><label>Tu recebes:</label><input id="mercado-recebes" type="number" min="0.10" step="0.01" placeholder="0,00 €"/></div>
+              <div class="mw-linha"><label>O comprador paga:</label><input id="mercado-preco" type="text" readonly placeholder="0,00 €"/><span class="mw-taxas">(inclui taxas)</span></div>
+              <p class="mw-aviso">Ao vender, o comprador paga mais <strong>10%</strong> do valor que defines. Essa taxa fica para a Caderneta Digital. Tu recebes sempre o valor que escreveste.</p>
+              <button class="mw-btn" onclick="publicarVenda()">Colocar à venda</button>
             </div>
           </div>
-          <button onclick="publicarTroca()" style="width:100%;padding:12px;border-radius:10px;border:none;background:#9b59b6;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Propor Troca</button>
-          <div style="margin-top:20px;">
-            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);margin-bottom:10px;">Trocas disponíveis de outros utilizadores:</div>
-            <div id="trocas-lista" style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;"></div>
+
+          <!-- TROCAS -->
+          <div id="mercado-trocas" style="display:none;">
+            <div id="troca-amigos">
+              <h4 class="mw-tit">Trocas com amigos</h4>
+              <p class="mw-sub">Escolhe um amigo para propor uma troca de cromos.</p>
+              <div id="troca-amigos-lista" class="mw-amigos"></div>
+            </div>
+            <div id="troca-ecra" style="display:none;"></div>
           </div>
-        </div>
 
-        <!-- TAB HISTÓRICO -->
-        <div id="mercado-historico" style="display:none;">
-          <div id="historico-lista" style="display:flex;flex-direction:column;gap:8px;max-height:500px;overflow-y:auto;"></div>
-        </div>
+          <!-- HISTÓRICO -->
+          <div id="mercado-historico" style="display:none;">
+            <h4 class="mw-tit">Histórico</h4>
+            <div id="historico-lista" class="mh-lista"></div>
+          </div>
 
-        <!-- TAB AS MINHAS -->
-        <div id="mercado-minhas" style="display:none;">
-          <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:12px;">Os teus anúncios ativos:</div>
-          <div id="minhas-vendas-lista" style="display:flex;flex-direction:column;gap:8px;max-height:500px;overflow-y:auto;"></div>
-        </div>
-      
+          <!-- AS MINHAS (escondido, mantido para compatibilidade) -->
+          <div id="mercado-minhas" style="display:none;"><div id="minhas-vendas-lista"></div></div>
         </div>
       </div>
 
@@ -2951,6 +2906,7 @@ function mudarTabMercado(tab) {
 }
 
 // ── COMPRAR ──────────────────────────────
+let _mercadoVendasVisiveis = [];
 async function carregarMercado() {
   const grid = document.getElementById('mercado-lista');
   const search = document.getElementById('mercado-search')?.value.toLowerCase() || '';
@@ -2978,6 +2934,10 @@ async function carregarMercado() {
     const jogador = JOGADORES[key];
     return String(v.num_cromo).includes(search) || (jogador && jogador.nome.toLowerCase().includes(search));
   });
+
+  const filtroRar = document.getElementById('mercado-filtro-raridade')?.value || '';
+  if (filtroRar) lista = lista.filter(v => (v.num_cromo === 1 ? 'lendario' : getRaridade(v.clube, v.num_cromo)) === filtroRar);
+  _mercadoVendasVisiveis = lista;
 
   if (lista.length === 0) {
     grid.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:14px;padding:26px 8px;">Nenhum cromo à venda no momento.</div>';
@@ -3012,6 +2972,7 @@ async function carregarMercado() {
       <div class="ml-esc">${getEscalao(v.clube, v.num_cromo) || '—'}</div>
       <div class="ml-vend">${nomes[v.vendedor_id] || 'Utilizador'}</div>
       <div class="ml-preco">${parseFloat(v.preco).toFixed(2)} €</div>
+      <div><button class="ml-btn ml-btn-prop" onclick="mzProposta('${v.id}')">Proposta</button></div>
       <div><button class="ml-btn" onclick="comprarCromo('${v.id}', ${v.preco}, '${v.vendedor_id}', '${v.clube}', ${v.num_cromo})">Comprar</button></div>`;
     grid.appendChild(row);
   });
@@ -3026,8 +2987,8 @@ async function comprarCromo(vendaId, preco, vendedorId, clube, numCromo) {
   const { data: perfil } = await sb.from('profiles').select('saldo').eq('id', user.id).single();
   if (!perfil || perfil.saldo < preco) { mostrarNotificacao('Saldo insuficiente!', 'erro'); return; }
 
-  const precoVendedor = Math.round(preco * 0.90 * 100) / 100;
-  const precoPlataforma = Math.round(preco * 0.10 * 100) / 100;
+  const precoVendedor = Math.round(preco / 1.10 * 100) / 100;
+  const precoPlataforma = Math.round((preco - precoVendedor) * 100) / 100;
 
   // 1. Debitar comprador
   await sb.from('profiles').update({ saldo: perfil.saldo - preco }).eq('id', user.id);
@@ -3419,4 +3380,5 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="pack-animacao.js"></script>
 <script src="caderneta-extras.js"></script>
 <script src="menu-mosaico.js"></script>
+<script src="mercado-novo.js"></script>
 </body>

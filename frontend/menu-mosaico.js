@@ -58,7 +58,6 @@
   };
   window.pmAlterarFoto = function () {
     document.getElementById('perfil-menu').classList.add('pm-modo-form');
-    var i = document.getElementById('perfil-foto-input'); if (i) i.click();
   };
   window.pmDefinicoes = function () {
     document.getElementById('perfil-menu').classList.remove('show');
