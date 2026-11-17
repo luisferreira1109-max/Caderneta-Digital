@@ -1007,6 +1007,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 <script src="jogadores-dados.js"></script>
 <link rel="stylesheet" href="pack-animacao.css">
 <link rel="stylesheet" href="caderneta-extras.css">
+<link rel="stylesheet" href="menu-mosaico.css">
 </head>
 <body>
 
@@ -1059,23 +1060,49 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
         <span class="user-nome" id="user-nome">Luís Ferreira</span>
         <div class="divider-v"></div>
         <div class="user-moedas"><span id="user-saldo-top">0,00</span> €</div>
+        <div class="mz-moedas"><span class="mz-moeda-ico"></span><span id="user-moedas">0</span></div>
 
         <!-- Menu perfil -->
         <div class="perfil-menu" id="perfil-menu" onclick="event.stopPropagation()">
-          <div class="perfil-foto-wrap">
-            <div class="perfil-foto-circulo" onclick="document.getElementById('perfil-foto-input').click()">
-              <span id="perfil-avatar-menu">LF</span>
-              <div class="foto-overlay">📷</div>
+          <div id="pm-lista">
+            <div class="pm-item" onclick="pmAlterarFoto()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8.5h3l1.5-2.5h7L17 8.5h3V18H4z"/><circle cx="12" cy="13" r="3.2"/></svg>Alterar foto de perfil
             </div>
-            <span class="perfil-foto-label">Clica para alterar foto</span>
-            <input type="file" id="perfil-foto-input" accept="image/*" onchange="previewFoto(event)"/>
+            <div class="pm-item" onclick="pmAlterarNome()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>Alterar nome
+            </div>
+            <div class="pm-item" onclick="window.location.href='carregar.html'">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="17" height="12" rx="2"/><path d="M3.5 10h17M7 15h3"/></svg>Carregar conta
+            </div>
+            <div class="pm-item" onclick="pmDefinicoes()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.2M12 18.8V21M21 12h-2.2M5.2 12H3M18 6l-1.5 1.5M7.5 16.5 6 18M18 18l-1.5-1.5M7.5 7.5 6 6"/></svg>Definições
+            </div>
+            <div class="pm-item sair" onclick="logout()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H9M15 16l4-4-4-4M19 12H9"/></svg>Terminar sessão
+            </div>
           </div>
-          <div class="perfil-campo">
-            <label>Nome de utilizador</label>
-            <input type="text" id="perfil-nome-input" placeholder="O teu nome"/>
+          <div id="perfil-form">
+            <div class="perfil-foto-wrap">
+              <div class="perfil-foto-circulo" onclick="document.getElementById('perfil-foto-input').click()">
+                <span id="perfil-avatar-menu">LF</span>
+                <div class="foto-overlay">📷</div>
+              </div>
+              <span class="perfil-foto-label">Clica para alterar foto</span>
+              <input type="file" id="perfil-foto-input" accept="image/*" onchange="previewFoto(event)"/>
+            </div>
+            <div class="perfil-campo">
+              <label>Nome de utilizador</label>
+              <input type="text" id="perfil-nome-input" placeholder="O teu nome"/>
+            </div>
+            <button class="perfil-btn" onclick="guardarPerfil()">💾 Guardar alterações</button>
           </div>
-          <button class="perfil-btn" onclick="guardarPerfil()">💾 Guardar alterações</button>
         </div>
+      </div>
+      <div class="mz-tabs">
+        <div class="mz-tab ativo" data-tab="inicio" onclick="mzTab('inicio')">Início</div>
+        <div class="mz-tab" data-tab="colecao" onclick="mzTab('colecao')">Coleção</div>
+        <div class="mz-tab" data-tab="mercado" onclick="mzTab('mercado')">Mercado</div>
+        <div class="mz-tab" data-tab="amigos" onclick="mzTab('amigos')">Amigos<span class="mz-ponto" id="mz-ponto-amigos"></span></div>
       </div>
     </div>
 
@@ -1083,21 +1110,22 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 
       <!-- INÍCIO -->
       <div id="pagina-inicio">
-        <div class="page-header">
-          <p class="page-titulo">Bem-vindo 👋</p>
-          <p class="page-sub">A tua coleção está a crescer. Continua assim!</p>
-        </div>
-
-        <!-- 3 CARDS TOPO -->
-        <div class="top-cards">
-
-          <!-- Card Coleções em Curso -->
-          <div class="top-card colecoes-card">
-            <div class="colecoes-card-header">
-              <i class="ti ti-book card-icon"></i>
-              <span class="card-label">Coleções em curso</span>
-            </div>
-            <div class="mini-colecao" id="mini-colecao-fcps" style="display:none">
+        <div class="mz-grid mz-inicio">
+          <div class="mz-tile mz-azul clicavel mz-packs" onclick="mostrarPagina('packs')">
+            <span class="mz-etq">NOVO</span>
+            <h3>Packs</h3>
+            <div class="mz-arte"><img src="images/pack-standard.png" alt=""><img src="images/pack-premium.png" alt=""></div>
+            <div class="mz-cta">Abrir packs</div>
+          </div>
+          <div class="mz-tile clicavel mz-cads" onclick="mostrarPagina('cadernetas')">
+            <h3>Cadernetas</h3>
+            <div class="mz-arte"><img src="images/caderneta-fcps.png" alt=""><img src="images/caderneta-ccrdsv.png" alt=""></div>
+            <div class="mz-cta">Continuar</div>
+          </div>
+          <div class="mz-tile mz-curso">
+            <h3>Coleção em curso</h3>
+            <div class="mz-corpo">
+              <div class="mini-colecao" id="mini-colecao-fcps" style="display:none">
               <div class="mini-emblema paco"><img src="images/simbolo paço de sousa/emblema-paco-mini.png" alt="FC Paço de Sousa"/></div>
               <div class="mini-info">
                 <div class="mini-nome">FC Paço de Sousa</div>
@@ -1114,31 +1142,13 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
               </div>
             </div>
             <div id="mini-colecao-vazio" style="color:#999; font-size:12px; padding:8px 0;">Ainda não desbloqueaste nenhuma caderneta.</div>
+            </div>
           </div>
-
-          <!-- Card Moedas -->
-          <div class="top-card">
-            <div class="card-icon-wrap"><i class="ti ti-coin"></i></div>
-            <div class="card-label">Moedas</div>
-            <div class="card-valor gold" id="stat-moedas">500</div>
-            <div class="card-sub">Para desbloquear cadernetas e para futuros eventos</div>
-            
-          </div>
-
-          <!-- Card Saldo -->
-          <div class="top-card">
-            <div class="card-icon-wrap" style="color:rgba(29,158,117,0.7)"><i class="ti ti-currency-euro"></i></div>
-            <div class="card-label">Saldo</div>
-            <div class="card-valor green" id="stat-saldo">0,00 €</div>
-            
-            <div class="card-btn green-btn" onclick="window.location.href='carregar.html'">+ Carregar saldo</div>
-          </div>
-
-        </div>
-
-        <!-- ATIVIDADE RECENTE -->
-        <div class="secao-titulo">Atividade recente</div>
-        <div class="atividade-lista" id="atividade-lista">
+          <div class="mz-tile mz-ativ">
+            <h3>Atividades recentes</h3>
+            <div class="mz-corpo">
+              <div id="mz-pedidos-ativ"></div>
+              <div class="atividade-lista" id="atividade-lista">
           <div class="atividade-item">
             <div class="atividade-icon ai-ach"><i class="ti ti-trophy" style="color:#C9943A"></i></div>
             <div class="atividade-texto">Conta criada com sucesso! <strong>+500 moedas de boas-vindas</strong></div>
@@ -1155,10 +1165,39 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
             <div class="atividade-tempo">—</div>
           </div>
         </div>
+
+            </div>
+          </div>
+        </div>
+        <div style="display:none"><span id="stat-moedas">500</span><span id="stat-saldo">0,00 €</span></div>
       </div>
 
-      
-      
+      <!-- COLEÇÃO (menu de mosaicos) -->
+      <div id="pagina-colecaohub" style="display:none">
+        <div class="mz-grid mz-hub">
+          <div class="mz-tile clicavel mz-t-cads" onclick="mostrarPagina('cadernetas')">
+            <h3>Cadernetas</h3>
+            <div class="mz-arte"><img src="images/caderneta-fcps.png" alt=""><img src="images/caderneta-ccrdsv.png" alt=""></div>
+            <div class="mz-cta">Abrir</div>
+          </div>
+          <div class="mz-tile clicavel mz-t-cromos" onclick="mostrarPagina('colecao'); carregarColecao()">
+            <h3>Os meus cromos</h3>
+            <div class="mz-arte mz-arte-h"><img src="images/cromos-mini/ccrdsv-13.webp" alt=""><img src="images/cromos-mini/fcps-26.webp" alt=""><img src="images/cromos-mini/fcps-133.webp" alt=""></div>
+            <div class="mz-cta">Ver coleção</div>
+          </div>
+          <div class="mz-tile mz-t-rank">
+            <span class="mz-etq">EM BREVE</span>
+            <h3>Ranking</h3>
+            <p class="mz-sub">Quem tem as cadernetas mais preenchidas.</p>
+            <div class="mz-rank">
+              <div><b>1</b><span>Criativo</span><i>85%</i></div>
+              <div><b>2</b><span>Agostinho</span><i>20%</i></div>
+              <div><b>3</b><span>···</span><i>··%</i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- CADERNETAS -->
       <div id="pagina-cadernetas" style="display:none">
         <div class="page-header">
@@ -1286,6 +1325,31 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 
       <!-- MERCADO -->
       <div id="pagina-mercado" style="display:none">
+        <div id="mercado-hub" class="mz-grid mz-inicio mz-merc">
+          <div class="mz-tile mz-azul clicavel mz-packs" onclick="mzMercado('comprar')">
+            <h3>Comprar</h3>
+            <div class="mz-arte"><svg class="mz-svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M30 42h60l6 62H24z"/><path d="M44 42V32a16 16 0 0 1 32 0v10"/><circle cx="60" cy="74" r="13"/><path d="M60 67v14M55 71.5h7a3 3 0 0 1 0 6h-6"/></svg></div>
+            <div class="mz-cta">Ver o mercado</div>
+          </div>
+          <div class="mz-tile clicavel mz-cads" onclick="mzMercado('vender')">
+            <h3>Vender</h3>
+            <div class="mz-arte"><svg class="mz-svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M58 14h42a6 6 0 0 1 6 6v42L62 106a8 8 0 0 1-11 0L14 69a8 8 0 0 1 0-11z"/><circle cx="88" cy="36" r="7"/><path d="M62 62v-8a8 8 0 0 0-12 0M50 70a8 8 0 0 0 12 0M44 62h22M44 70h22"/></svg></div>
+            <div class="mz-cta">Pôr à venda</div>
+          </div>
+          <div class="mz-tile clicavel mz-curso" onclick="mzMercado('trocas')">
+            <h3>Trocas</h3>
+            <p class="mz-sub">Troca cromos repetidos com outros colecionadores.</p>
+            <div class="mz-ico-grande">🔄</div>
+          </div>
+          <div class="mz-tile clicavel mz-ativ" onclick="mzMercado('historico')">
+            <h3>Histórico</h3>
+            <p class="mz-sub">As tuas compras, vendas e trocas.</p>
+            <div class="mz-ico-grande">📋</div>
+          </div>
+        </div>
+        <div id="mercado-painel" class="mz-painel" style="display:none">
+          <div class="mz-voltar" onclick="mzMercadoHub()">← Voltar</div>
+
         <div class="page-header">
           <p class="page-titulo">Mercado</p>
           <p class="page-sub">Compra, vende e troca cromos com outros colecionadores</p>
@@ -1316,7 +1380,8 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
               <option value="recente">Mais recente</option>
             </select>
           </div>
-          <div id="mercado-lista" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;max-height:500px;overflow-y:auto;"></div>
+          <div class="ml-cab"><span></span><span>Jogador</span><span>Raridade</span><span>Escalão</span><span>Vendedor</span><span>Preço</span><span></span></div>
+          <div id="mercado-lista" class="ml-lista"></div>
         </div>
 
         <!-- TAB VENDER -->
@@ -1390,31 +1455,45 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
           <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:12px;">Os teus anúncios ativos:</div>
           <div id="minhas-vendas-lista" style="display:flex;flex-direction:column;gap:8px;max-height:500px;overflow-y:auto;"></div>
         </div>
+      
+        </div>
       </div>
 
       <!-- AMIGOS v2 -->
       <div id="pagina-amigos" style="display:none">
-        <div class="amigos-header">
-          <div class="page-header"><p class="page-titulo">Amigos</p><p class="page-sub">Os teus amigos colecionadores</p></div>
-          <button class="btn-adicionar-amigo" onclick="abrirModalAmigo()">+ Adicionar amigo</button>
+        <div id="amigos-hub" class="mz-grid mz-amigos">
+          <div class="mz-tile clicavel" onclick="mzAmigos('codigo')"><h3>O meu código</h3><p class="mz-sub">O teu código de amigo, para partilhares.</p><div class="mz-codigo-mini" id="mz-codigo-mini">------</div></div>
+          <div class="mz-tile clicavel" onclick="mzAmigos('lista')"><h3>Os teus amigos</h3><p class="mz-sub">Quem já colecciona contigo.</p><div class="mz-ico-grande">👥</div></div>
+          <div class="mz-tile clicavel" onclick="mzAmigos('qr')"><h3>Código QR</h3><p class="mz-sub">Mostra-o para um amigo apontar o telemóvel.</p><div class="mz-ico-grande">▦</div></div>
+          <div class="mz-tile mz-azul clicavel" onclick="mzAmigos('lista')"><h3>Chat</h3><p class="mz-sub">Fala com os teus amigos.</p><div class="mz-ico-grande">💬</div></div>
+          <div class="mz-tile clicavel" onclick="abrirModalAmigo()"><h3>Adicionar amigo</h3><p class="mz-sub">Insere o código de um amigo para enviar o pedido.</p><div class="mz-ico-grande">➕</div></div>
         </div>
 
-        <div class="meu-codigo">
-          <div class="meu-codigo-info">
-            <div class="meu-codigo-label">O teu código</div>
-            <div class="meu-codigo-valor" id="meu-codigo-valor">------</div>
-            <div class="meu-codigo-sub">Partilha este código para te adicionarem como amigo</div>
+        <div id="amigos-painel" class="mz-painel" style="display:none">
+          <div class="mz-voltar" onclick="mzAmigosHub()">← Voltar</div>
+
+          <div id="am-codigo" class="am-sub" style="display:none">
+            <p class="page-titulo">O meu código</p>
+            <div class="meu-codigo-valor" id="meu-codigo-valor" style="font-size:54px;letter-spacing:.2em;margin:18px 0 8px;">------</div>
+            <p class="page-sub">Partilha este código para te adicionarem como amigo.</p>
+            <button class="perfil-btn" style="max-width:240px;margin-top:14px;" onclick="mzCopiarCodigo()">Copiar código</button>
           </div>
-          <div class="meu-qr"><img id="meu-qr-canvas" width="80" height="80" style="display:block;" alt="QR code"/></div>
-        </div>
 
-        <div class="pedidos-section" id="pedidos-section" style="display:none">
-          <div class="pedidos-titulo">Pedidos de amizade</div>
-          <div id="pedidos-lista"></div>
-        </div>
+          <div id="am-qr" class="am-sub" style="display:none;text-align:center;">
+            <p class="page-titulo">Código QR</p>
+            <div style="background:#fff;padding:16px;display:inline-block;margin:18px 0 8px;"><img id="meu-qr-canvas" width="240" height="240" style="display:block;" alt="QR code"/></div>
+            <p class="page-sub">Um amigo aponta a câmara do telemóvel e pode enviar-te o pedido de amizade.</p>
+          </div>
 
-        <div class="amigos-lista-titulo">Os teus amigos (<span id="amigos-count">0</span>)</div>
-        <div id="amigos-lista"></div>
+          <div id="am-lista" class="am-sub" style="display:none">
+            <div class="pedidos-section" id="pedidos-section" style="display:none">
+              <div class="pedidos-titulo">Pedidos de amizade</div>
+              <div id="pedidos-lista"></div>
+            </div>
+            <div class="amigos-lista-titulo">Os teus amigos (<span id="amigos-count">0</span>) · clica num amigo para abrir o chat</div>
+            <div id="amigos-lista"></div>
+          </div>
+        </div>
       </div>
 
       <!-- PERFIL -->
@@ -2901,27 +2980,40 @@ async function carregarMercado() {
   });
 
   if (lista.length === 0) {
-    grid.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:13px;padding:20px;grid-column:1/-1;">Nenhum cromo à venda no momento.</div>';
+    grid.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:14px;padding:26px 8px;">Nenhum cromo à venda no momento.</div>';
     return;
   }
 
+  // Nomes dos vendedores
+  const nomes = {};
+  try {
+    const ids = [...new Set(lista.map(v => v.vendedor_id))];
+    if (ids.length) {
+      const { data: profs } = await sb.from('profiles').select('id, display_name').in('id', ids);
+      (profs || []).forEach(pf => { nomes[pf.id] = pf.display_name; });
+    }
+  } catch (e) {}
+
+  const RAR = { lendario: 'Lendário', epico: 'Épico', raro: 'Raro', comum: 'Comum' };
   lista.forEach(v => {
     const key = `${v.clube}-${v.num_cromo}`;
     const img = CROMOS_IMAGENS[key];
+    const mini = img ? img.replace('/cromos/', '/cromos-mini/') : '';
     const jogador = JOGADORES[key];
-    const vendedor = 'Utilizador';
-    const div = document.createElement('div');
-    div.className = 'mercado-card';
-    div.innerHTML = `
-      <div class="mercado-card-img">${img ? `<img src="${img}" alt="cromo"/>` : `#${v.num_cromo}`}</div>
-      <div class="mercado-card-nome">${jogador ? jogador.nome : `Cromo #${v.num_cromo}`}</div>
-      <div class="mercado-card-sub">${v.clube === 'fcps' ? 'FCPS' : 'CCRDSV'} · #${v.num_cromo}</div>
-      <div class="mercado-card-vendedor">por: ${vendedor}</div>
-      <div class="mercado-card-footer">
-        <span class="mercado-card-preco">${parseFloat(v.preco).toFixed(2)} €</span>
-        <button class="mercado-card-btn" onclick="comprarCromo('${v.id}', ${v.preco}, '${v.vendedor_id}', '${v.clube}', ${v.num_cromo})">Comprar</button>
-      </div>`;
-    grid.appendChild(div);
+    const rar = getRaridade(v.clube, v.num_cromo);
+    const emb = v.num_cromo === 1;
+    const clubeNome = v.clube === 'fcps' ? 'FC Paço de Sousa' : 'CCRDSV Irivo';
+    const row = document.createElement('div');
+    row.className = 'ml-linha';
+    row.innerHTML = `
+      <div class="ml-thumb">${mini ? `<img src="${mini}" alt="">` : `#${v.num_cromo}`}</div>
+      <div class="ml-jog"><div class="ml-nome">${emb ? 'Emblema' : (jogador ? jogador.nome : 'Cromo #' + v.num_cromo)}</div><div class="ml-sub">${clubeNome} · Nº ${v.num_cromo}</div></div>
+      <div><span class="ml-rar ml-rar-${emb ? 'lendario' : rar}">${emb ? 'Emblema' : (RAR[rar] || rar)}</span></div>
+      <div class="ml-esc">${getEscalao(v.clube, v.num_cromo) || '—'}</div>
+      <div class="ml-vend">${nomes[v.vendedor_id] || 'Utilizador'}</div>
+      <div class="ml-preco">${parseFloat(v.preco).toFixed(2)} €</div>
+      <div><button class="ml-btn" onclick="comprarCromo('${v.id}', ${v.preco}, '${v.vendedor_id}', '${v.clube}', ${v.num_cromo})">Comprar</button></div>`;
+    grid.appendChild(row);
   });
 }
 
@@ -3326,4 +3418,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 <script src="pack-animacao.js"></script>
 <script src="caderneta-extras.js"></script>
+<script src="menu-mosaico.js"></script>
 </body>
