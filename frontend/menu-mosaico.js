@@ -86,8 +86,8 @@
   window.mzAmigosHub = function () { ver('amigos-hub', true); ver('amigos-painel', false); };
   window.mzAmigos = function (sub) {
     ver('amigos-hub', false); ver('amigos-painel', true);
-    ['codigo', 'qr', 'lista'].forEach(function (k) { ver('am-' + k, k === sub); });
-    try { carregarAmigos(); } catch (e) {}
+    ['codigo', 'qr', 'lista', 'chat'].forEach(function (k) { ver('am-' + k, k === sub); });
+    try { if (sub === 'chat') mzChatInicio(); else carregarAmigos(); } catch (e) {}
   };
   window.mzCopiarCodigo = function () {
     var c = document.getElementById('meu-codigo-valor').textContent;
@@ -99,6 +99,17 @@
     var m = document.getElementById('mz-codigo-mini'); if (m) m.textContent = cod.textContent;
   }).observe(cod, { childList: true, characterData: true, subtree: true });
 
+  var qrGrande = document.getElementById('meu-qr-canvas');
+  if (qrGrande) new MutationObserver(function () {
+    var m = document.getElementById('mz-qr-mini'); if (m) m.src = qrGrande.src;
+  }).observe(qrGrande, { attributes: true, attributeFilter: ['src'] });
+
+  window._mzPed = 0; window._mzMsg = 0;
+  window.mzPonto = function () {
+    var p = document.getElementById('mz-ponto-amigos');
+    if (p) p.classList.toggle('on', (window._mzPed || 0) + (window._mzMsg || 0) > 0);
+  };
+
   /* ----- Pedidos de amizade nas Atividades recentes ----- */
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   async function carregarPedidosAtividade() {
@@ -108,7 +119,7 @@
       var pedidos = q.data || [];
       var cont = document.getElementById('mz-pedidos-ativ');
       var ponto = document.getElementById('mz-ponto-amigos');
-      if (ponto) ponto.classList.toggle('on', pedidos.length > 0);
+      window._mzPed = pedidos.length; window.mzPonto();
       if (!cont) return;
       var html = '';
       for (var i = 0; i < pedidos.length; i++) {

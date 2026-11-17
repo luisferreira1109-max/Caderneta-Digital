@@ -87,7 +87,7 @@
       '<div class="mz-caixa-tit">Fazer proposta</div>' +
       '<div class="mz-caixa-sub">' + esc(nomeCromo(v.clube, v.num_cromo)) + ' · ' + clubeNome(v.clube) + ' · Nº ' + v.num_cromo + '</div>' +
       '<div class="mz-sep"><button class="on" data-m="troca">Trocar por um cromo meu</button><button data-m="preco">Propor um preço</button></div>' +
-      '<div id="mz-m-troca"><div class="mw-grid mw-grid-peq">' + grelha + '</div></div>' +
+      '<div id="mz-m-troca"><p class="mw-sub">Escolhe até 4 cromos para oferecer.</p><div class="mw-grid mw-grid-peq">' + grelha + '</div></div>' +
       '<div id="mz-m-preco" style="display:none">' +
         '<div class="mw-linha"><label>O vendedor recebe:</label><input id="mz-prop-recebe" type="number" min="0.10" step="0.01" placeholder="0,00 €"/></div>' +
         '<div class="mw-linha"><label>Tu pagas:</label><input id="mz-prop-paga" type="text" readonly placeholder="0,00 €"/><span class="mw-taxas">(inclui taxas)</span></div>' +
@@ -105,7 +105,10 @@
       };
     });
     d.querySelectorAll('#mz-m-troca .mw-cromo').forEach(function (c) {
-      c.onclick = function () { d.querySelectorAll('#mz-m-troca .mw-cromo').forEach(function (x) { x.classList.remove('sel'); }); c.classList.add('sel'); };
+      c.onclick = function () {
+        if (!c.classList.contains('sel') && d.querySelectorAll('#mz-m-troca .mw-cromo.sel').length >= 4) { mostrarNotificacao('Só podes oferecer até 4 cromos de cada vez.', 'erro'); return; }
+        c.classList.toggle('sel');
+      };
     });
     var rec = $('mz-prop-recebe');
     rec.oninput = function () { var x = parseFloat(rec.value) || 0; $('mz-prop-paga').value = x > 0 ? (Math.round(x * 1.10 * 100) / 100).toFixed(2) + ' €' : ''; };
@@ -142,8 +145,9 @@
     } catch (e) { lista.innerHTML = '<div class="mw-vazio">Não foi possível carregar os amigos.</div>'; }
   };
 
+  var MAX_TROCA = 4;
   window.mzAbrirTroca = async function (amigo) {
-    _amigoTroca = amigo; _meuSel = null; _delSel = null; _invAmigo = [];
+    _amigoTroca = amigo; _meuSel = []; _delSel = []; _invAmigo = [];
     try { var q = await sb.from('colecao').select('*').eq('user_id', amigo.id); _invAmigo = q.data || []; } catch (e) {}
     $('troca-amigos').style.display = 'none';
     var ec = $('troca-ecra'); ec.style.display = '';
@@ -152,50 +156,64 @@
       '<div class="mz-voltar mz-voltar-peq" onclick="mzTrocasInicio()">← Outros amigos</div>' +
       '<div class="mt-cols">' +
         '<div class="mt-esq">' +
-          '<div class="mt-tabs"><button class="on" data-t="meu">O teu inventário</button><button data-t="dele">O inventário dele(a)</button></div>' +
+          '<div class="mt-tabs"><button class="on" data-t="meu">O teu inventário</button><button data-t="dele">' + nome + '</button></div>' +
           '<div id="mt-grid" class="mw-grid mw-grid-peq"></div>' +
         '</div>' +
         '<div class="mt-dir">' +
-          '<div class="mt-bloco"><div class="mt-tit">Os teus itens</div><div class="mt-sub">Este é o cromo que vais dar na troca.</div><div class="mt-slot" id="mt-slot-meu"><span>Escolhe um cromo do teu inventário</span></div></div>' +
+          '<div class="mt-bloco"><div class="mt-tit">Os teus itens <small id="mt-cont-meu">0/' + MAX_TROCA + '</small></div><div class="mt-slots" id="mt-slots-meu"></div></div>' +
           '<div class="mt-setas">⇅</div>' +
-          '<div class="mt-bloco"><div class="mt-tit">Os itens de ' + nome + '</div><div class="mt-sub">Este é o cromo que vais receber.</div><div class="mt-slot" id="mt-slot-dele"><span>Escolhe um cromo do inventário dele(a)</span></div></div>' +
-          '<p class="mw-aviso">' + nome + ' vai receber uma notificação com a tua proposta e pode aceitar ou recusar.</p>' +
+          '<div class="mt-bloco"><div class="mt-tit">Os itens de ' + nome + ' <small id="mt-cont-dele">0/' + MAX_TROCA + '</small></div><div class="mt-slots" id="mt-slots-dele"></div></div>' +
+          '<p class="mw-aviso">Podes trocar até ' + MAX_TROCA + ' cromos de cada lado. ' + nome + ' vai receber uma notificação com a tua proposta e pode aceitar ou recusar.</p>' +
           '<button class="mw-btn" id="mt-enviar" disabled>Fazer proposta</button>' +
         '</div>' +
       '</div>';
     var tab = 'meu';
+    function chave(c) { return c.clube + '-' + c.num_cromo; }
+    function noSel(arr, c) { return arr.some(function (x) { return chave(x) === chave(c); }); }
     function pintar() {
       var g = $('mt-grid'); g.innerHTML = '';
       var inv = tab === 'meu' ? (_colecaoTodos || []) : _invAmigo;
+      var sel = tab === 'meu' ? _meuSel : _delSel;
       if (!inv.length) { g.innerHTML = '<div class="mw-vazio">' + (tab === 'meu' ? 'Não tens cromos.' : 'Sem cromos disponíveis.') + '</div>'; return; }
       inv.slice().sort(function (a, b) { return a.clube === b.clube ? a.num_cromo - b.num_cromo : (a.clube < b.clube ? -1 : 1); }).forEach(function (c) {
         var m = mini(c.clube, c.num_cromo);
         var d = document.createElement('div'); d.className = 'mw-cromo';
-        var atual = tab === 'meu' ? _meuSel : _delSel;
-        if (atual && atual.clube === c.clube && atual.num_cromo === c.num_cromo) d.classList.add('sel');
+        if (noSel(sel, c)) d.classList.add('sel');
         d.title = nomeCromo(c.clube, c.num_cromo);
         d.innerHTML = m ? '<img src="' + m + '" alt="">' : '#' + c.num_cromo;
         d.onclick = function () {
-          if (tab === 'meu') _meuSel = c; else _delSel = c;
+          var i = sel.findIndex(function (x) { return chave(x) === chave(c); });
+          if (i >= 0) sel.splice(i, 1);
+          else if (sel.length >= MAX_TROCA) { mostrarNotificacao('Só podes trocar até ' + MAX_TROCA + ' cromos de cada vez.', 'erro'); return; }
+          else sel.push(c);
           pintarSlots(); pintar();
         };
         g.appendChild(d);
       });
     }
-    function slot(id, c, vazio) {
-      var e = $(id); var m = c ? mini(c.clube, c.num_cromo) : '';
-      e.innerHTML = c ? ('<img src="' + m + '" alt=""><div class="mt-slot-nome">' + esc(nomeCromo(c.clube, c.num_cromo)) + '<small>Nº ' + c.num_cromo + '</small></div>') : '<span>' + vazio + '</span>';
+    function slots(id, arr, lado) {
+      var e = $(id); e.innerHTML = '';
+      for (var i = 0; i < MAX_TROCA; i++) {
+        var c = arr[i]; var d = document.createElement('div'); d.className = 'mt-slot' + (c ? ' cheio' : '');
+        if (c) {
+          var m = mini(c.clube, c.num_cromo);
+          d.innerHTML = (m ? '<img src="' + m + '" alt="">' : '#' + c.num_cromo) + '<button class="mt-x" title="Tirar">×</button>';
+          (function (cc) { d.querySelector('.mt-x').onclick = function () { var j = arr.findIndex(function (x) { return chave(x) === chave(cc); }); if (j >= 0) arr.splice(j, 1); pintarSlots(); pintar(); }; })(c);
+        }
+        e.appendChild(d);
+      }
+      $('mt-cont-' + lado).textContent = arr.length + '/' + MAX_TROCA;
     }
     function pintarSlots() {
-      slot('mt-slot-meu', _meuSel, 'Escolhe um cromo do teu inventário');
-      slot('mt-slot-dele', _delSel, 'Escolhe um cromo do inventário dele(a)');
-      $('mt-enviar').disabled = !(_meuSel && _delSel);
+      slots('mt-slots-meu', _meuSel, 'meu');
+      slots('mt-slots-dele', _delSel, 'dele');
+      $('mt-enviar').disabled = !(_meuSel.length && _delSel.length);
     }
     ec.querySelectorAll('.mt-tabs button').forEach(function (b) {
       b.onclick = function () { tab = b.dataset.t; ec.querySelectorAll('.mt-tabs button').forEach(function (x) { x.classList.toggle('on', x === b); }); pintar(); };
     });
     $('mt-enviar').onclick = function () { mostrarNotificacao('As propostas de troca ficam disponíveis na próxima atualização.', 'info'); };
-    pintar();
+    pintarSlots(); pintar();
   };
 
   /* ---------- HISTÓRICO ---------- */

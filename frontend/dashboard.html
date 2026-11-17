@@ -1336,12 +1336,12 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
           <div class="mz-tile clicavel mz-curso" onclick="mzMercado('trocas')">
             <h3>Trocas</h3>
             <p class="mz-sub">Troca cromos repetidos com outros colecionadores.</p>
-            <div class="mz-ico-grande">🔄</div>
+            <div class="mz-arte"><svg class="mz-svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 46h66M74 28l18 18-18 18"/><path d="M96 80H30M46 62 28 80l18 18"/></svg></div>
           </div>
           <div class="mz-tile clicavel mz-ativ" onclick="mzMercado('historico')">
             <h3>Histórico</h3>
             <p class="mz-sub">As tuas compras, vendas e trocas.</p>
-            <div class="mz-ico-grande">📋</div>
+            <div class="mz-arte"><svg class="mz-svg" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><circle cx="62" cy="62" r="38"/><path d="M62 38v26l18 12"/><path d="M14 52l8 12 12-8"/></svg></div>
           </div>
         </div>
         <div id="mercado-painel" class="mz-painel" style="display:none">
@@ -1417,10 +1417,10 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
       <!-- AMIGOS v2 -->
       <div id="pagina-amigos" style="display:none">
         <div id="amigos-hub" class="mz-grid mz-amigos">
-          <div class="mz-tile clicavel" onclick="mzAmigos('codigo')"><h3>O meu código</h3><p class="mz-sub">O teu código de amigo, para partilhares.</p><div class="mz-codigo-mini" id="mz-codigo-mini">------</div></div>
+          <div class="mz-tile mz-t-cod"><h3>O meu código</h3><p class="mz-sub">O teu código de amigo, para partilhares.</p><div class="mz-codigo-mini" id="mz-codigo-mini">------</div><button class="mz-copiar" onclick="mzCopiarCodigo()">Copiar código</button></div>
           <div class="mz-tile clicavel" onclick="mzAmigos('lista')"><h3>Os teus amigos</h3><p class="mz-sub">Quem já colecciona contigo.</p><div class="mz-ico-grande">👥</div></div>
-          <div class="mz-tile clicavel" onclick="mzAmigos('qr')"><h3>Código QR</h3><p class="mz-sub">Mostra-o para um amigo apontar o telemóvel.</p><div class="mz-ico-grande">▦</div></div>
-          <div class="mz-tile mz-azul clicavel" onclick="mzAmigos('lista')"><h3>Chat</h3><p class="mz-sub">Fala com os teus amigos.</p><div class="mz-ico-grande">💬</div></div>
+          <div class="mz-tile mz-t-qr"><h3>Código QR</h3><p class="mz-sub">Mostra-o para um amigo apontar o telemóvel.</p><div class="mz-qr-box"><img id="mz-qr-mini" alt="Código QR" /></div></div>
+          <div class="mz-tile mz-azul clicavel" onclick="mzAmigos('chat')"><h3>Chat</h3><p class="mz-sub">Fala com os teus amigos.</p><div class="mz-ico-grande">💬</div></div>
           <div class="mz-tile clicavel" onclick="abrirModalAmigo()"><h3>Adicionar amigo</h3><p class="mz-sub">Insere o código de um amigo para enviar o pedido.</p><div class="mz-ico-grande">➕</div></div>
         </div>
 
@@ -1440,12 +1440,29 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
             <p class="page-sub">Um amigo aponta a câmara do telemóvel e pode enviar-te o pedido de amizade.</p>
           </div>
 
+          <div id="am-chat" class="am-sub" style="display:none">
+            <div class="cm-grelha">
+              <div class="cm-esq">
+                <input id="cm-pesquisa" class="cm-pesquisa" type="text" placeholder="Pesquisar amigo..." oninput="mzChatFiltrar()"/>
+                <div id="cm-lista" class="cm-lista"></div>
+              </div>
+              <div class="cm-dir">
+                <div id="cm-vazio" class="cm-vazio">Escolhe uma conversa para começar a falar.</div>
+                <div id="cm-conversa" class="cm-conversa" style="display:none">
+                  <div class="cm-topo"><div class="cm-ava" id="cm-topo-ava"></div><div><div class="cm-topo-nome" id="cm-topo-nome"></div><div class="cm-topo-estado" id="cm-topo-estado"></div></div></div>
+                  <div id="cm-msgs" class="cm-msgs"></div>
+                  <div class="cm-entrada"><input id="cm-input" type="text" placeholder="Escreve uma mensagem..." maxlength="500"/><button onclick="mzChatEnviar()">Enviar</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div id="am-lista" class="am-sub" style="display:none">
             <div class="pedidos-section" id="pedidos-section" style="display:none">
               <div class="pedidos-titulo">Pedidos de amizade</div>
               <div id="pedidos-lista"></div>
             </div>
-            <div class="amigos-lista-titulo">Os teus amigos (<span id="amigos-count">0</span>) · clica num amigo para abrir o chat</div>
+            <div class="amigos-lista-titulo">Os teus amigos (<span id="amigos-count">0</span>)</div>
             <div id="amigos-lista"></div>
           </div>
         </div>
@@ -1730,7 +1747,7 @@ function gerarCodigoAmigo() {
 function gerarQR(texto, img) {
   // QR Code real, gerado através de uma API gratuita
   const url = 'https://www.caderneta-digital.com/?amigo=' + encodeURIComponent(texto);
-  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=0&data=' + encodeURIComponent(url);
+  img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=0&data=' + encodeURIComponent(url);
 }
 
 async function carregarAmigos() {
@@ -1846,7 +1863,7 @@ async function carregarListaAmigos(userId) {
     const onlineAt = a.online_at ? new Date(a.online_at) : null;
     const isOnline = onlineAt && (agora - onlineAt) < 5 * 60 * 1000; // 5 minutos
     const statusClass = isOnline ? 'online' : 'offline';
-    const statusTexto = isOnline ? '● Online' : '● Offline';
+    const statusTexto = isOnline ? '● ON' : '● OFF';
     const nome = a.display_name || 'Utilizador';
     const avatar = a.avatar_url;
     const avatarHtml = avatar 
@@ -1856,7 +1873,7 @@ async function carregarListaAmigos(userId) {
     const cromos = a.coins || 0;
     
     lista.innerHTML += `
-      <div class="amigo-item" onclick="abrirChat('${a.id}', '${nome}', '${avatar || ''}', ${isOnline})">
+      <div class="amigo-item amigo-item-fixo">
         <div class="amigo-avatar">
           ${avatarHtml}
           <div class="amigo-status-dot ${statusClass}"></div>
@@ -1864,9 +1881,8 @@ async function carregarListaAmigos(userId) {
         <div class="amigo-info">
           <div class="amigo-nome">${nome} ${statusPers}</div>
           <div class="amigo-status-texto ${statusClass}">${statusTexto}</div>
-          <div class="amigo-cromos">💰 ${cromos} moedas</div>
         </div>
-        <div class="amigo-seta">›</div>
+        <button class="amigo-remover" onclick="mzRemoverAmigo('${a.amizade_id}', '${nome.replace(/'/g, "")}')">Remover amizade</button>
       </div>`;
   });
 }
@@ -2757,14 +2773,14 @@ setInterval(async () => {
 
 <!-- Modal Adicionar Amigo -->
 <div class="modal-amigo" id="modal-amigo" onclick="fecharModalAmigo()">
-  <div onclick="event.stopPropagation()" style="background:#16161e; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:28px; width:320px;">
-    <div style="font-family:'Bebas Neue',sans-serif; font-size:22px; color:#fff; letter-spacing:2px; margin-bottom:6px;">Adicionar Amigo</div>
-    <div style="font-size:12px; color:#555; margin-bottom:20px;">Insere o código do teu amigo</div>
+  <div onclick="event.stopPropagation()" class="modal-amigo-box">
+    <div class="modal-amigo-titulo">Adicionar amigo</div>
+    <div class="modal-amigo-sub">Insere o código do teu amigo</div>
     <div class="modal-amigo-erro" id="erro-amigo"></div>
     <div class="modal-amigo-sucesso" id="sucesso-amigo"></div>
     <input class="modal-amigo-input" id="input-codigo-amigo" placeholder="Ex: AB12CD" maxlength="6"/>
     <div class="modal-amigo-btns">
-      <button class="modal-amigo-btn confirmar" onclick="enviarPedidoAmizade()">Enviar Pedido</button>
+      <button class="modal-amigo-btn confirmar" onclick="enviarPedidoAmizade()">Enviar pedido</button>
       <button class="modal-amigo-btn cancelar" onclick="fecharModalAmigo()">Cancelar</button>
     </div>
   </div>
@@ -3381,4 +3397,5 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="caderneta-extras.js"></script>
 <script src="menu-mosaico.js"></script>
 <script src="mercado-novo.js"></script>
+<script src="chat-novo.js"></script>
 </body>
