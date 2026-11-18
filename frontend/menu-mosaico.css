@@ -596,3 +596,15 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 .mz-azul.mz-ativ .atividade-icon.ai-money{background:#1d9e75 !important;}
 .mz-azul.mz-ativ .atividade-icon.ai-user{background:#fff !important;}
 .mz-inicio .mz-ativ .mz-corpo{overflow-y:auto;min-height:0;}
+
+/* ===== Janela do cromo (Coleção) no design novo ===== */
+#cromo-overlay{background:rgba(23,40,110,.5) !important;backdrop-filter:blur(8px);}
+#cromo-overlay > div{background:#fff;border-left:4px solid var(--mz-ouro);box-shadow:0 24px 60px rgba(10,20,70,.4);padding:30px 34px 22px;max-width:92vw;}
+#cromo-overlay-img{filter:drop-shadow(0 12px 22px rgba(23,57,154,.35)) !important;}
+#cromo-overlay-num{font-family:var(--mz-fonte);font-size:30px !important;font-weight:700 !important;letter-spacing:.5px;text-transform:uppercase;color:var(--mz-azul) !important;}
+#cromo-overlay-info{color:#5b6a9a !important;}
+#cromo-overlay-qty{color:var(--mz-ouro) !important;font-weight:600;}
+#cromo-overlay button{font-family:var(--mz-fonte);font-weight:700 !important;font-size:15px !important;letter-spacing:1px;text-transform:uppercase;border-radius:2px !important;white-space:nowrap;}
+#cromo-overlay button[onclick*="colarNaCaderneta"]{background:var(--mz-azul-vivo) !important;color:#fff !important;border:0 !important;}
+#cromo-overlay button[onclick*="irParaMercadoVender"]{background:#fff !important;color:var(--mz-azul) !important;border:1.5px solid var(--mz-azul) !important;}
+#cromo-overlay button[onclick*="fecharCromoOverlay"]{background:transparent !important;color:#7b88b4 !important;font-size:15px !important;}

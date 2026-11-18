@@ -73,6 +73,72 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
 .sucesso-icon { font-size: 48px; margin-bottom: 12px; }
 .sucesso-texto { font-size: 16px; color: white; font-weight: 500; margin-bottom: 6px; }
 .sucesso-sub { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+/* ===== Novo design (igual ao site) ===== */
+@font-face{font-family:'Barlow Condensed';font-weight:500;font-display:swap;src:url('fonts/barlow-condensed-latin-500-normal.woff2') format('woff2');}
+@font-face{font-family:'Barlow Condensed';font-weight:600;font-display:swap;src:url('fonts/barlow-condensed-latin-600-normal.woff2') format('woff2');}
+@font-face{font-family:'Barlow Condensed';font-weight:700;font-display:swap;src:url('fonts/barlow-condensed-latin-700-normal.woff2') format('woff2');}
+:root{--nz-azul:#17399a;--nz-vivo:#1d55e6;--nz-ouro:#C9943A;--nz-fonte:'Barlow Condensed','Arial Narrow',sans-serif;}
+body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#dfe4fa;overflow:auto;}
+.bg{background-image:none !important;background:
+  radial-gradient(ellipse 60% 50% at 78% 8%,rgba(255,255,255,.75),transparent 70%),
+  radial-gradient(ellipse 50% 60% at 8% 95%,rgba(150,170,255,.35),transparent 70%),
+  linear-gradient(135deg,#c9d2f6 0%,#dfe4fa 45%,#cdd6f7 100%) !important;}
+.bg::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(115deg,transparent 0 58%,rgba(255,255,255,.35) 58% 61%,transparent 61%),
+  linear-gradient(115deg,transparent 0 70%,rgba(255,255,255,.22) 70% 78%,transparent 78%);}
+.overlay{display:none !important;}
+.center{flex:0 1 auto;margin:auto;width:calc(100% - 32px);max-width:460px;background:#fff;border-left:4px solid var(--nz-ouro);box-shadow:0 18px 50px rgba(23,57,154,.18);padding:44px 40px 40px;gap:22px;}
+.center::before{font-family:var(--nz-fonte) !important;font-weight:700;font-size:44px !important;letter-spacing:1px !important;background:none !important;-webkit-text-fill-color:var(--nz-azul) !important;color:var(--nz-azul);line-height:1;}
+.emblemas{width:124px !important;height:124px !important;border-radius:28px !important;box-shadow:0 14px 30px rgba(23,57,154,.28) !important;}
+.titulo-acoes{display:block !important;font-size:14px;color:#5b6a9a;letter-spacing:.04em;text-transform:none;margin-bottom:4px;text-align:center;}
+.acoes{width:100%;gap:12px;}
+.btn-inscrever,.btn-login{width:100%;max-width:300px;border-radius:2px !important;font-family:var(--nz-fonte);font-weight:700;font-size:18px;letter-spacing:1.5px;text-transform:uppercase;padding:14px 20px;}
+.btn-inscrever{background:var(--nz-vivo) !important;color:#fff;box-shadow:0 8px 20px rgba(29,85,230,.28);}
+.btn-inscrever:hover{background:#1747c4 !important;transform:translateY(-2px);box-shadow:0 10px 24px rgba(29,85,230,.35);}
+.btn-login{background:#fff !important;color:var(--nz-azul);border:1.5px solid var(--nz-azul);}
+.btn-login:hover{background:#eef1fd !important;border-color:var(--nz-azul);color:var(--nz-azul);transform:translateY(-2px);box-shadow:none;}
+.separador{color:#7b88b4;}
+.rodape{color:#7b88b4;}
+.modal-overlay{background:rgba(23,40,110,.42);backdrop-filter:blur(6px);z-index:2147483000 !important;}
+.modal{background:#fff;border:0;border-left:4px solid var(--nz-ouro);border-radius:2px;box-shadow:0 24px 60px rgba(10,20,70,.35);}
+.modal-fechar{color:#7b88b4;}
+.modal-fechar:hover{color:var(--nz-azul);}
+.modal-titulo{font-family:var(--nz-fonte);font-weight:700;font-size:30px;letter-spacing:.5px;color:var(--nz-azul);text-transform:uppercase;}
+.modal-sub{color:#7b88b4;}
+.campo label{color:#5b6a9a;font-weight:600;}
+.campo input,.campo select{background:#f3f5fd;border:1px solid #cdd6f7;color:var(--nz-azul);border-radius:2px;}
+.campo input:focus,.campo select:focus{border-color:var(--nz-vivo);box-shadow:0 0 0 3px rgba(29,85,230,.12);}
+.campo input::placeholder{color:#a3aed3;}
+.campo select option{background:#fff;color:var(--nz-azul);}
+.btn-modal{background:var(--nz-vivo);color:#fff;border-radius:2px;font-family:var(--nz-fonte);font-weight:700;font-size:19px;letter-spacing:1.5px;text-transform:uppercase;}
+.btn-modal:hover{background:#1747c4;}
+.modal-trocar{color:#7b88b4;}
+.modal-trocar span{color:var(--nz-vivo);font-weight:600;}
+.modal-trocar span[onclick*="recuperar"]{color:#7b88b4 !important;}
+.sucesso-texto{color:var(--nz-azul);}
+.sucesso-sub{color:#7b88b4;}
+#registo-confirmar-email p:nth-of-type(1){color:var(--nz-azul) !important;font-family:var(--nz-fonte);font-size:26px !important;text-transform:uppercase;}
+#registo-confirmar-email p:nth-of-type(2){color:#5b6a9a !important;}
+#registo-confirmar-email p:nth-of-type(3){color:#7b88b4 !important;}
+#btn-reenviar-email{border-color:var(--nz-azul) !important;color:var(--nz-azul) !important;border-radius:2px !important;}
+@media(max-width:600px){.center{padding:34px 22px 30px;}.center::before{font-size:36px !important;}.modal{margin:0 12px;padding:30px 24px;}}
+
+/* ===== Landing: foto do estádio, sem caixa branca ===== */
+.bg{background:#0b1220 url('images/fundo-estadio.jpg') center 20%/cover no-repeat !important;}
+.bg::before{display:none !important;}
+.overlay{display:block !important;background:linear-gradient(180deg,rgba(20,12,0,0.6),rgba(8,6,4,0.3) 40%,rgba(6,5,8,0.8) 100%) !important;}
+.center{background:none !important;border-left:0 !important;box-shadow:none !important;padding:20px !important;max-width:520px;}
+.center::before{-webkit-text-fill-color:#fff !important;color:#fff !important;text-shadow:0 3px 18px rgba(0,0,0,.65);}
+.emblemas{box-shadow:0 14px 34px rgba(0,0,0,.6) !important;}
+.titulo-acoes{color:rgba(255,255,255,.82) !important;text-shadow:0 2px 10px rgba(0,0,0,.7);}
+.btn-inscrever{box-shadow:0 8px 24px rgba(0,0,0,.45);}
+.btn-login{background:rgba(255,255,255,.08) !important;color:#fff !important;border:1.5px solid rgba(255,255,255,.7) !important;}
+.btn-login:hover{background:rgba(255,255,255,.2) !important;color:#fff !important;border-color:#fff !important;}
+.separador{color:rgba(255,255,255,.65);text-shadow:0 1px 6px rgba(0,0,0,.7);}
+.rodape{color:rgba(255,255,255,.45);}
+
+.modal-overlay{background:rgba(0,0,0,.08) !important;backdrop-filter:none !important;}
+body:has(.modal-overlay.aberto) .center,body:has(.modal-overlay.aberto) .rodape{visibility:hidden;}
 </style>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#f59e0b">
