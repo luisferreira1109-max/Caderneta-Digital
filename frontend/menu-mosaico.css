@@ -514,10 +514,25 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 #pagina-cadernetas .cad-label-sub{font-size:12px;color:#6a77a8;}
 
 /* Packs */
-#pagina-packs .pack-info-preco{font-family:var(--mz-fonte);font-weight:700;color:var(--mz-azul);font-size:38px;}
+#pagina-packs .pack-info-preco{font-family:var(--mz-fonte);font-weight:700;color:var(--mz-azul);font-size:34px;margin-bottom:2px;}
 #pagina-packs .pack-info-preco.pre{color:var(--mz-azul);}
-#pagina-packs .pack-info-btn{border-radius:0;background:var(--mz-azul-vivo);color:#fff;font-family:var(--mz-fonte);font-weight:700;font-size:19px;letter-spacing:.08em;text-transform:uppercase;}
+#pagina-packs .pack-info-btn{border-radius:0;background:var(--mz-azul-vivo);color:#fff;font-family:var(--mz-fonte);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;width:auto;padding:7px 20px;margin-bottom:0;}
 #pagina-packs .pack-info-btn:hover,#pagina-packs .pack-info-btn.pre:hover{background:#3a6df0;transform:none;}
 #pagina-packs .pack-info-btn.pre{background:var(--mz-azul-vivo);}
 #pagina-packs .pack-info div,#pagina-packs .pack-info span{color:#6a77a8;}
 #pagina-packs .pack-info b,#pagina-packs .pack-info strong{color:var(--mz-azul);}
+
+/* ===== Packs: 4 packs (prata, standard, premium, dourado) ===== */
+#pagina-packs .packs-wrap{gap:46px;margin-top:40px;align-items:flex-start;}
+#pagina-packs .pk-card{display:flex;flex-direction:column;align-items:center;gap:14px;}
+#pagina-packs .pk-outer{width:200px;height:320px;perspective:1200px;cursor:pointer;}
+#pagina-packs .pk-inner{width:100%;height:100%;background-size:contain;background-repeat:no-repeat;background-position:center;transition:transform .4s ease;filter:drop-shadow(0 10px 14px rgba(20,30,90,.28));}
+#pack-pra-inner{background-image:url("images/pack-prata.png");}
+#pack-std-inner{background-image:url("images/pack-standard.png");}
+#pack-pre-inner{background-image:url("images/pack-premium.png");}
+#pack-dou-inner{background-image:url("images/pack-dourado.png");}
+#pagina-packs .pack-info{width:auto;display:flex;flex-direction:column;align-items:center;}
+#pagina-packs .pk-cromos{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#6a77a8;margin-bottom:10px;font-weight:600;}
+#pagina-packs .pack-info-preco.pra{color:#7d8794;}
+#pagina-packs .pack-info-preco.pre{color:#6b3fc4;}
+#pagina-packs .pack-info-preco.dou{color:#b8860b;}

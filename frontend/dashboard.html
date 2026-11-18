@@ -627,10 +627,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
   cursor: default;
 }
 .pack-envelope:hover { filter: drop-shadow(0 28px 55px rgba(0,0,0,0.95)); }
-#pack-std-inner, #pack-pre-inner { background: none !important; } #pack-std-outer, #pack-pre-outer, #pack-std-inner, #pack-pre-inner { filter: none !important; box-shadow: none !important; }
-#pack-std-inner { background-image: url("images/pack-standard.png") !important; background-size: cover !important; background-position: center !important; }
-#pack-pre-inner { background-image: url("images/pack-premium.png") !important; background-size: contain !important; background-repeat: no-repeat !important; background-position: center !important; border: none !important; border-radius: 0 !important; overflow: visible !important; box-shadow: none !important; } #pack-std-inner { background-size: contain !important; background-repeat: no-repeat !important; border: none !important; border-radius: 0 !important; overflow: visible !important; box-shadow: none !important; }
-#pack-std-inner > *, #pack-pre-inner > * { display: none !important; }
 .pack-envelope.premium-body { animation: floatPackPre 3.5s ease-in-out infinite; }
 
 @keyframes floatPack { 0%,100%{transform:translateY(0) rotate(-1.5deg)} 50%{transform:translateY(-16px) rotate(-1.5deg)} }
@@ -1306,16 +1302,21 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
           <p class="page-sub">Abre packs e descobre novos cromos!</p>
         </div>
         <div class="packs-wrap">
-
-          <!-- Pack Standard -->
-          <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
-            <div id="pack-std-outer" style="width:220px;height:310px;perspective:1200px;cursor:pointer;animation:floatPack 3s ease-in-out infinite;"><div id="pack-std-inner" style="position:relative;width:100%;height:100%;border-radius:22px;background:linear-gradient(135deg,#0d3b3a 0%,#0a1f28 35%,#071418 60%,#0d2b2e 100%);border:5px solid rgba(0,0,0,0.7);box-shadow:0 12px 30px rgba(0,0,0,0.5);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:20px 16px 18px;transition:transform 0.4s ease,box-shadow 0.4s ease;"><div style="position:absolute;inset:0;border-radius:22px;background:repeating-linear-gradient(115deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 2px,transparent 2px,transparent 10px);pointer-events:none;"></div><div id="pack-std-shine" style="position:absolute;inset:0;pointer-events:none;opacity:0.4;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,0.55),transparent 45%);border-radius:22px;transition:opacity 0.3s;"></div><div style="position:absolute;inset:10px;border-radius:16px;border:2px solid rgba(255,255,255,0.15);pointer-events:none;"></div><div style="position:absolute;left:14px;top:0;bottom:0;display:flex;align-items:center;pointer-events:none;"><span style="writing-mode:vertical-rl;transform:rotate(180deg);font-family:Inter,sans-serif;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.3);font-weight:700;">CADERNETA DIGITAL</span></div><div style="text-align:center;position:relative;z-index:2;"><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#c8a84b;letter-spacing:1px;">Pack</div><div style="font-family:Inter,sans-serif;font-size:11px;font-weight:800;letter-spacing:5px;color:rgba(255,255,255,0.75);margin-top:2px;">STANDARD</div></div><div style="display:flex;align-items:center;justify-content:center;flex:1;position:relative;z-index:2;"><img src="images/Logo/logo-icon.png" style="width:110px;height:110px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,0.7)) drop-shadow(0 0 16px rgba(200,168,75,0.3));"/></div><div style="display:flex;align-items:center;justify-content:center;gap:6px;position:relative;z-index:2;"><div style="width:18px;height:18px;border-radius:50%;background:#c8a84b;color:#06110d;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;">7</div><div style="font-family:Inter,sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,0.7);">CROMOS</div></div></div></div>
-            <div class="pack-info"><div class="pack-info-preco">1,50 €</div><button class="pack-info-btn" onclick="comprarPack('standard')">Comprar Pack</button><div class="pack-saldo-depois">Ficará com <span id="saldo-depois-std">---</span> €</div></div>
+          <div class="pk-card">
+            <div id="pack-pra-outer" class="pk-outer" style="animation:floatPack 3.2s ease-in-out infinite;" onclick="comprarPack('prata')"><div id="pack-pra-inner" class="pk-inner"></div></div>
+            <div class="pack-info"><div class="pack-info-preco pra" data-pk-preco="prata">0,75 €</div><div class="pk-cromos" data-pk-cromos="prata">3 cromos</div><button class="pack-info-btn pra" onclick="comprarPack('prata')">Comprar Pack</button></div>
           </div>
-          <!-- Pack Premium -->
-          <div style="display:flex;flex-direction:column;align-items:center;gap:20px;">
-            <div id="pack-pre-outer" style="width:220px;height:310px;perspective:1200px;cursor:pointer;animation:floatPackPre 3.5s ease-in-out infinite;"><div id="pack-pre-inner" style="position:relative;width:100%;height:100%;border-radius:22px;background:linear-gradient(135deg,#1a0a2e 0%,#16082a 35%,#0d0520 60%,#1a0a2e 100%);border:5px solid rgba(0,0,0,0.7);box-shadow:0 12px 30px rgba(0,0,0,0.5);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:20px 16px 18px;transition:transform 0.4s ease,box-shadow 0.4s ease;"><div style="position:absolute;inset:0;border-radius:22px;background:repeating-linear-gradient(115deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 2px,transparent 2px,transparent 10px);pointer-events:none;"></div><div id="pack-pre-shine" style="position:absolute;inset:0;pointer-events:none;opacity:0.4;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,0.55),transparent 45%);border-radius:22px;transition:opacity 0.3s;"></div><div style="position:absolute;inset:10px;border-radius:16px;border:2px solid rgba(255,255,255,0.15);pointer-events:none;"></div><div style="position:absolute;left:14px;top:0;bottom:0;display:flex;align-items:center;pointer-events:none;"><span style="writing-mode:vertical-rl;transform:rotate(180deg);font-family:Inter,sans-serif;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.3);font-weight:700;">CADERNETA DIGITAL</span></div><div style="text-align:center;position:relative;z-index:2;"><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#d980fa;letter-spacing:1px;">Pack</div><div style="font-family:Inter,sans-serif;font-size:11px;font-weight:800;letter-spacing:5px;color:rgba(255,255,255,0.75);margin-top:2px;">PREMIUM</div></div><div style="display:flex;align-items:center;justify-content:center;flex:1;position:relative;z-index:2;"><img src="images/Logo/logo-icon.png" style="width:110px;height:110px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,0.7)) drop-shadow(0 0 16px rgba(217,128,250,0.3));"/></div><div style="display:flex;align-items:center;justify-content:center;gap:6px;position:relative;z-index:2;"><div style="width:18px;height:18px;border-radius:50%;background:#d980fa;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;">7</div><div style="font-family:Inter,sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,0.7);">CROMOS</div></div></div></div>
-            <div class="pack-info"><div class="pack-info-preco pre">2,00 €</div><button class="pack-info-btn pre" onclick="comprarPack('premium')">Comprar Pack</button><div class="pack-saldo-depois">Ficará com <span id="saldo-depois-pre">---</span> €</div></div>
+          <div class="pk-card">
+            <div id="pack-std-outer" class="pk-outer" style="animation:floatPack 3s ease-in-out infinite;" onclick="comprarPack('standard')"><div id="pack-std-inner" class="pk-inner"></div></div>
+            <div class="pack-info"><div class="pack-info-preco" data-pk-preco="standard">1,50 €</div><div class="pk-cromos" data-pk-cromos="standard">7 cromos</div><button class="pack-info-btn" onclick="comprarPack('standard')">Comprar Pack</button></div>
+          </div>
+          <div class="pk-card">
+            <div id="pack-pre-outer" class="pk-outer" style="animation:floatPackPre 3.5s ease-in-out infinite;" onclick="comprarPack('premium')"><div id="pack-pre-inner" class="pk-inner"></div></div>
+            <div class="pack-info"><div class="pack-info-preco pre" data-pk-preco="premium">2,00 €</div><div class="pk-cromos" data-pk-cromos="premium">7 cromos</div><button class="pack-info-btn pre" onclick="comprarPack('premium')">Comprar Pack</button></div>
+          </div>
+          <div class="pk-card">
+            <div id="pack-dou-outer" class="pk-outer" style="animation:floatPackPre 3.8s ease-in-out infinite;" onclick="comprarPack('dourado')"><div id="pack-dou-inner" class="pk-inner"></div></div>
+            <div class="pack-info"><div class="pack-info-preco dou" data-pk-preco="dourado">4,00 €</div><div class="pk-cromos" data-pk-cromos="dourado">9 cromos</div><button class="pack-info-btn dou" onclick="comprarPack('dourado')">Comprar Pack</button></div>
           </div>
         </div>
       </div>
@@ -2323,21 +2324,59 @@ const CROMOS_VERSAO = '20261117a';
 const CROMOS_IMAGENS = {};
 ['fcps','ccrdsv'].forEach(cl=>{for(let n=1;n<=CROMOS_DISPONIVEIS[cl].total;n++)CROMOS_IMAGENS[`${cl}-${n}`]=`images/cromos/${cl}-${n}.webp?v=${CROMOS_VERSAO}`;});
 function getRaridade(clube,num){const c=CROMOS_DISPONIVEIS[clube];if(c.lendarios.includes(num))return'lendario';if(c.epicos.includes(num))return'epico';if(c.raros.includes(num))return'raro';return'comum';}
-function gerarCromo(tipoPack){
+/* ===== CONFIGURAÇÃO DOS PACKS =====
+   preco            = euros
+   cromos           = quantos cromos saem
+   raroGarantidos   = nº de cromos RAROS que saem sempre (os épicos entram neste grupo)
+   raroExtra        = chance (0 a 1) de CADA um dos restantes cromos também ser raro
+   raroMax          = máximo de raros no pack
+   epicoNoRaro      = chance (0 a 1) de um cromo raro ser promovido a ÉPICO
+   lendario         = chance (0 a 1) de o PACK trazer 1 lendário (0.01 = 1%)
+   Todos os outros cromos são comuns. */
+const PACKS={
+  prata:   {preco:0.50, cromos:3,  raroGarantidos:0, raroExtra:0,    raroMax:0, epicoNoRaro:0,    lendario:0},
+  standard:{preco:1.50, cromos:7,  raroGarantidos:1, raroExtra:0.05, raroMax:3, epicoNoRaro:0, lendario:0.0001},
+  premium: {preco:2.50, cromos:10, raroGarantidos:2, raroExtra:0.07, raroMax:5, epicoNoRaro:0, lendario:0.001},
+  dourado: {preco:4.00, cromos:13, raroGarantidos:5, raroExtra:0,    raroMax:5, epicoNoRaro:0, lendario:0.01}
+};
+/* os preços e o nº de cromos que aparecem na página vêm daqui (um só sítio para mudar) */
+document.addEventListener('DOMContentLoaded',function(){
+  Object.keys(PACKS).forEach(function(k){
+    var p=document.querySelector('[data-pk-preco="'+k+'"]'),c=document.querySelector('[data-pk-cromos="'+k+'"]');
+    if(p)p.textContent=PACKS[k].preco.toFixed(2).replace('.',',')+' €';
+    if(c)c.textContent=PACKS[k].cromos+' cromos';
+  });
+});
+function cromoDaCategoria(cat){
   const clube=Math.random()<0.5?'fcps':'ccrdsv';
   const c=CROMOS_DISPONIVEIS[clube];
-  const rand=Math.random()*100;
-  const p=tipoPack==='premium'?{lend:5,epico:20,raro:50}:{lend:2,epico:7,raro:27};
   let num;
-  if(rand<p.lend)num=c.lendarios[Math.floor(Math.random()*c.lendarios.length)];
-  else if(rand<p.epico)num=c.epicos[Math.floor(Math.random()*c.epicos.length)];
-  else if(rand<p.raro)num=c.raros[Math.floor(Math.random()*c.raros.length)];
+  if(cat==='lendario')num=c.lendarios[Math.floor(Math.random()*c.lendarios.length)];
+  else if(cat==='epico')num=c.epicos[Math.floor(Math.random()*c.epicos.length)];
+  else if(cat==='raro'){const pool=[...c.raros,...c.epicos];num=pool[Math.floor(Math.random()*pool.length)];}  /* os épicos contam como raros nos packs */
   else{do{num=Math.floor(Math.random()*c.total)+1;}while([...c.lendarios,...c.epicos,...c.raros].includes(num));}
   return{clube,num,raridade:getRaridade(clube,num)};
 }
+function gerarPack(tipo){
+  const cfg=PACKS[tipo]||PACKS.standard;
+  const cats=[];
+  let raros=Math.min(cfg.raroGarantidos,cfg.cromos);
+  for(let i=0;i<raros;i++)cats.push('raro');
+  for(let i=raros;i<cfg.cromos;i++){
+    if(raros<cfg.raroMax&&Math.random()<cfg.raroExtra){cats.push('raro');raros++;}
+    else cats.push('comum');
+  }
+  for(let i=0;i<cats.length;i++)if(cats[i]==='raro'&&Math.random()<cfg.epicoNoRaro)cats[i]='epico';
+  if(Math.random()<cfg.lendario){
+    let i=cats.indexOf('raro');if(i<0)i=cats.indexOf('epico');if(i<0)i=0;
+    cats[i]='lendario';
+  }
+  for(let i=cats.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cats[i],cats[j]]=[cats[j],cats[i]];}
+  return cats.map(cromoDaCategoria);
+}
 async function comprarPack(tipo){
   const{data:{user}}=await sb.auth.getUser();if(!user)return;
-  const preco=tipo==='premium'?2.0:1.5;
+  const cfg=PACKS[tipo]||PACKS.standard;const preco=cfg.preco;
   const{data:profile}=await sb.from('profiles').select('saldo').eq('id',user.id).single();
   if(!profile||profile.saldo<preco){alert(`Saldo insuficiente! Precisas de ${preco.toFixed(2).replace('.',',')}€.
 Carrega saldo em Início → + Carregar saldo`);return;}
@@ -2346,7 +2385,7 @@ Carrega saldo em Início → + Carregar saldo`);return;}
   document.getElementById('stat-saldo').textContent=novoSaldo.toFixed(2).replace('.',',')+'  €';
   const st=document.getElementById('user-saldo-top');if(st)st.textContent=novoSaldo.toFixed(2).replace('.',',');
   atualizarSaldoPacks(novoSaldo);
-  const cromos=[];for(let i=0;i<7;i++)cromos.push(gerarCromo(tipo));
+  const cromos=gerarPack(tipo);
   await guardarCromosColecao(user.id,cromos);
   mostrarPackOverlay(cromos,tipo);
 }
@@ -2832,7 +2871,7 @@ setInterval(async () => {
 <script>
 (function(){
   function ip(o,i,s){const outer=document.getElementById(o),inner=document.getElementById(i),shine=document.getElementById(s);if(!outer||!inner)return;outer.addEventListener('mousemove',function(e){const r=outer.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;inner.style.transform=`rotateX(${(0.5-py)*22}deg) rotateY(${(px-0.5)*22}deg) scale(1.04)`;inner.style.transition='transform 0.05s linear';inner.style.boxShadow='0 30px 60px rgba(0,0,0,0.6),0 0 40px rgba(200,168,75,0.4)';if(shine){shine.style.background=`radial-gradient(circle at ${px*100}% ${py*100}%,rgba(255,255,255,0.55),transparent 45%)`;shine.style.opacity='0.9';}});outer.addEventListener('mouseleave',function(){inner.style.transform='rotateX(0) rotateY(0) scale(1)';inner.style.transition='transform 0.4s ease';inner.style.boxShadow='0 12px 30px rgba(0,0,0,0.5)';if(shine)shine.style.opacity='0.4';});}
-  document.addEventListener('DOMContentLoaded',function(){ip('pack-std-outer','pack-std-inner','pack-std-shine');ip('pack-pre-outer','pack-pre-inner','pack-pre-shine');});
+  document.addEventListener('DOMContentLoaded',function(){ip('pack-std-outer','pack-std-inner','pack-std-shine');ip('pack-pre-outer','pack-pre-inner','pack-pre-shine');ip('pack-pra-outer','pack-pra-inner','pack-pra-shine');ip('pack-dou-outer','pack-dou-inner','pack-dou-shine');});
 })();
 function mostrarNotificacao(msg, tipo) {
   const cor = tipo === 'erro' ? '#e74c3c' : tipo === 'sucesso' ? '#2ecc71' : '#c8a84b';
