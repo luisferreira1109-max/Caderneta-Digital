@@ -1056,7 +1056,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
         <span class="user-nome" id="user-nome">Luís Ferreira</span>
         <div class="divider-v"></div>
         <div class="user-moedas"><span id="user-saldo-top">0,00</span> €</div>
-        <div class="mz-moedas"><span class="mz-moeda-ico"></span><span id="user-moedas">0</span></div>
 
         <!-- Menu perfil -->
         <div class="perfil-menu" id="perfil-menu" onclick="event.stopPropagation()">
@@ -1144,7 +1143,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
               <div class="atividade-lista" id="atividade-lista">
           <div class="atividade-item">
             <div class="atividade-icon ai-ach"><i class="ti ti-trophy" style="color:#C9943A"></i></div>
-            <div class="atividade-texto">Conta criada com sucesso! <strong>+500 moedas de boas-vindas</strong></div>
+            <div class="atividade-texto" id="ativ-boasvindas">Conta criada com sucesso! <strong>As duas cadernetas já estão abertas</strong></div>
             <div class="atividade-tempo">agora</div>
           </div>
           <div class="atividade-item">
@@ -1162,7 +1161,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
             </div>
           </div>
         </div>
-        <div style="display:none"><span id="stat-moedas">500</span><span id="stat-saldo">0,00 €</span></div>
+        <div style="display:none"><span id="stat-saldo">0,00 €</span></div>
       </div>
 
       <!-- COLEÇÃO (menu de mosaicos) -->
@@ -1201,39 +1200,23 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
 
           <!-- FC PAÇO DE SOUSA -->
           <div class="cad-wrap">
-            <div class="book-container locked" id="card-fcps" onclick="abrirCaderneta('fcps')">
+            <div class="book-container" id="card-fcps" onclick="abrirCaderneta('fcps')">
               <div class="book-body"><img class="caderneta-img" src="images/caderneta-fcps.png" alt="FC Paço de Sousa"/></div>
-              <div class="book-lock-overlay">
-                <div class="book-lock-icon">🔒</div>
-                <div class="book-lock-preco">
-                  <div class="book-lock-coin">$</div>
-                  <span class="book-lock-valor">250 moedas</span>
-                </div>
-                <button class="book-lock-btn" onclick="event.stopPropagation(); abrirCaderneta('fcps')">Desbloquear</button>
-              </div>
-            </div>
+                          </div>
             <div class="cad-label">
               <div class="cad-label-nome">FC Paço de Sousa</div>
-              <div class="cad-label-sub" id="sub-cad-fcps">🔒 Bloqueada</div>
+              <div class="cad-label-sub" id="sub-cad-fcps">0 / 217 cromos</div>
             </div>
           </div>
 
           <!-- CCRDSV IRIVO -->
           <div class="cad-wrap">
-            <div class="book-container locked" id="card-ccrdsv" onclick="abrirCaderneta('ccrdsv')">
+            <div class="book-container" id="card-ccrdsv" onclick="abrirCaderneta('ccrdsv')">
               <div class="book-body"><img class="caderneta-img" src="images/caderneta-ccrdsv.png" alt="CCRDSV Irivo"/></div>
-              <div class="book-lock-overlay">
-                <div class="book-lock-icon">🔒</div>
-                <div class="book-lock-preco">
-                  <div class="book-lock-coin">$</div>
-                  <span class="book-lock-valor">250 moedas</span>
-                </div>
-                <button class="book-lock-btn" onclick="event.stopPropagation(); abrirCaderneta('ccrdsv')">Desbloquear</button>
-              </div>
-            </div>
+                          </div>
             <div class="cad-label">
               <div class="cad-label-nome">CCRDSV Irivo</div>
-              <div class="cad-label-sub" id="sub-cad-ccrdsv">🔒 Bloqueada</div>
+              <div class="cad-label-sub" id="sub-cad-ccrdsv">0 / 241 cromos</div>
             </div>
           </div>
 
@@ -1304,19 +1287,19 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
         <div class="packs-wrap">
           <div class="pk-card">
             <div id="pack-pra-outer" class="pk-outer" style="animation:floatPack 3.2s ease-in-out infinite;" onclick="comprarPack('prata')"><div id="pack-pra-inner" class="pk-inner"></div></div>
-            <div class="pack-info"><div class="pack-info-preco pra" data-pk-preco="prata">0,75 €</div><div class="pk-cromos" data-pk-cromos="prata">3 cromos</div><button class="pack-info-btn pra" onclick="comprarPack('prata')">Comprar Pack</button></div>
+            <div class="pack-info"><div class="pack-info-preco pra" data-pk-preco="prata">0,75 €</div><div class="pk-cromos" data-pk-cromos="prata">3 cromos</div><button class="pack-info-btn pra" onclick="comprarPack('prata')">Comprar Pack</button><div class="pk-oferta" id="oferta-prata" style="display:none"><span>Tens <b id="oferta-n-prata">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('prata')">Abrir grátis</button></div></div>
           </div>
           <div class="pk-card">
             <div id="pack-std-outer" class="pk-outer" style="animation:floatPack 3s ease-in-out infinite;" onclick="comprarPack('standard')"><div id="pack-std-inner" class="pk-inner"></div></div>
-            <div class="pack-info"><div class="pack-info-preco" data-pk-preco="standard">1,50 €</div><div class="pk-cromos" data-pk-cromos="standard">7 cromos</div><button class="pack-info-btn" onclick="comprarPack('standard')">Comprar Pack</button></div>
+            <div class="pack-info"><div class="pack-info-preco" data-pk-preco="standard">1,50 €</div><div class="pk-cromos" data-pk-cromos="standard">7 cromos</div><button class="pack-info-btn" onclick="comprarPack('standard')">Comprar Pack</button><div class="pk-oferta" id="oferta-standard" style="display:none"><span>Tens <b id="oferta-n-standard">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('standard')">Abrir grátis</button></div></div>
           </div>
           <div class="pk-card">
             <div id="pack-pre-outer" class="pk-outer" style="animation:floatPackPre 3.5s ease-in-out infinite;" onclick="comprarPack('premium')"><div id="pack-pre-inner" class="pk-inner"></div></div>
-            <div class="pack-info"><div class="pack-info-preco pre" data-pk-preco="premium">2,00 €</div><div class="pk-cromos" data-pk-cromos="premium">7 cromos</div><button class="pack-info-btn pre" onclick="comprarPack('premium')">Comprar Pack</button></div>
+            <div class="pack-info"><div class="pack-info-preco pre" data-pk-preco="premium">2,00 €</div><div class="pk-cromos" data-pk-cromos="premium">7 cromos</div><button class="pack-info-btn pre" onclick="comprarPack('premium')">Comprar Pack</button><div class="pk-oferta" id="oferta-premium" style="display:none"><span>Tens <b id="oferta-n-premium">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('premium')">Abrir grátis</button></div></div>
           </div>
           <div class="pk-card">
             <div id="pack-dou-outer" class="pk-outer" style="animation:floatPackPre 3.8s ease-in-out infinite;" onclick="comprarPack('dourado')"><div id="pack-dou-inner" class="pk-inner"></div></div>
-            <div class="pack-info"><div class="pack-info-preco dou" data-pk-preco="dourado">4,00 €</div><div class="pk-cromos" data-pk-cromos="dourado">9 cromos</div><button class="pack-info-btn dou" onclick="comprarPack('dourado')">Comprar Pack</button></div>
+            <div class="pack-info"><div class="pack-info-preco dou" data-pk-preco="dourado">4,00 €</div><div class="pk-cromos" data-pk-cromos="dourado">9 cromos</div><button class="pack-info-btn dou" onclick="comprarPack('dourado')">Comprar Pack</button><div class="pk-oferta" id="oferta-dourado" style="display:none"><span>Tens <b id="oferta-n-dourado">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('dourado')">Abrir grátis</button></div></div>
           </div>
         </div>
       </div>
@@ -1691,11 +1674,16 @@ async function carregarCadernetas() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
 
-  const { data, error } = await sb.from('cadernetas_desbloqueadas').select('caderneta_id').eq('user_id', user.id);
-  if (error || !data) return;
+  /* cadernetas grátis: garantir que as duas ficam registadas na conta */
+  try {
+    const { data } = await sb.from('cadernetas_desbloqueadas').select('caderneta_id').eq('user_id', user.id);
+    const tem = (data || []).map(r => r.caderneta_id);
+    for (const c of ['fcps', 'ccrdsv']) {
+      if (!tem.includes(c)) await sb.from('cadernetas_desbloqueadas').insert({ user_id: user.id, caderneta_id: c });
+    }
+  } catch (e) {}
 
-  data.forEach(row => {
-    const clube = row.caderneta_id;
+  ['fcps', 'ccrdsv'].forEach(clube => {
     cadDesbloqueadas[clube] = true;
     const card = document.getElementById('card-' + clube);
     if (card) card.classList.remove('locked');
@@ -1832,12 +1820,12 @@ async function carregarListaAmigos(userId) {
   // Buscar profiles dos amigos
   const amigos1 = [];
   for (const a of (amigos1raw || [])) {
-    const { data: prof } = await sb.from('profiles').select('id, display_name, avatar_url, online_at, status_personalizado, coins').eq('id', a.amigo_id).single();
+    const { data: prof } = await sb.from('profiles').select('id, display_name, avatar_url, online_at, status_personalizado').eq('id', a.amigo_id).single();
     if (prof) amigos1.push({ ...a, profiles: prof });
   }
   const amigos2 = [];
   for (const a of (amigos2raw || [])) {
-    const { data: prof } = await sb.from('profiles').select('id, display_name, avatar_url, online_at, status_personalizado, coins').eq('id', a.user_id).single();
+    const { data: prof } = await sb.from('profiles').select('id, display_name, avatar_url, online_at, status_personalizado').eq('id', a.user_id).single();
     if (prof) amigos2.push({ ...a, profiles: prof });
   }
 
@@ -1871,7 +1859,6 @@ async function carregarListaAmigos(userId) {
       ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`
       : nome[0].toUpperCase();
     const statusPers = a.status_personalizado || '🃏';
-    const cromos = a.coins || 0;
     
     lista.innerHTML += `
       <div class="amigo-item amigo-item-fixo">
@@ -2389,6 +2376,52 @@ Carrega saldo em Início → + Carregar saldo`);return;}
   await guardarCromosColecao(user.id,cromos);
   mostrarPackOverlay(cromos,tipo);
 }
+
+/* ===== PACKS OFERECIDOS (vêm dos carregamentos de saldo) ===== */
+const NOMES_PACK={prata:'prata',standard:'verde',premium:'roxo',dourado:'dourado'};
+
+/* ===== PACKS DE BOAS-VINDAS: 2 packs prata para contas novas (uma só vez) ===== */
+async function darPacksBoasVindas(user){
+  try{
+    if(!user||!user.created_at)return;
+    const idadeDias=(Date.now()-new Date(user.created_at).getTime())/86400000;
+    if(idadeDias>14)return;                       // só contas novas
+    const{data:marca,error:e1}=await sb.from('packs_oferecidos').select('quantidade').eq('user_id',user.id).eq('tipo','boasvindas').maybeSingle();
+    if(e1||marca)return;                          // já recebeu (ou a tabela ainda não existe)
+    const{error:e2}=await sb.from('packs_oferecidos').insert({user_id:user.id,tipo:'boasvindas',quantidade:0});
+    if(e2)return;
+    const{data:p}=await sb.from('packs_oferecidos').select('quantidade').eq('user_id',user.id).eq('tipo','prata').maybeSingle();
+    const{error:e3}=await sb.from('packs_oferecidos').upsert({user_id:user.id,tipo:'prata',quantidade:((p&&p.quantidade)||0)+2});
+    if(e3)return;
+    const t=document.getElementById('ativ-boasvindas');
+    if(t)t.innerHTML='Conta criada com sucesso! <strong>Tens 2 packs prata de boas-vindas</strong>';
+    mostrarNotificacao('Recebeste 2 packs prata de boas-vindas! Abre-os em Packs.','sucesso');
+    carregarPacksOferecidos();
+  }catch(e){}
+}
+async function carregarPacksOferecidos(){
+  try{
+    const{data:{user}}=await sb.auth.getUser();if(!user)return;
+    const{data,error}=await sb.from('packs_oferecidos').select('tipo,quantidade').eq('user_id',user.id);
+    if(error)return;
+    Object.keys(NOMES_PACK).forEach(t=>{const d=document.getElementById('oferta-'+t);if(d)d.style.display='none';});
+    (data||[]).forEach(r=>{
+      const d=document.getElementById('oferta-'+r.tipo),n=document.getElementById('oferta-n-'+r.tipo);
+      if(d&&n&&r.quantidade>0){n.textContent=r.quantidade;d.style.display='flex';}
+    });
+  }catch(e){}
+}
+async function abrirPackOferecido(tipo){
+  const{data:{user}}=await sb.auth.getUser();if(!user)return;
+  const{data:r}=await sb.from('packs_oferecidos').select('quantidade').eq('user_id',user.id).eq('tipo',tipo).maybeSingle();
+  if(!r||r.quantidade<1){carregarPacksOferecidos();return;}
+  const{error}=await sb.from('packs_oferecidos').update({quantidade:r.quantidade-1}).eq('user_id',user.id).eq('tipo',tipo);
+  if(error){mostrarNotificacao('Não foi possível abrir o pack.','erro');return;}
+  const cromos=gerarPack(tipo);
+  await guardarCromosColecao(user.id,cromos);
+  carregarPacksOferecidos();
+  mostrarPackOverlay(cromos,tipo);
+}
 async function guardarCromosColecao(userId,cromos){
   for(const c of cromos){
     const{data:ex}=await sb.from('colecao').select('quantidade').eq('user_id',userId).eq('clube',c.clube).eq('num_cromo',c.num).maybeSingle();
@@ -2447,8 +2480,7 @@ const maxPagCad = { fcps: 18, ccrdsv: 20 };
 const luisImg = 'images/foto-luis.jpg';
 const isMobileCad = () => window.innerWidth <= 700;
 let isAnimatingCad = false;
-let moedasAtual = 0;
-const cadDesbloqueadas = { fcps: false, ccrdsv: false };
+const cadDesbloqueadas = { fcps: true, ccrdsv: true };  /* grátis para todos */
 
 async function carregarCromosColados(clube) {
   const { data: { user } } = await sb.auth.getUser();
@@ -2481,55 +2513,11 @@ async function carregarCromosColados(clube) {
 }
 
 async function abrirCaderneta(clube) {
-  // Se já desbloqueada — abrir diretamente
-  if (cadDesbloqueadas[clube]) {
-    mostrarPaginasCad(clube, 0, false);
-    document.getElementById('modal-' + clube).classList.add('show');
-    await carregarCromosColados(clube);
-    return;
-  }
-  // Verificar moedas
-  if (moedasAtual < 250) {
-    document.getElementById('modal-sem-moedas').classList.add('show');
-    return;
-  }
-  // Confirmar antes de desbloquear
-  if (!confirm('Desbloquear esta caderneta por 250 moedas?')) return;
-  // Desbloquear
-  desbloquearCaderneta(clube);
-}
-
-async function desbloquearCaderneta(clube) {
-  const { data:{ user } } = await sb.auth.getUser();
-  if (!user) return;
-
-  // 1. Guardar desbloqueio PRIMEIRO na tabela
-  const { error: errCad } = await sb.from('cadernetas_desbloqueadas').insert({ user_id: user.id, caderneta_id: clube });
-  if (errCad && errCad.code !== '23505') { alert('Erro ao desbloquear: ' + errCad.message); return; }
-
-  // 2. Debitar moedas
-  const novasMoedas = moedasAtual - 250;
-  const { error: errMoedas } = await sb.from('profiles').update({ coins: novasMoedas }).eq('id', user.id);
-  if (errMoedas) { alert('Erro ao debitar moedas!'); return; }
-
-  moedasAtual = novasMoedas;
-  const elStat = document.getElementById('stat-moedas');
-  if (elStat) elStat.textContent = moedasAtual;
-  const elTop = document.getElementById('user-saldo-top');
-  
+  /* as cadernetas são grátis: abrem sempre */
   cadDesbloqueadas[clube] = true;
-  atualizarMiniColecoes();
-
-  // Atualizar card visual
-  const card = document.getElementById('card-' + clube);
-  if (card) {
-    card.classList.remove('locked');
-  }
-  (document.getElementById('sub-cad-' + clube) || document.getElementById('sub-' + clube) || {textContent:''}).textContent = '0 / ' + (clube === 'fcps' ? '217' : '241') + ' cromos';
-  
-  // Abrir caderneta
   mostrarPaginasCad(clube, 0, false);
   document.getElementById('modal-' + clube).classList.add('show');
+  await carregarCromosColados(clube);
 }
 
 function fecharModal(clube) { document.getElementById('modal-' + clube).classList.remove('show'); }
@@ -2620,7 +2608,6 @@ async function garantirPerfil(user) {
       id: user.id,
       username: user.email.split('@')[0] + Math.floor(Math.random() * 1000),
       display_name: nomeInicial,
-      coins: 500,
       saldo: 0
     }).select().single();
     profile = novoPerfil;
@@ -2632,11 +2619,10 @@ async function carregarUtilizador() {
   const { data:{ user } } = await sb.auth.getUser();
   if(!user) { window.location.href='index.html'; return; }
   const profile = await garantirPerfil(user);
+  darPacksBoasVindas(user);
   if(profile) {
     const nome = profile.display_name || user.email;
     document.getElementById('user-nome').textContent = nome;
-    const moedas = profile.coins||500; moedasAtual = moedas; document.getElementById('user-moedas') && (document.getElementById('user-moedas').textContent = moedas);
-    document.getElementById('stat-moedas').textContent = moedasAtual;
     const ini = nome.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
     document.getElementById('user-avatar').textContent = ini;
     const saldo = profile.saldo || 0;
@@ -2800,13 +2786,6 @@ setInterval(async () => {
       <img id="cromo-grande-img" style="display:none; width:100%; height:100%; object-fit:cover; border-radius:14px;"/>
       <div class="cromo-grande-num" id="cromo-grande-num"></div>
     </div>
-  </div>
-</div>
-<div class="modal-cad" id="modal-sem-moedas">
-  <div class="modal-cad-box">
-    <h2>Moedas Insuficientes</h2>
-    <p>Precisas de 250 moedas para desbloquear esta caderneta.</p>
-    <button class="modal-cad-btn" onclick="document.getElementById('modal-sem-moedas').classList.remove('show')">OK</button>
   </div>
 </div>
 

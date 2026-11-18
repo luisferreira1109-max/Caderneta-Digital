@@ -16,6 +16,7 @@
     document.querySelectorAll('.mz-tab').forEach(function (t) {
       t.classList.toggle('ativo', t.getAttribute('data-tab') === tab);
     });
+    if (nome === 'packs') { try { carregarPacksOferecidos(); } catch (e) {} }
     if (nome === 'amigos') window.mzAmigosHub();
     if (nome === 'mercado') window.mzMercadoHub();
     if (historico[historico.length - 1] !== nome) historico.push(nome);
@@ -64,15 +65,6 @@
     window.mostrarPagina('definicoes');
     try { mostrarDefinicoes(); } catch (e) {}
   };
-
-  /* Moedas e saldo do canto superior direito acompanham os valores do site */
-  function sincronizar() {
-    var a = document.getElementById('stat-moedas'), b = document.getElementById('user-moedas');
-    if (a && b) b.textContent = a.textContent;
-  }
-  var alvo = document.getElementById('stat-moedas');
-  if (alvo) new MutationObserver(sincronizar).observe(alvo, { childList: true, characterData: true, subtree: true });
-  sincronizar();
 
   /* ----- Mercado ----- */
   function ver(id, on) { var e = document.getElementById(id); if (e) e.style.display = on ? '' : 'none'; }

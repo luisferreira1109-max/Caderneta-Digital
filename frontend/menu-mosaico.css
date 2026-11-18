@@ -538,3 +538,8 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 #pagina-packs .pack-info-preco.dou{color:#b8860b;}
 /* sem retângulo/sombra à volta dos packs (o efeito de rato punha uma sombra na caixa) */
 #pagina-packs .pk-outer,#pagina-packs .pk-inner{box-shadow:none !important;background-color:transparent !important;border:0 !important;outline:0 !important;}
+
+/* packs oferecidos */
+#pagina-packs .pk-oferta{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:12px;padding:8px 14px;background:#e9f7f0;font-size:12px;color:#0e7a55;font-weight:600;}
+#pagina-packs .pk-oferta-btn{background:#0e9f6e;color:#fff;border:0;padding:6px 16px;font-family:var(--mz-fonte);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
+#pagina-packs .pk-oferta-btn:hover{background:#12b883;}
