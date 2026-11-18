@@ -1103,7 +1103,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
       <!-- INÍCIO -->
       <div id="pagina-inicio">
         <div class="mz-grid mz-inicio">
-          <div class="mz-tile mz-azul clicavel mz-packs" onclick="mostrarPagina('packs')">
+          <div class="mz-tile clicavel mz-packs" onclick="mostrarPagina('packs')">
             <span class="mz-etq">NOVO</span>
             <h3>Packs</h3>
             <div class="mz-arte"><img src="images/pack-standard.png" alt=""><img src="images/pack-premium.png" alt=""></div>
@@ -1112,7 +1112,6 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
           <div class="mz-tile clicavel mz-cads" onclick="mostrarPagina('cadernetas')">
             <h3>Cadernetas</h3>
             <div class="mz-arte"><img src="images/caderneta-fcps.png" alt=""><img src="images/caderneta-ccrdsv.png" alt=""></div>
-            <div class="mz-cta">Continuar</div>
           </div>
           <div class="mz-tile mz-curso">
             <h3>Coleção em curso</h3>
@@ -1136,23 +1135,23 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
             <div id="mini-colecao-vazio" style="color:#999; font-size:12px; padding:8px 0;">Ainda não desbloqueaste nenhuma caderneta.</div>
             </div>
           </div>
-          <div class="mz-tile mz-ativ">
+          <div class="mz-tile mz-azul mz-ativ">
             <h3>Atividades recentes</h3>
             <div class="mz-corpo">
               <div id="mz-pedidos-ativ"></div>
               <div class="atividade-lista" id="atividade-lista">
           <div class="atividade-item">
-            <div class="atividade-icon ai-ach"><i class="ti ti-trophy" style="color:#C9943A"></i></div>
+            <div class="atividade-icon ai-logo"><img src="images/logo-icon.png" alt=""/></div>
             <div class="atividade-texto" id="ativ-boasvindas">Conta criada com sucesso! <strong>As duas cadernetas já estão abertas</strong></div>
             <div class="atividade-tempo">agora</div>
           </div>
           <div class="atividade-item" id="ativ-packs" style="display:none;cursor:pointer" onclick="mostrarPagina('packs')">
-            <div class="atividade-icon ai-pack"><i class="ti ti-package" style="color:#7F77DD"></i></div>
+            <div class="atividade-icon ai-logo"><img src="images/logo-icon.png" alt=""/></div>
             <div class="atividade-texto" id="ativ-packs-txt"></div>
             <div class="atividade-tempo">agora</div>
           </div>
           <div class="atividade-item">
-            <div class="atividade-icon ai-money"><i class="ti ti-currency-euro" style="color:#1D9E75"></i></div>
+            <div class="atividade-icon ai-money">€</div>
             <div class="atividade-texto">Carrega saldo para <strong>começar a colecionar!</strong></div>
             <div class="atividade-tempo">—</div>
           </div>
@@ -1177,7 +1176,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
             <div class="mz-arte mz-arte-h"><img src="images/cromos-mini/ccrdsv-13.webp" alt=""><img src="images/cromos-mini/fcps-26.webp" alt=""><img src="images/cromos-mini/fcps-133.webp" alt=""></div>
             <div class="mz-cta">Ver coleção</div>
           </div>
-          <div class="mz-tile mz-t-rank">
+          <div class="mz-tile mz-azul mz-t-rank">
             <span class="mz-etq">EM BREVE</span>
             <h3>Ranking</h3>
             <p class="mz-sub">Quem tem as cadernetas mais preenchidas.</p>
@@ -2440,7 +2439,7 @@ function mostrarResultadoPack(cromos){
   const w=document.getElementById('pack-anim-wrapper');if(w)w.style.display='none';
   const f1=document.getElementById('pack-fase1'),f2=document.getElementById('pack-fase2');
   if(f1)f1.style.display='none';if(f2){f2.style.display='flex';f2.classList.add('show');}
-  overlay.classList.add('show');
+  overlay.classList.add('resultado');overlay.classList.add('show');
   revelarCromos(cromos);
 }
 function mostrarPackOverlay(cromos,tipo){
@@ -2472,9 +2471,9 @@ function revelarCromos(cromos){
   });
   const lend=cromos.filter(c=>c.raridade==='lendario').length;
   const epic=cromos.filter(c=>c.raridade==='epico').length;
-  document.getElementById('pack-resultado-sub').textContent=lend>0?'⭐ Incrível! Obtiveste um cromo lendário!':epic>0?'💎 Muito bom! Obtiveste um cromo épico!':'7 novos cromos adicionados à tua coleção!';
+  document.getElementById('pack-resultado-sub').textContent=lend>0?'⭐ Incrível! Obtiveste um cromo lendário!':epic>0?'💎 Muito bom! Obtiveste um cromo épico!':cromos.length+' novos cromos adicionados à tua coleção!';
 }
-function fecharPackOverlay(){document.getElementById('pack-overlay').classList.remove('show');}
+function fecharPackOverlay(){const o=document.getElementById('pack-overlay');o.classList.remove('show');o.classList.remove('resultado');}
 function atualizarSaldoPacks(saldo){
   const s=document.getElementById('saldo-depois-std');if(s)s.textContent=Math.max(0,saldo-1.5).toFixed(2).replace('.',',');
   const p=document.getElementById('saldo-depois-pre');if(p)p.textContent=Math.max(0,saldo-2.0).toFixed(2).replace('.',',');
@@ -2666,13 +2665,13 @@ async function carregarAtividadeAmigos() {
   if (combinados.length === 0) return;
 
   for (const item of combinados) {
-    const { data: prof } = await sb.from('profiles').select('display_name').eq('id', item.outroId).single();
+    const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', item.outroId).single();
     const nome = prof?.display_name || 'Utilizador';
     const tempo = tempoRelativo(new Date(item.quando));
     const div = document.createElement('div');
     div.className = 'atividade-item';
     div.innerHTML = `
-      <div class="atividade-icon ai-ach"><i class="ti ti-users" style="color:#C9943A"></i></div>
+      <div class="atividade-icon ai-user">${prof?.avatar_url ? `<img src="${String(prof.avatar_url).replace(/"/g,'&quot;')}" alt="" onerror="this.replaceWith(document.createTextNode('${(nome[0]||'?').toUpperCase().replace(/'/g,'')}'))"/>` : (nome[0]||'?').toUpperCase()}</div>
       <div class="atividade-texto">Tu e <strong>${nome}</strong> são agora amigos</div>
       <div class="atividade-tempo">${tempo}</div>`;
     lista.prepend(div);

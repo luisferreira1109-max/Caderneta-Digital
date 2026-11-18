@@ -545,3 +545,54 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 #pagina-packs .pk-oferta-btn:hover{background:#12b883;}
 
 #pagina-packs .pk-aviso{margin-top:12px;display:inline-block;background:#e9f7f0;border-left:4px solid #0e9f6e;color:#0e7a55;padding:9px 16px;font-size:14px;}
+
+/* ===== Packs: painel azul escuro ===== */
+#pagina-packs{
+  background:linear-gradient(165deg,#1a3f9e 0%,#122c75 45%,#0b1d52 100%);
+  color:#fff;
+}
+#pagina-packs .mz-voltar{color:#fff;border-color:rgba(255,255,255,.55);background:rgba(10,10,40,.25);}
+#pagina-packs .mz-voltar:hover{background:rgba(255,255,255,.18);}
+#pagina-packs .page-titulo{color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.45);}
+#pagina-packs .page-sub{color:#e8e4ff;text-shadow:0 1px 6px rgba(0,0,0,.5);}
+#pagina-packs .pk-cromos,#pagina-packs .pack-info div,#pagina-packs .pack-info span{color:#f1eeff;text-shadow:0 1px 5px rgba(0,0,0,.55);}
+#pagina-packs .pack-info-preco{text-shadow:0 2px 8px rgba(0,0,0,.55);}
+#pagina-packs .pack-info-preco.pra{color:#e3e8f0;}
+#pagina-packs .pack-info-preco.pre{color:#c9a8ff;}
+#pagina-packs .pack-info-preco.dou{color:#ffd45a;}
+#pagina-packs .pack-info-preco:not(.pra):not(.pre):not(.dou){color:#9fe8c8;}
+#pagina-packs .pk-inner{filter:drop-shadow(0 12px 18px rgba(0,0,0,.5));}
+
+/* ===== Resultado do pack: fundo com foto do estádio ===== */
+#pack-overlay.resultado{
+  background:linear-gradient(rgba(8,8,34,.25),rgba(8,8,34,.35)),url('images/imagens de fundo do site/bg-packs.jpg') center bottom/cover no-repeat !important;
+}
+#pack-overlay.resultado .pack-resultado-titulo{text-shadow:0 2px 12px rgba(0,0,0,.6);}
+#pack-overlay.resultado .pack-resultado-sub{color:#f1eeff !important;text-shadow:0 1px 6px rgba(0,0,0,.7);}
+
+/* ===== Início: Coleção em curso e Ranking em azul ===== */
+.mz-azul.mz-curso .mini-colecao{border-bottom-color:rgba(255,255,255,.18);}
+.mz-azul.mz-curso .mini-nome{color:#fff;}
+.mz-azul.mz-curso .mini-progress{background:rgba(255,255,255,.22);}
+.mz-azul.mz-curso .mini-pct{color:#dfe7ff;}
+.mz-azul.mz-curso #mini-colecao-vazio{color:#dfe7ff !important;}
+.mz-azul.mz-t-rank .mz-rank div{background:#fff;color:var(--mz-azul);}
+.mz-azul.mz-t-rank .mz-rank i{color:var(--mz-azul);}
+.mz-azul.mz-t-rank .mz-rank b{color:var(--mz-ouro);}
+
+/* Atividades recentes em azul (Início) */
+.mz-azul.mz-ativ .atividade-item{border-bottom-color:rgba(255,255,255,.2) !important;}
+.mz-azul.mz-ativ .atividade-texto{color:#fff !important;}
+.mz-azul.mz-ativ .atividade-texto strong{color:#fff;font-weight:700;}
+.mz-azul.mz-ativ .atividade-tempo{color:#cfdcff !important;}
+.mz-azul.mz-ativ .atividade-icon{background:#fff !important;}
+
+/* Atividades: logo, euro verde e foto do utilizador */
+.atividade-icon.ai-logo,.atividade-icon.ai-user{padding:0;overflow:hidden;background:transparent !important;}
+.atividade-icon.ai-logo img,.atividade-icon.ai-user img{width:100%;height:100%;object-fit:cover;display:block;border-radius:9px;}
+.atividade-icon.ai-user{background:#fff !important;color:var(--mz-azul);font-weight:700;font-size:15px;}
+.atividade-icon.ai-money{background:#1d9e75 !important;color:#fff;font-weight:700;font-size:19px;font-family:var(--mz-fonte);}
+.mz-azul.mz-ativ .atividade-icon.ai-logo{background:transparent !important;}
+.mz-azul.mz-ativ .atividade-icon.ai-money{background:#1d9e75 !important;}
+.mz-azul.mz-ativ .atividade-icon.ai-user{background:#fff !important;}
+.mz-inicio .mz-ativ .mz-corpo{overflow-y:auto;min-height:0;}
