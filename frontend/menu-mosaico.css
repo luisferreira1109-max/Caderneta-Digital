@@ -536,3 +536,5 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 #pagina-packs .pack-info-preco.pra{color:#7d8794;}
 #pagina-packs .pack-info-preco.pre{color:#6b3fc4;}
 #pagina-packs .pack-info-preco.dou{color:#b8860b;}
+/* sem retângulo/sombra à volta dos packs (o efeito de rato punha uma sombra na caixa) */
+#pagina-packs .pk-outer,#pagina-packs .pk-inner{box-shadow:none !important;background-color:transparent !important;border:0 !important;outline:0 !important;}
