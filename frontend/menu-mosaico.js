@@ -141,4 +141,10 @@
   setInterval(carregarPedidosAtividade, 20000);
 
   document.body.setAttribute('data-pg', 'inicio');
+
+  /* abrir um separador pedido por outra página (ex.: dashboard.html#mercado) */
+  var h = (location.hash || '').replace('#', '');
+  if (['inicio', 'colecao', 'mercado', 'amigos'].indexOf(h) >= 0 && h !== 'inicio') {
+    setTimeout(function () { window.mzTab(h); }, 600);
+  }
 })();

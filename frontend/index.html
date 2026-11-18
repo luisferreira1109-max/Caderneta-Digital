@@ -50,6 +50,9 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
 .campo input { padding: 12px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: white; font-size: 14px; outline: none; transition: border 0.2s; }
 .campo input:focus { border-color: #C9943A; }
 .campo input::placeholder { color: rgba(255,255,255,0.2); }
+.campo select { padding: 12px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: white; font-size: 14px; outline: none; transition: border 0.2s; }
+.campo select:focus { border-color: #C9943A; }
+.campo select option { background: #1a1a1a; color: white; }
 .btn-modal { width: 100%; padding: 14px; background: #C9943A; color: #0f0f1a; border: none; border-radius: 50px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all 0.2s; }
 .btn-modal:hover { background: #E8A83E; transform: translateY(-1px); }
 .btn-modal:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
@@ -123,6 +126,14 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
       <div class="campo"><label>Email</label><input type="email" id="reg-email" placeholder="email@exemplo.com"/></div>
       <div class="campo"><label>Password</label><input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres"/></div>
       <div class="campo"><label>Confirmar password</label><input type="password" id="reg-pass2" placeholder="Repete a password"/></div>
+      <div class="campo"><label>De onde vens?</label>
+        <select id="reg-origem">
+          <option value="">Escolhe uma opção</option>
+          <option value="Irivo">Irivo</option>
+          <option value="Paço de Sousa">Paço de Sousa</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </div>
       <div class="erro" id="erro-registo"></div>
       <button class="btn-modal" id="btn-registar" onclick="registar()">Criar conta</button>
       <div class="modal-trocar">Já tens conta? <span onclick="trocarModal('registo','login')">Entra aqui</span></div>
@@ -216,17 +227,19 @@ body { font-family: 'Segoe UI', Arial, sans-serif; min-height: 100vh; overflow: 
     var email = document.getElementById('reg-email').value.trim();
     var pass = document.getElementById('reg-pass').value;
     var pass2 = document.getElementById('reg-pass2').value;
+    var origem = document.getElementById('reg-origem').value;
     var btn = document.getElementById('btn-registar');
     document.getElementById('erro-registo').style.display = 'none';
 
     if (!nome || !email || !pass || !pass2) { mostrarErro('erro-registo', 'Preenche todos os campos!'); return; }
     if (pass.length < 6) { mostrarErro('erro-registo', 'A password deve ter pelo menos 6 caracteres!'); return; }
     if (pass !== pass2) { mostrarErro('erro-registo', 'As passwords não coincidem!'); return; }
+    if (!origem) { mostrarErro('erro-registo', 'Diz-nos de onde vens (Irivo, Paço de Sousa ou Outros)!'); return; }
 
     btn.disabled = true;
     btn.textContent = 'A criar conta...';
 
-    var result = await supabaseClient.auth.signUp({ email: email, password: pass, options: { data: { display_name: nome } } });
+    var result = await supabaseClient.auth.signUp({ email: email, password: pass, options: { data: { display_name: nome, origem: origem } } });
 
     if (result.error) {
       btn.disabled = false;

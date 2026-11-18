@@ -543,3 +543,5 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 #pagina-packs .pk-oferta{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:12px;padding:8px 14px;background:#e9f7f0;font-size:12px;color:#0e7a55;font-weight:600;}
 #pagina-packs .pk-oferta-btn{background:#0e9f6e;color:#fff;border:0;padding:6px 16px;font-family:var(--mz-fonte);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
 #pagina-packs .pk-oferta-btn:hover{background:#12b883;}
+
+#pagina-packs .pk-aviso{margin-top:12px;display:inline-block;background:#e9f7f0;border-left:4px solid #0e9f6e;color:#0e7a55;padding:9px 16px;font-size:14px;}

@@ -1146,10 +1146,10 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
             <div class="atividade-texto" id="ativ-boasvindas">Conta criada com sucesso! <strong>As duas cadernetas já estão abertas</strong></div>
             <div class="atividade-tempo">agora</div>
           </div>
-          <div class="atividade-item">
+          <div class="atividade-item" id="ativ-packs" style="display:none;cursor:pointer" onclick="mostrarPagina('packs')">
             <div class="atividade-icon ai-pack"><i class="ti ti-package" style="color:#7F77DD"></i></div>
-            <div class="atividade-texto">Packs disponíveis <strong>em breve!</strong></div>
-            <div class="atividade-tempo">—</div>
+            <div class="atividade-texto" id="ativ-packs-txt"></div>
+            <div class="atividade-tempo">agora</div>
           </div>
           <div class="atividade-item">
             <div class="atividade-icon ai-money"><i class="ti ti-currency-euro" style="color:#1D9E75"></i></div>
@@ -1283,6 +1283,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
         <div class="page-header">
           <p class="page-titulo">Packs</p>
           <p class="page-sub">Abre packs e descobre novos cromos!</p>
+          <div class="pk-aviso" id="packs-aviso" style="display:none"></div>
         </div>
         <div class="packs-wrap">
           <div class="pk-card">
@@ -2405,10 +2406,15 @@ async function carregarPacksOferecidos(){
     const{data,error}=await sb.from('packs_oferecidos').select('tipo,quantidade').eq('user_id',user.id);
     if(error)return;
     Object.keys(NOMES_PACK).forEach(t=>{const d=document.getElementById('oferta-'+t);if(d)d.style.display='none';});
+    let total=0;
     (data||[]).forEach(r=>{
       const d=document.getElementById('oferta-'+r.tipo),n=document.getElementById('oferta-n-'+r.tipo);
-      if(d&&n&&r.quantidade>0){n.textContent=r.quantidade;d.style.display='flex';}
+      if(d&&n&&r.quantidade>0){n.textContent=r.quantidade;d.style.display='flex';total+=r.quantidade;}
     });
+    const txt=total===1?'Tens <strong>1 pack oferecido</strong> por abrir!':'Tens <strong>'+total+' packs oferecidos</strong> por abrir!';
+    const at=document.getElementById('ativ-packs'),att=document.getElementById('ativ-packs-txt'),av=document.getElementById('packs-aviso');
+    if(at&&att){at.style.display=total>0?'':'none';att.innerHTML=txt;}
+    if(av){av.style.display=total>0?'block':'none';av.innerHTML=txt+' Abre-os já aqui em baixo.';}
   }catch(e){}
 }
 async function abrirPackOferecido(tipo){
@@ -2619,7 +2625,13 @@ async function carregarUtilizador() {
   const { data:{ user } } = await sb.auth.getUser();
   if(!user) { window.location.href='index.html'; return; }
   const profile = await garantirPerfil(user);
+  /* guardar de onde veio o utilizador (escolhido no registo) */
+  try{
+    const og=user.user_metadata&&user.user_metadata.origem;
+    if(profile&&og&&!profile.origem)await sb.from('profiles').update({origem:og}).eq('id',user.id);
+  }catch(e){}
   darPacksBoasVindas(user);
+  carregarPacksOferecidos();
   if(profile) {
     const nome = profile.display_name || user.email;
     document.getElementById('user-nome').textContent = nome;
