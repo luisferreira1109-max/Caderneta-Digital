@@ -608,3 +608,12 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 #cromo-overlay button[onclick*="colarNaCaderneta"]{background:var(--mz-azul-vivo) !important;color:#fff !important;border:0 !important;}
 #cromo-overlay button[onclick*="irParaMercadoVender"]{background:#fff !important;color:var(--mz-azul) !important;border:1.5px solid var(--mz-azul) !important;}
 #cromo-overlay button[onclick*="fecharCromoOverlay"]{background:transparent !important;color:#7b88b4 !important;font-size:15px !important;}
+
+/* ===== Ranking (caixa da Coleção, Top 10 com scroll) ===== */
+.mz-t-rank{min-height:0;}
+.mz-t-rank .mz-rank{flex:1;min-height:0;overflow-y:auto;padding-right:6px;margin-bottom:2px;gap:4px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.7) rgba(255,255,255,.15);}
+.mz-t-rank .mz-rank::-webkit-scrollbar{width:8px;}
+.mz-t-rank .mz-rank::-webkit-scrollbar-track{background:rgba(255,255,255,.15);}
+.mz-t-rank .mz-rank::-webkit-scrollbar-thumb{background:rgba(255,255,255,.75);}
+.mz-t-rank .mz-rank div{padding:5px 12px;flex-shrink:0;}
+.mz-azul.mz-t-rank .mz-rank div.rk-meu{outline:2px solid var(--mz-ouro);}

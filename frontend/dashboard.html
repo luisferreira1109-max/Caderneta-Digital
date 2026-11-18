@@ -1174,14 +1174,9 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
             <div class="mz-cta">Ver coleção</div>
           </div>
           <div class="mz-tile mz-azul mz-t-rank">
-            <span class="mz-etq">EM BREVE</span>
             <h3>Ranking</h3>
-            <p class="mz-sub">Quem tem as cadernetas mais preenchidas.</p>
-            <div class="mz-rank">
-              <div><b>1</b><span>Criativo</span><i>85%</i></div>
-              <div><b>2</b><span>Agostinho</span><i>20%</i></div>
-              <div><b>3</b><span>···</span><i>··%</i></div>
-            </div>
+            <p class="mz-sub">Top 10 · % das duas cadernetas.</p>
+            <div class="mz-rank" id="rank-tile"><div><b>·</b><span>A carregar...</span><i></i></div></div>
           </div>
         </div>
       </div>
@@ -1638,6 +1633,32 @@ function atualizarMiniColecoes() {
   if (miniVazio) miniVazio.style.display = (cadDesbloqueadas.fcps || cadDesbloqueadas.ccrdsv) ? 'none' : 'block';
   // Atualizar barras com cromos colados
   atualizarBarrasProgresso();
+}
+
+async function carregarRanking() {
+  const tile = document.getElementById('rank-tile');
+  if (!tile) return;
+  let linhas = [];
+  try {
+    const { data, error } = await sb.rpc('ranking_top', { p_limite: 10 });
+    if (error) throw error;
+    linhas = (data || []).filter(l => l.posicao <= 10);
+  } catch (e) {
+    tile.innerHTML = '<div><b>·</b><span>Ranking indisponível</span><i></i></div>';
+    return;
+  }
+  const mk = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt !== undefined) e.textContent = txt; return e; };
+  tile.innerHTML = '';
+  if (!linhas.length) {
+    const d = mk('div'); d.append(mk('b', '', '·'), mk('span', '', 'Ainda ninguém colou cromos'), mk('i', '', ''));
+    tile.appendChild(d);
+    return;
+  }
+  linhas.forEach(l => {
+    const d = mk('div', l.eu ? 'rk-meu' : '');
+    d.append(mk('b', '', l.posicao), mk('span', '', l.nome + (l.eu ? ' (tu)' : '')), mk('i', '', String(l.pct).replace('.', ',') + '%'));
+    tile.appendChild(d);
+  });
 }
 
 async function atualizarBarrasProgresso() {

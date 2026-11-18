@@ -17,6 +17,7 @@
       t.classList.toggle('ativo', t.getAttribute('data-tab') === tab);
     });
     if (nome === 'packs') { try { carregarPacksOferecidos(); } catch (e) {} }
+    if (nome === 'colecaohub') { try { carregarRanking(); } catch (e) {} }
     if (nome === 'amigos') window.mzAmigosHub();
     if (nome === 'mercado') window.mzMercadoHub();
     if (historico[historico.length - 1] !== nome) historico.push(nome);
