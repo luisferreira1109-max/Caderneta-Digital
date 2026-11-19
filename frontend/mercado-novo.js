@@ -26,8 +26,9 @@
   };
 
   /* ---------- VENDER ---------- */
-  window.carregarMinhaColecaoVenda = function () {
+  window.carregarMinhaColecaoVenda = async function () {
     var grid = $('mercado-minha-colecao'); if (!grid) return;
+    try { await carregarColecao(); } catch (e) {}
     grid.innerHTML = '';
     $('mercado-form-venda').style.display = 'none';
     var cromos = (_colecaoTodos || []).slice().sort(function (a, b) { return a.clube === b.clube ? a.num_cromo - b.num_cromo : (a.clube < b.clube ? -1 : 1); });

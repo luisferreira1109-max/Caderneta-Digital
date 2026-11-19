@@ -2374,6 +2374,7 @@ Carrega saldo em Início → + Carregar saldo`);return;}
   const st=document.getElementById('user-saldo-top');if(st)st.textContent=novoSaldo.toFixed(2).replace('.',',');
   atualizarSaldoPacks(novoSaldo);
   const cromos=res.cromos;
+  carregarColecao();
   mostrarPackOverlay(cromos,tipo);
 }
 
@@ -2416,6 +2417,7 @@ async function abrirPackOferecido(tipo){
   const{data:res,error}=await sb.rpc('abrir_pack_oferecido',{p_tipo:tipo});
   if(error||!res){carregarPacksOferecidos();if(error&&!/sem_packs/.test(error.message))mostrarNotificacao('Não foi possível abrir o pack.','erro');return;}
   const cromos=res.cromos;
+  carregarColecao();
   carregarPacksOferecidos();
   mostrarPackOverlay(cromos,tipo);
 }
