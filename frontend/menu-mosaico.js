@@ -116,7 +116,7 @@
       if (!cont) return;
       var html = '';
       for (var i = 0; i < pedidos.length; i++) {
-        var pr = await sb.from('profiles').select('display_name,avatar_url').eq('id', pedidos[i].user_id).single();
+        var pr = await sb.from('perfis_publicos').select('display_name,avatar_url').eq('id', pedidos[i].user_id).single();
         var nome = (pr.data && pr.data.display_name) || 'Utilizador';
         var av = pr.data && pr.data.avatar_url;
         html += '<div class="mz-pedido"><div class="mz-pedido-ava">' + (av ? '<img src="' + esc(av) + '">' : esc(nome[0].toUpperCase())) +

@@ -1794,7 +1794,7 @@ async function carregarPedidos(userId) {
   // Buscar profiles separadamente
   if (pedidos && pedidos.length > 0) {
     for (let p of pedidos) {
-      const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', p.user_id).single();
+      const { data: prof } = await sb.from('perfis_publicos').select('display_name, avatar_url').eq('id', p.user_id).single();
       p.profiles = prof;
     }
   }
@@ -1837,12 +1837,12 @@ async function carregarListaAmigos(userId) {
   // Buscar profiles dos amigos
   const amigos1 = [];
   for (const a of (amigos1raw || [])) {
-    const { data: prof } = await sb.from('profiles').select('id, display_name, avatar_url, online_at, status_personalizado').eq('id', a.amigo_id).single();
+    const { data: prof } = await sb.from('perfis_publicos').select('id, display_name, avatar_url, online_at, status_personalizado').eq('id', a.amigo_id).single();
     if (prof) amigos1.push({ ...a, profiles: prof });
   }
   const amigos2 = [];
   for (const a of (amigos2raw || [])) {
-    const { data: prof } = await sb.from('profiles').select('id, display_name, avatar_url, online_at, status_personalizado').eq('id', a.user_id).single();
+    const { data: prof } = await sb.from('perfis_publicos').select('id, display_name, avatar_url, online_at, status_personalizado').eq('id', a.user_id).single();
     if (prof) amigos2.push({ ...a, profiles: prof });
   }
 
@@ -1928,7 +1928,7 @@ async function enviarPedidoAmizade() {
   const { data: { user } } = await sb.auth.getUser();
   
   // Encontrar utilizador com esse código
-  const { data: profiles } = await sb.from('profiles').select('id, display_name').eq('codigo_amigo', codigo);
+  const { data: profiles } = await sb.rpc('procurar_amigo', { p_codigo: codigo });
   
   if (!profiles || profiles.length === 0) { erro.textContent = 'Código não encontrado!'; erro.style.display = 'block'; return; }
   const amigo = profiles[0];
@@ -2278,25 +2278,8 @@ async function colarNaCaderneta() {
   // Descontar da coleção e guardar cromo colado no Supabase
   const { data: { user } } = await sb.auth.getUser();
   if (user) {
-    if (cromo.quantidade > 1) {
-      await sb.from('colecao')
-        .update({ quantidade: cromo.quantidade - 1 })
-        .eq('user_id', user.id)
-        .eq('clube', cromo.clube)
-        .eq('num_cromo', cromo.num_cromo);
-    } else {
-      await sb.from('colecao')
-        .delete()
-        .eq('user_id', user.id)
-        .eq('clube', cromo.clube)
-        .eq('num_cromo', cromo.num_cromo);
-    }
-    // Guardar cromo colado
-    await sb.from('cromos_colados').upsert({
-      user_id: user.id,
-      clube: cromo.clube,
-      num_cromo: cromo.num_cromo
-    });
+    const { error: eCol } = await sb.rpc('colar_cromo', { p_clube: cromo.clube, p_num: cromo.num_cromo });
+    if (eCol) { mostrarNotificacao('Não foi possível colar este cromo.', 'erro'); }
     await carregarColecao();
   }
 
@@ -2384,13 +2367,13 @@ async function comprarPack(tipo){
   const{data:profile}=await sb.from('profiles').select('saldo').eq('id',user.id).single();
   if(!profile||profile.saldo<preco){alert(`Saldo insuficiente! Precisas de ${preco.toFixed(2).replace('.',',')}€.
 Carrega saldo em Início → + Carregar saldo`);return;}
-  const novoSaldo=parseFloat((profile.saldo-preco).toFixed(2));
-  await sb.from('profiles').update({saldo:novoSaldo}).eq('id',user.id);
+  const{data:res,error:errPack}=await sb.rpc('comprar_pack',{p_tipo:tipo});
+  if(errPack||!res){mostrarNotificacao((errPack&&/saldo_insuficiente/.test(errPack.message))?'Saldo insuficiente!':'Não foi possível comprar o pack.','erro');return;}
+  const novoSaldo=parseFloat(res.saldo);
   document.getElementById('stat-saldo').textContent=novoSaldo.toFixed(2).replace('.',',')+'  €';
   const st=document.getElementById('user-saldo-top');if(st)st.textContent=novoSaldo.toFixed(2).replace('.',',');
   atualizarSaldoPacks(novoSaldo);
-  const cromos=gerarPack(tipo);
-  await guardarCromosColecao(user.id,cromos);
+  const cromos=res.cromos;
   mostrarPackOverlay(cromos,tipo);
 }
 
@@ -2403,13 +2386,8 @@ async function darPacksBoasVindas(user){
     if(!user||!user.created_at)return;
     const idadeDias=(Date.now()-new Date(user.created_at).getTime())/86400000;
     if(idadeDias>14)return;                       // só contas novas
-    const{data:marca,error:e1}=await sb.from('packs_oferecidos').select('quantidade').eq('user_id',user.id).eq('tipo','boasvindas').maybeSingle();
-    if(e1||marca)return;                          // já recebeu (ou a tabela ainda não existe)
-    const{error:e2}=await sb.from('packs_oferecidos').insert({user_id:user.id,tipo:'boasvindas',quantidade:0});
-    if(e2)return;
-    const{data:p}=await sb.from('packs_oferecidos').select('quantidade').eq('user_id',user.id).eq('tipo','prata').maybeSingle();
-    const{error:e3}=await sb.from('packs_oferecidos').upsert({user_id:user.id,tipo:'prata',quantidade:((p&&p.quantidade)||0)+2});
-    if(e3)return;
+    const{data:okBV,error:eBV}=await sb.rpc('dar_boas_vindas');
+    if(eBV||!okBV)return;
     const t=document.getElementById('ativ-boasvindas');
     if(t)t.innerHTML='Conta criada com sucesso! <strong>Tens 2 packs prata de boas-vindas</strong>';
     mostrarNotificacao('Recebeste 2 packs prata de boas-vindas! Abre-os em Packs.','sucesso');
@@ -2435,21 +2413,11 @@ async function carregarPacksOferecidos(){
 }
 async function abrirPackOferecido(tipo){
   const{data:{user}}=await sb.auth.getUser();if(!user)return;
-  const{data:r}=await sb.from('packs_oferecidos').select('quantidade').eq('user_id',user.id).eq('tipo',tipo).maybeSingle();
-  if(!r||r.quantidade<1){carregarPacksOferecidos();return;}
-  const{error}=await sb.from('packs_oferecidos').update({quantidade:r.quantidade-1}).eq('user_id',user.id).eq('tipo',tipo);
-  if(error){mostrarNotificacao('Não foi possível abrir o pack.','erro');return;}
-  const cromos=gerarPack(tipo);
-  await guardarCromosColecao(user.id,cromos);
+  const{data:res,error}=await sb.rpc('abrir_pack_oferecido',{p_tipo:tipo});
+  if(error||!res){carregarPacksOferecidos();if(error&&!/sem_packs/.test(error.message))mostrarNotificacao('Não foi possível abrir o pack.','erro');return;}
+  const cromos=res.cromos;
   carregarPacksOferecidos();
   mostrarPackOverlay(cromos,tipo);
-}
-async function guardarCromosColecao(userId,cromos){
-  for(const c of cromos){
-    const{data:ex}=await sb.from('colecao').select('quantidade').eq('user_id',userId).eq('clube',c.clube).eq('num_cromo',c.num).maybeSingle();
-    if(ex)await sb.from('colecao').update({quantidade:ex.quantidade+1}).eq('user_id',userId).eq('clube',c.clube).eq('num_cromo',c.num);
-    else await sb.from('colecao').insert({user_id:userId,clube:c.clube,num_cromo:c.num,raridade:c.raridade,quantidade:1});
-  }
 }
 function mostrarResultadoPack(cromos){
   const overlay=document.getElementById('pack-overlay');if(!overlay)return;
@@ -2626,13 +2594,13 @@ async function garantirPerfil(user) {
   let { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
   if (!profile) {
     const nomeInicial = (user.user_metadata && user.user_metadata.display_name) || user.email.split('@')[0];
-    const { data: novoPerfil } = await sb.from('profiles').upsert({
+    const { data: novoPerfil } = await sb.from('profiles').insert({
       id: user.id,
       username: user.email.split('@')[0] + Math.floor(Math.random() * 1000),
-      display_name: nomeInicial,
-      saldo: 0
+      display_name: nomeInicial
     }).select().single();
-    profile = novoPerfil;
+    if (novoPerfil) { profile = novoPerfil; }
+    else { const r2 = await sb.from('profiles').select('*').eq('id', user.id).single(); profile = r2.data; }
   }
   return profile;
 }
@@ -2682,7 +2650,7 @@ async function carregarAtividadeAmigos() {
   if (combinados.length === 0) return;
 
   for (const item of combinados) {
-    const { data: prof } = await sb.from('profiles').select('display_name, avatar_url').eq('id', item.outroId).single();
+    const { data: prof } = await sb.from('perfis_publicos').select('display_name, avatar_url').eq('id', item.outroId).single();
     const nome = prof?.display_name || 'Utilizador';
     const tempo = tempoRelativo(new Date(item.quando));
     const div = document.createElement('div');
@@ -3011,7 +2979,7 @@ async function carregarMercado() {
   try {
     const ids = [...new Set(lista.map(v => v.vendedor_id))];
     if (ids.length) {
-      const { data: profs } = await sb.from('profiles').select('id, display_name').in('id', ids);
+      const { data: profs } = await sb.from('perfis_publicos').select('id, display_name').in('id', ids);
       (profs || []).forEach(pf => { nomes[pf.id] = pf.display_name; });
     }
   } catch (e) {}
@@ -3045,33 +3013,14 @@ async function comprarCromo(vendaId, preco, vendedorId, clube, numCromo) {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
 
-  // Verificar saldo
-  const { data: perfil } = await sb.from('profiles').select('saldo').eq('id', user.id).single();
-  if (!perfil || perfil.saldo < preco) { mostrarNotificacao('Saldo insuficiente!', 'erro'); return; }
-
-  const precoVendedor = Math.round(preco / 1.10 * 100) / 100;
-  const precoPlataforma = Math.round((preco - precoVendedor) * 100) / 100;
-
-  // 1. Debitar comprador
-  await sb.from('profiles').update({ saldo: perfil.saldo - preco }).eq('id', user.id);
-  // 2. Creditar vendedor (90%)
-  const { data: perfilVendedor } = await sb.from('profiles').select('saldo').eq('id', vendedorId).single();
-  await sb.from('profiles').update({ saldo: (perfilVendedor?.saldo || 0) + precoVendedor }).eq('id', vendedorId);
-  // 3. Marcar venda como vendida
-  await sb.from('mercado_vendas').update({ estado: 'vendido', comprador_id: user.id, vendido_em: new Date().toISOString() }).eq('id', vendaId);
-  // 4. Adicionar cromo à coleção do comprador
-  const { data: cromoExiste } = await sb.from('colecao').select('quantidade').eq('user_id', user.id).eq('clube', clube).eq('num_cromo', numCromo).single();
-  if (cromoExiste) {
-    await sb.from('colecao').update({ quantidade: cromoExiste.quantidade + 1 }).eq('user_id', user.id).eq('clube', clube).eq('num_cromo', numCromo);
-  } else {
-    await sb.from('colecao').insert({ user_id: user.id, clube, num_cromo: numCromo, quantidade: 1 });
+  const { error: eCV } = await sb.rpc('comprar_venda', { p_id: vendaId });
+  if (eCV) {
+    const m = eCV.message || '';
+    mostrarNotificacao(/saldo_insuficiente/.test(m) ? 'Saldo insuficiente!' : /compra_propria/.test(m) ? 'Não podes comprar o teu próprio cromo!' : 'Este cromo já não está disponível.', 'erro');
+    carregarMercado();
+    return;
   }
-  // 5. Histórico
-  await sb.from('mercado_historico').insert({ tipo: 'venda', user1_id: vendedorId, user2_id: user.id, clube1: clube, num_cromo1: numCromo, preco, preco_vendedor: precoVendedor, preco_plataforma: precoPlataforma });
-  // 6. Notificação ao vendedor
-  await sb.from('mensagens').insert({ de_user_id: user.id, para_user_id: vendedorId, mensagem: `💰 O teu cromo #${numCromo} (${clube === 'fcps' ? 'FCPS' : 'CCRDSV'}) foi vendido por ${parseFloat(preco).toFixed(2)} €! Recebeste ${precoVendedor.toFixed(2)} €.`, lida: false });
-  // 7. Notificação ao comprador
-  await notificarProprio(user.id, `🛒 Compraste o cromo #${numCromo} (${clube === 'fcps' ? 'FCPS' : 'CCRDSV'}) por ${parseFloat(preco).toFixed(2)} €!`);
+  atualizarContadorMensagens();
 
   mostrarNotificacao(`✅ Cromo comprado com sucesso!`, 'sucesso');
   atualizarSaldoUI();
@@ -3380,18 +3329,14 @@ async function publicarVenda() {
     return;
   }
 
-  // Publicar no mercado
-  await sb.from('mercado_vendas').insert({ vendedor_id: user.id, clube: cromo.clube, num_cromo: cromo.num_cromo, preco });
-
-  // Descontar da coleção
-  if (cromoAtual.quantidade > 1) {
-    await sb.from('colecao').update({ quantidade: cromoAtual.quantidade - 1 }).eq('user_id', user.id).eq('clube', cromo.clube).eq('num_cromo', cromo.num_cromo);
-  } else {
-    await sb.from('colecao').delete().eq('user_id', user.id).eq('clube', cromo.clube).eq('num_cromo', cromo.num_cromo);
+  const { error: eCr } = await sb.rpc('criar_venda', { p_clube: cromo.clube, p_num: cromo.num_cromo, p_preco: preco });
+  if (eCr) {
+    mostrarNotificacao(/preco_invalido/.test(eCr.message) ? 'Preço inválido (entre 0,10 € e 500 €).' : /sem_cromo/.test(eCr.message) ? 'Já não tens este cromo disponível.' : 'Não foi possível colocar à venda.', 'erro');
+    await carregarColecao(); await carregarMinhaColecaoVenda();
+    return;
   }
-
+  atualizarContadorMensagens();
   mostrarNotificacao(`✅ Cromo colocado à venda por ${preco.toFixed(2)} €!`, 'sucesso');
-  await notificarProprio(user.id, `💰 Colocaste o cromo #${cromo.num_cromo} (${cromo.clube === 'fcps' ? 'FCPS' : 'CCRDSV'}) à venda por ${preco.toFixed(2)} €.`);
   document.getElementById('mercado-form-venda').style.display = 'none';
   document.getElementById('mercado-preco').value = '';
   _mercadoCromoSelecionado = null;
@@ -3404,16 +3349,8 @@ async function cancelarVenda(vendaId, clube, numCromo) {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
 
-  // Cancelar venda
-  await sb.from('mercado_vendas').update({ estado: 'cancelado' }).eq('id', vendaId);
-
-  // Devolver cromo à coleção
-  const { data: jaExiste } = await sb.from('colecao').select('quantidade').eq('user_id', user.id).eq('clube', clube).eq('num_cromo', numCromo).single();
-  if (jaExiste) {
-    await sb.from('colecao').update({ quantidade: jaExiste.quantidade + 1 }).eq('user_id', user.id).eq('clube', clube).eq('num_cromo', numCromo);
-  } else {
-    await sb.from('colecao').insert({ user_id: user.id, clube, num_cromo: numCromo, quantidade: 1 });
-  }
+  const { error: eCa } = await sb.rpc('cancelar_venda', { p_id: vendaId });
+  if (eCa) { mostrarNotificacao('Não foi possível cancelar este anúncio.', 'erro'); await carregarMinhasVendas(); return; }
 
   mostrarNotificacao('✅ Anúncio cancelado! Cromo devolvido à coleção.', 'sucesso');
   await carregarMinhasVendas();

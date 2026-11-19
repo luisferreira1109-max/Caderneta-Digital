@@ -131,7 +131,7 @@
       var ids = a1.map(function (x) { return x.amigo_id; }).concat(a2.map(function (x) { return x.user_id; }));
       var amigos = [];
       for (var i = 0; i < ids.length; i++) {
-        var p = (await sb.from('profiles').select('id, display_name, avatar_url').eq('id', ids[i]).single()).data;
+        var p = (await sb.from('perfis_publicos').select('id, display_name, avatar_url').eq('id', ids[i]).single()).data;
         if (p) amigos.push(p);
       }
       if (!amigos.length) { lista.innerHTML = '<div class="mw-vazio">Ainda não tens amigos. Adiciona amigos no separador Amigos para poderes trocar cromos.</div>'; return; }
@@ -148,7 +148,7 @@
   var MAX_TROCA = 4;
   window.mzAbrirTroca = async function (amigo) {
     _amigoTroca = amigo; _meuSel = []; _delSel = []; _invAmigo = [];
-    try { var q = await sb.from('colecao').select('*').eq('user_id', amigo.id); _invAmigo = q.data || []; } catch (e) {}
+    try { var q = await sb.rpc('inventario_amigo', { p_amigo: amigo.id }); _invAmigo = q.data || []; } catch (e) {}
     $('troca-amigos').style.display = 'none';
     var ec = $('troca-ecra'); ec.style.display = '';
     var nome = esc(amigo.display_name || 'Utilizador');
@@ -232,7 +232,7 @@
       var outros = {}; hist.forEach(function (h) { outros[h.user1_id === user.id ? h.user2_id : h.user1_id] = 1; });
       var nomes = {};
       try {
-        var ps = (await sb.from('profiles').select('id, display_name').in('id', Object.keys(outros))).data || [];
+        var ps = (await sb.from('perfis_publicos').select('id, display_name').in('id', Object.keys(outros))).data || [];
         ps.forEach(function (p) { nomes[p.id] = p.display_name; });
       } catch (e) {}
       lista.innerHTML = '';

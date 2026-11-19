@@ -314,15 +314,7 @@ body:has(.modal-overlay.aberto) .center,body:has(.modal-overlay.aberto) .rodape{
       return;
     }
 
-    if (result.data.user) {
-      await supabaseClient.from('profiles').upsert({
-        id: result.data.user.id,
-        username: email.split('@')[0] + Math.floor(Math.random() * 1000),
-        display_name: nome,
-        coins: 500,
-        saldo: 0
-      });
-    }
+    /* o perfil é criado automaticamente pelo servidor */
 
     // Verificar se precisa de confirmar email
     if (result.data.session) {

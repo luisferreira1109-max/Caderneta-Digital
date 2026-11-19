@@ -295,7 +295,7 @@ function atualizarResumo() {
 function selecionarPacote(id, euros, packs, texto) {
   document.querySelectorAll('.pacote').forEach(function(p) { p.classList.remove('ativo'); });
   document.getElementById(id).classList.add('ativo');
-  pacote = { euros: euros, packs: packs, texto: texto };
+  pacote = { id: id, euros: euros, packs: packs, texto: texto };
   atualizarResumo();
 }
 
@@ -323,37 +323,20 @@ async function pagar() {
   btn.textContent = 'A processar...';
 
   try {
-    /* 1) gastar o código de desconto (só funciona uma vez por conta) */
-    var pctUsado = 0;
-    if (desconto) {
-      var u = await sb.rpc('usar_codigo', { p_codigo: desconto.codigo });
-      if (u.error || !u.data || u.data <= 0) {
-        desconto = null; msgCodigo('Este código já não pode ser usado.', 'erro');
-        atualizarResumo();
-        return;
-      }
-      pctUsado = u.data;
+    /* tudo é feito no servidor: código de desconto, saldo e packs oferecidos */
+    var r2 = await sb.rpc('carregar_saldo_teste', { p_pacote: pacote.id, p_codigo: desconto ? desconto.codigo : null });
+    if (r2.error || !r2.data) {
+      var m = (r2.error && r2.error.message) || '';
+      if (/codigo_invalido/.test(m)) { desconto = null; msgCodigo('Este código já não pode ser usado.', 'erro'); atualizarResumo(); }
+      else if (/pagamentos_indisponiveis/.test(m)) { alert('Os pagamentos ainda não estão ativos.'); }
+      else { alert('Não foi possível concluir o carregamento. Tenta novamente.'); }
+      btn.disabled = false; atualizarBotao();
+      return;
     }
-    var pago = Math.round((pacote.euros - Math.round(pacote.euros * pctUsado) / 100) * 100) / 100;
-
-    /* 2) saldo: recebe o valor total do pacote (pagou com desconto) */
-    var res = await sb.from('profiles').select('saldo').eq('id', userId).single();
-    var novoSaldo = (parseFloat(res.data.saldo) || 0) + pacote.euros;
-    await sb.from('profiles').update({ saldo: novoSaldo }).eq('id', userId);
-
-    /* 3) packs oferecidos */
-    var avisoPacks = '';
-    try {
-      for (var tipo in pacote.packs) {
-        var q = await sb.from('packs_oferecidos').select('quantidade').eq('user_id', userId).eq('tipo', tipo).maybeSingle();
-        var atual = (q.data && q.data.quantidade) || 0;
-        var w = await sb.from('packs_oferecidos').upsert({ user_id: userId, tipo: tipo, quantidade: atual + pacote.packs[tipo] });
-        if (w.error) throw w.error;
-      }
-      avisoPacks = '\nOferta: ' + pacote.texto + ' (abre-os em Packs).';
-    } catch (e2) {
-      avisoPacks = '\nNão foi possível registar os packs oferecidos.';
-    }
+    var pctUsado = r2.data.desconto || 0;
+    var pago = parseFloat(r2.data.pago);
+    var novoSaldo = parseFloat(r2.data.saldo);
+    var avisoPacks = '\nOferta: ' + pacote.texto + ' (abre-os em Packs).';
 
     document.getElementById('s-valor').textContent = '+' + pacote.euros + ' €';
     document.getElementById('s-sub').textContent = 'Pagaste ' + euro(pago) + (pctUsado ? ' (desconto de ' + pctUsado + '%)' : '') + '\nNovo saldo: ' + euro(novoSaldo) + avisoPacks;

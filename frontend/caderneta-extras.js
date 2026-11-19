@@ -285,14 +285,8 @@
     // Guardar na base de dados
     const { data: { user } } = await sb.auth.getUser();
     if (user) {
-      if (cromo.quantidade > 1) {
-        await sb.from('colecao').update({ quantidade: cromo.quantidade - 1 })
-          .eq('user_id', user.id).eq('clube', clube).eq('num_cromo', cromo.num_cromo);
-      } else {
-        await sb.from('colecao').delete()
-          .eq('user_id', user.id).eq('clube', clube).eq('num_cromo', cromo.num_cromo);
-      }
-      await sb.from('cromos_colados').upsert({ user_id: user.id, clube: clube, num_cromo: cromo.num_cromo });
+      const rc = await sb.rpc('colar_cromo', { p_clube: clube, p_num: cromo.num_cromo });
+      if (rc.error) mostrarNotificacao('Não foi possível colar este cromo.', 'erro');
       await carregarColecao();
     }
     mostrarNotificacao('✅ Cromo #' + cromo.num_cromo + ' colado na caderneta ' + clubeNome + '!', 'sucesso');

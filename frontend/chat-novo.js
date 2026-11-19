@@ -28,7 +28,7 @@
     var msgs = (await sb.from('mensagens').select('*').or('de_user_id.eq.' + u.id + ',para_user_id.eq.' + u.id).order('criado_em', { ascending: false }).limit(600)).data || [];
     var agora = new Date(), lista = [];
     for (var i = 0; i < ids.length; i++) {
-      var p = (await sb.from('profiles').select('id, display_name, avatar_url, online_at').eq('id', ids[i]).single()).data;
+      var p = (await sb.from('perfis_publicos').select('id, display_name, avatar_url, online_at').eq('id', ids[i]).single()).data;
       if (!p) continue;
       var dele = msgs.filter(function (m) { return m.de_user_id !== m.para_user_id && (m.de_user_id === p.id || m.para_user_id === p.id); });
       var ult = dele[0];
