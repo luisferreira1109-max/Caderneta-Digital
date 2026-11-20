@@ -3029,6 +3029,7 @@ async function comprarCromo(vendaId, preco, vendedorId, clube, numCromo) {
   mostrarNotificacao(`✅ Cromo comprado com sucesso!`, 'sucesso');
   atualizarSaldoUI();
   carregarMercado();
+  carregarColecao();
 }
 
 // ── VENDER ──────────────────────────────
@@ -3366,9 +3367,20 @@ async function atualizarSaldoUI() {
   if (!user) return;
   const { data: perfil } = await sb.from('profiles').select('saldo').eq('id', user.id).single();
   if (perfil) {
+    const saldo = parseFloat(perfil.saldo) || 0;
     const el = document.getElementById('topbar-saldo');
-    if (el) el.textContent = parseFloat(perfil.saldo).toFixed(2) + ' €';
+    if (el) el.textContent = saldo.toFixed(2) + ' €';
+    const st = document.getElementById('user-saldo-top');
+    if (st) st.textContent = saldo.toFixed(2).replace('.', ',');
+    const ss = document.getElementById('stat-saldo');
+    if (ss) ss.textContent = saldo.toFixed(2).replace('.', ',') + ' €';
+    try { atualizarSaldoPacks(saldo); } catch (e) {}
   }
+}
+
+// Atualiza o aviso de mensagens/atividades (o ecrã de Atividades recentes volta a ler a base de dados)
+function atualizarContadorMensagens() {
+  try { if (typeof carregarAtividadeAmigos === 'function') carregarAtividadeAmigos(); } catch (e) {}
 }
 
 // Inicializar mercado quando a página abre
