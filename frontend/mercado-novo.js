@@ -235,7 +235,7 @@
     return '<div class="mh-cromo">' + (m ? '<img src="' + m + '" alt="">' : '#' + num) + '</div>';
   }
   window.mzHistorico = async function () {
-    var lista = $('historico-lista'); lista.innerHTML = '<div class="mw-vazio">A carregar...</div>';
+    var lista = $('historico-lista'); if (!lista.children.length) lista.innerHTML = '<div class="mw-vazio">A carregar...</div>';
     try {
       var r = await sb.auth.getUser(); var user = r.data.user; if (!user) return;
       var hist = (await sb.from('mercado_historico').select('*').or('user1_id.eq.' + user.id + ',user2_id.eq.' + user.id).order('criado_em', { ascending: false }).limit(50)).data || [];

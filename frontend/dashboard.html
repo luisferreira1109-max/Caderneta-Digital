@@ -3383,6 +3383,23 @@ function atualizarContadorMensagens() {
   try { if (typeof carregarAtividadeAmigos === 'function') carregarAtividadeAmigos(); } catch (e) {}
 }
 
+// Atualização automática (quem recebe dinheiro ou vê vendas passa a ver tudo sem carregar F5)
+(function () {
+  function visivel(id) { var e = document.getElementById(id); return !!e && e.style.display !== 'none' && e.offsetParent !== null; }
+  async function tick() {
+    if (document.hidden) return;
+    try {
+      var r = await sb.auth.getSession(); if (!r.data.session) return;
+      atualizarSaldoUI();
+      atualizarContadorMensagens();
+      if (visivel('mercado-comprar')) carregarMercado();
+      if (visivel('mercado-historico') && window.mzHistorico) window.mzHistorico();
+    } catch (e) {}
+  }
+  setInterval(tick, 10000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
+})();
+
 // Inicializar mercado quando a página abre
 document.addEventListener('DOMContentLoaded', () => {
   const navMercado = document.querySelector('.nav-item[onclick*="mercado"]');
