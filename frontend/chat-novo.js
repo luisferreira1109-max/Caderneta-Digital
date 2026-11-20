@@ -147,7 +147,6 @@
 
   /* ----- Remover amizade ----- */
   window.mzRemoverAmigo = async function (amizadeId, nome) {
-    if (!confirm('Remover ' + nome + ' dos teus amigos?')) return;
     try {
       await sb.from('amigos').delete().eq('id', amizadeId);
       mostrarNotificacao('Amizade removida.', 'sucesso');

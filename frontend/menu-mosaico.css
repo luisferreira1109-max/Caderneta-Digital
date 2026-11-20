@@ -546,22 +546,13 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 
 #pagina-packs .pk-aviso{margin-top:12px;display:inline-block;background:#e9f7f0;border-left:4px solid #0e9f6e;color:#0e7a55;padding:9px 16px;font-size:14px;}
 
-/* ===== Packs: painel azul escuro ===== */
-#pagina-packs{
-  background:linear-gradient(165deg,#1a3f9e 0%,#122c75 45%,#0b1d52 100%);
-  color:#fff;
-}
-#pagina-packs .mz-voltar{color:#fff;border-color:rgba(255,255,255,.55);background:rgba(10,10,40,.25);}
-#pagina-packs .mz-voltar:hover{background:rgba(255,255,255,.18);}
-#pagina-packs .page-titulo{color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.45);}
-#pagina-packs .page-sub{color:#e8e4ff;text-shadow:0 1px 6px rgba(0,0,0,.5);}
-#pagina-packs .pk-cromos,#pagina-packs .pack-info div,#pagina-packs .pack-info span{color:#f1eeff;text-shadow:0 1px 5px rgba(0,0,0,.55);}
-#pagina-packs .pack-info-preco{text-shadow:0 2px 8px rgba(0,0,0,.55);}
-#pagina-packs .pack-info-preco.pra{color:#e3e8f0;}
-#pagina-packs .pack-info-preco.pre{color:#c9a8ff;}
-#pagina-packs .pack-info-preco.dou{color:#ffd45a;}
-#pagina-packs .pack-info-preco:not(.pra):not(.pre):not(.dou){color:#9fe8c8;}
-#pagina-packs .pk-inner{filter:drop-shadow(0 12px 18px rgba(0,0,0,.5));}
+/* ===== Packs: sem painel (os packs "flutuam" sobre o fundo do site) ===== */
+#pagina-packs{background:none !important;box-shadow:none !important;}
+#packs-aviso{display:none !important;}
+#pagina-packs .pk-oferta{background:none;padding:0;margin-top:10px;gap:0;display:flex;flex-direction:column;align-items:center;}
+#pagina-packs .pk-oferta span{display:none;}
+#pagina-packs .pk-oferta-btn{border:0;border-radius:0;background:var(--mz-azul-vivo);color:#fff;font-family:var(--mz-fonte);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;padding:7px 20px;cursor:pointer;}
+#pagina-packs .pk-oferta-btn:hover{background:#3a6df0;}
 
 /* ===== Resultado do pack: fundo com foto do estádio ===== */
 #pack-overlay.resultado{
@@ -651,3 +642,22 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 .mh-valor.pend{color:var(--mz-ouro);}
 .mh-cancelar{border:2px solid var(--mz-azul);background:#fff;color:var(--mz-azul);font-family:var(--mz-fonte);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:7px 12px;cursor:pointer;}
 .mh-cancelar:hover{background:var(--mz-azul);color:#fff;}
+
+/* Atividades recentes em branco */
+.mz-ativ:not(.mz-azul) .atividade-icon.ai-user{background:#e8edfb !important;color:var(--mz-azul);}
+.mz-ativ:not(.mz-azul) .atividade-icon.ai-logo{background:transparent !important;}
+.mz-ativ:not(.mz-azul) .atividade-lista{padding-right:4px;}
+#pagina-packs .pack-info-btn,#pagina-packs .pk-oferta-btn{min-width:140px;text-align:center;}
+
+/* Cadernetas: sem painel branco, sem subtítulo */
+#pagina-cadernetas{background:none !important;box-shadow:none !important;}
+#pagina-cadernetas .page-sub{display:none !important;}
+
+/* ===== Ecrã "Os teus cromos!": sem frase, só botão Fechar no estilo do site ===== */
+#pack-overlay.resultado .pack-resultado-sub{display:none !important;}
+#pack-overlay.resultado .pack-resultado-btn.colecao{display:none !important;}
+#pack-overlay.resultado .pack-resultado-btn.fechar{border:0 !important;border-radius:0 !important;background:var(--mz-azul-vivo) !important;color:#fff !important;font-family:var(--mz-fonte);font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase;padding:9px 34px;min-width:140px;box-shadow:0 4px 14px rgba(0,0,0,.35);}
+#pack-overlay.resultado .pack-resultado-btn.fechar:hover{background:#3a6df0 !important;}
+
+/* Caderneta: espaços vazios não abrem popup (só cromos colados) */
+.cromo-slot:not(.tem-cromo){cursor:default !important;}

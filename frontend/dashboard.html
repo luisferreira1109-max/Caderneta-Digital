@@ -1132,7 +1132,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
             <div id="mini-colecao-vazio" style="color:#999; font-size:12px; padding:8px 0;">Ainda não desbloqueaste nenhuma caderneta.</div>
             </div>
           </div>
-          <div class="mz-tile mz-azul mz-ativ">
+          <div class="mz-tile mz-ativ">
             <h3>Atividades recentes</h3>
             <div class="mz-corpo">
               <div id="mz-pedidos-ativ"></div>
@@ -1278,19 +1278,19 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
         <div class="packs-wrap">
           <div class="pk-card">
             <div id="pack-pra-outer" class="pk-outer" style="animation:floatPack 3.2s ease-in-out infinite;" onclick="comprarPack('prata')"><div id="pack-pra-inner" class="pk-inner"></div></div>
-            <div class="pack-info"><div class="pack-info-preco pra" data-pk-preco="prata">0,75 €</div><div class="pk-cromos" data-pk-cromos="prata">3 cromos</div><button class="pack-info-btn pra" onclick="comprarPack('prata')">Comprar Pack</button><div class="pk-oferta" id="oferta-prata" style="display:none"><span>Tens <b id="oferta-n-prata">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('prata')">Abrir grátis</button></div></div>
+            <div class="pack-info"><div class="pack-info-preco pra" data-pk-preco="prata">0,75 €</div><div class="pk-cromos" data-pk-cromos="prata">3 cromos</div><button class="pack-info-btn pra" onclick="comprarPack('prata')">Comprar Pack</button><div class="pk-oferta" id="oferta-prata" style="display:none"><span>Tens <b id="oferta-n-prata">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('prata')">Pack Grátis</button></div></div>
           </div>
           <div class="pk-card">
             <div id="pack-std-outer" class="pk-outer" style="animation:floatPack 3s ease-in-out infinite;" onclick="comprarPack('standard')"><div id="pack-std-inner" class="pk-inner"></div></div>
-            <div class="pack-info"><div class="pack-info-preco" data-pk-preco="standard">1,50 €</div><div class="pk-cromos" data-pk-cromos="standard">7 cromos</div><button class="pack-info-btn" onclick="comprarPack('standard')">Comprar Pack</button><div class="pk-oferta" id="oferta-standard" style="display:none"><span>Tens <b id="oferta-n-standard">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('standard')">Abrir grátis</button></div></div>
+            <div class="pack-info"><div class="pack-info-preco" data-pk-preco="standard">1,50 €</div><div class="pk-cromos" data-pk-cromos="standard">7 cromos</div><button class="pack-info-btn" onclick="comprarPack('standard')">Comprar Pack</button><div class="pk-oferta" id="oferta-standard" style="display:none"><span>Tens <b id="oferta-n-standard">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('standard')">Pack Grátis</button></div></div>
           </div>
           <div class="pk-card">
             <div id="pack-pre-outer" class="pk-outer" style="animation:floatPackPre 3.5s ease-in-out infinite;" onclick="comprarPack('premium')"><div id="pack-pre-inner" class="pk-inner"></div></div>
-            <div class="pack-info"><div class="pack-info-preco pre" data-pk-preco="premium">2,00 €</div><div class="pk-cromos" data-pk-cromos="premium">7 cromos</div><button class="pack-info-btn pre" onclick="comprarPack('premium')">Comprar Pack</button><div class="pk-oferta" id="oferta-premium" style="display:none"><span>Tens <b id="oferta-n-premium">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('premium')">Abrir grátis</button></div></div>
+            <div class="pack-info"><div class="pack-info-preco pre" data-pk-preco="premium">2,00 €</div><div class="pk-cromos" data-pk-cromos="premium">7 cromos</div><button class="pack-info-btn pre" onclick="comprarPack('premium')">Comprar Pack</button><div class="pk-oferta" id="oferta-premium" style="display:none"><span>Tens <b id="oferta-n-premium">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('premium')">Pack Grátis</button></div></div>
           </div>
           <div class="pk-card">
             <div id="pack-dou-outer" class="pk-outer" style="animation:floatPackPre 3.8s ease-in-out infinite;" onclick="comprarPack('dourado')"><div id="pack-dou-inner" class="pk-inner"></div></div>
-            <div class="pack-info"><div class="pack-info-preco dou" data-pk-preco="dourado">4,00 €</div><div class="pk-cromos" data-pk-cromos="dourado">9 cromos</div><button class="pack-info-btn dou" onclick="comprarPack('dourado')">Comprar Pack</button><div class="pk-oferta" id="oferta-dourado" style="display:none"><span>Tens <b id="oferta-n-dourado">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('dourado')">Abrir grátis</button></div></div>
+            <div class="pack-info"><div class="pack-info-preco dou" data-pk-preco="dourado">4,00 €</div><div class="pk-cromos" data-pk-cromos="dourado">9 cromos</div><button class="pack-info-btn dou" onclick="comprarPack('dourado')">Comprar Pack</button><div class="pk-oferta" id="oferta-dourado" style="display:none"><span>Tens <b id="oferta-n-dourado">0</b> oferecido(s)</span><button class="pk-oferta-btn" onclick="abrirPackOferecido('dourado')">Pack Grátis</button></div></div>
           </div>
         </div>
       </div>
@@ -2406,7 +2406,7 @@ async function carregarPacksOferecidos(){
     let total=0;
     (data||[]).forEach(r=>{
       const d=document.getElementById('oferta-'+r.tipo),n=document.getElementById('oferta-n-'+r.tipo);
-      if(d&&n&&r.quantidade>0){n.textContent=r.quantidade;d.style.display='flex';total+=r.quantidade;}
+      if(d&&n&&r.quantidade>0){n.textContent=r.quantidade;d.style.display='flex';total+=r.quantidade;const bt=d.querySelector('.pk-oferta-btn');if(bt)bt.textContent='Pack Grátis'+(r.quantidade>1?' ×'+r.quantidade:'');}
     });
     const txt=total===1?'Tens <strong>1 pack oferecido</strong> por abrir!':'Tens <strong>'+total+' packs oferecidos</strong> por abrir!';
     const at=document.getElementById('ativ-packs'),att=document.getElementById('ativ-packs-txt'),av=document.getElementById('packs-aviso');
@@ -2572,6 +2572,7 @@ function atualizarNavCad(clube) {
 
 function abrirCromo(tipo) {
   event.stopPropagation();
+  if (tipo !== 'luis') return; // espaço vazio: sem popup
   const img = document.getElementById('cromo-grande-img');
   const txt = document.getElementById('cromo-grande-num');
   if (tipo === 'luis') { img.src = luisImg; img.style.display = 'block'; txt.style.display = 'none'; }
@@ -3018,7 +3019,6 @@ async function carregarMercado() {
 }
 
 async function comprarCromo(vendaId, preco, vendedorId, clube, numCromo) {
-  if (!confirm(`Comprar este cromo por ${parseFloat(preco).toFixed(2)} €?`)) return;
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
 
@@ -3186,7 +3186,6 @@ async function carregarTrocas() {
 }
 
 async function aceitarTroca(trocaId, proponenteId, clubeOferta, numOferta, clubePedido, numPedido) {
-  if (!confirm('Aceitar esta troca?')) return;
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
   // Verificar que tens o cromo pedido
@@ -3294,7 +3293,6 @@ async function carregarMinhasVendas() {
 }
 
 async function cancelarTroca(trocaId, clube, numCromo) {
-  if (!confirm('Cancelar esta troca? O cromo volta à tua coleção.')) return;
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
   await sb.from('mercado_trocas').update({ estado: 'cancelado' }).eq('id', trocaId);
@@ -3355,7 +3353,6 @@ async function publicarVenda() {
 }
 
 async function cancelarVenda(vendaId, clube, numCromo) {
-  if (!confirm('Cancelar este anúncio? O cromo volta à tua coleção.')) return;
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
 

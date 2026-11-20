@@ -82,3 +82,16 @@
 .cromo-pack img{object-fit:contain;border:none;border-radius:0}
 .cromos-grid-pack{flex-wrap:nowrap;gap:clamp(6px,1.2vw,14px);align-items:center}
 @media(max-width:760px){.cromos-grid-pack{flex-wrap:wrap}.cromo-pack{width:26vw}}
+
+/* ===== Fundo com a foto do estádio (em vez de preto) ===== */
+#pa-layer{background:linear-gradient(rgba(8,8,34,.2),rgba(8,8,34,.3)),url('images/imagens de fundo do site/bg-packs.jpg') center bottom/cover no-repeat !important}
+.pa-load{background:none !important}
+.pa-stadium{background:none !important}
+.pa-floor{background:none !important}
+.pa-dim{background:radial-gradient(ellipse at 50% 46%,rgba(8,8,34,0) 25%,rgba(8,8,34,.55) 100%) !important}
+.pa-wall{opacity:.55 !important}
+
+/* sem rectângulo amarelo atrás do cromo: aparece a relva */
+.pa-door-light{transition:opacity .5s ease-out}
+.pa-screen.open .pa-door-light{opacity:0 !important}
+.pa-screen.open{box-shadow:none !important}
