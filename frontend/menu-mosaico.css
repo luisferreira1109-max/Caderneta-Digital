@@ -617,3 +617,37 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 .mz-t-rank .mz-rank::-webkit-scrollbar-thumb{background:rgba(255,255,255,.75);}
 .mz-t-rank .mz-rank div{padding:5px 12px;flex-shrink:0;}
 .mz-azul.mz-t-rank .mz-rank div.rk-meu{outline:2px solid var(--mz-ouro);}
+
+
+/* ===== Mercado: cromos sem fundo cinzento + Vender em popup ===== */
+.mw-cromo{background:transparent !important;border:0 !important;}
+.mw-cromo:hover{box-shadow:none !important;transform:translateY(-3px);}
+.mw-cromo img{padding:0;filter:drop-shadow(0 4px 6px rgba(20,30,90,.28));transition:filter .15s;}
+.mw-cromo:hover img{filter:drop-shadow(0 8px 12px rgba(20,30,90,.38));}
+.mw-cromo.sel{box-shadow:none !important;}
+.mw-cromo.sel img{filter:drop-shadow(0 0 0 transparent) drop-shadow(0 0 3px #C9943A) drop-shadow(0 0 8px rgba(201,148,58,.8));}
+.mw-venda{position:fixed;inset:0;margin:0;max-width:none;padding:16px;border:0;background:rgba(8,16,48,.62);display:flex;align-items:center;justify-content:center;z-index:2147483000;overflow-y:auto;}
+.mw-venda-card{position:relative;width:100%;max-width:520px;background:#fff;padding:26px 26px 24px;border-left:4px solid var(--mz-ouro);box-shadow:0 24px 60px rgba(0,0,0,.45);}
+.mw-venda-x{position:absolute;top:6px;right:10px;border:0;background:none;font-size:30px;line-height:1;color:#6a77a8;cursor:pointer;}
+.mw-venda-x:hover{color:var(--mz-azul);}
+@media(max-width:560px){.mw-linha{flex-wrap:wrap}.mw-linha label{width:100%;text-align:left}.mw-linha input{flex:1;min-width:0}}
+
+/* Os teus anúncios */
+.mw-anuncios{display:flex;flex-direction:column;gap:10px;max-width:640px;}
+.mw-anuncio{display:flex;align-items:center;gap:14px;background:#f3f5fd;border-left:4px solid var(--mz-ouro);padding:10px 14px;}
+.mw-anuncio-img{width:46px;height:69px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#6a77a8;}
+.mw-anuncio-img img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 5px rgba(20,30,90,.28));}
+.mw-anuncio-info{flex:1;min-width:0;}
+.mw-anuncio-nome{font-family:var(--mz-fonte);font-weight:700;font-size:20px;color:var(--mz-azul);line-height:1.1;}
+.mw-anuncio-sub{font-size:12px;color:#6a77a8;margin-top:2px;}
+.mw-anuncio-preco{font-family:var(--mz-fonte);font-weight:700;font-size:22px;color:var(--mz-azul);text-align:right;line-height:1.1;}
+.mw-anuncio-preco small{display:block;font-family:inherit;font-size:12px;font-weight:600;color:#6a77a8;}
+.mw-anuncio-btn{border:2px solid var(--mz-azul);background:#fff;color:var(--mz-azul);font-family:var(--mz-fonte);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:8px 14px;cursor:pointer;}
+.mw-anuncio-btn:hover{background:var(--mz-azul);color:#fff;}
+@media(max-width:560px){.mw-anuncio{flex-wrap:wrap}.mw-anuncio-preco{text-align:left}}
+
+/* Histórico: anúncios à venda */
+.mh-linha.mh-ativa{box-shadow:inset 4px 0 0 var(--mz-ouro);}
+.mh-valor.pend{color:var(--mz-ouro);}
+.mh-cancelar{border:2px solid var(--mz-azul);background:#fff;color:var(--mz-azul);font-family:var(--mz-fonte);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:7px 12px;cursor:pointer;}
+.mh-cancelar:hover{background:var(--mz-azul);color:#fff;}

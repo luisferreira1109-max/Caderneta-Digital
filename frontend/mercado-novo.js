@@ -63,6 +63,16 @@
     rec.focus();
   };
 
+  var _cancelar = window.cancelarVenda;
+  window.cancelarVenda = async function (id, clube, num) { await _cancelar(id, clube, num); mzHistorico(); };
+
+  window.fecharVendaPopup = function () {
+    var f = $('mercado-form-venda'); if (f) f.style.display = 'none';
+    _mercadoCromoSelecionado = null;
+    document.querySelectorAll('#mercado-minha-colecao .mw-cromo.sel').forEach(function (x) { x.classList.remove('sel'); });
+  };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') window.fecharVendaPopup(); });
+
   var _publicar = window.publicarVenda;
   window.publicarVenda = async function () {
     await _publicar();
@@ -229,7 +239,8 @@
     try {
       var r = await sb.auth.getUser(); var user = r.data.user; if (!user) return;
       var hist = (await sb.from('mercado_historico').select('*').or('user1_id.eq.' + user.id + ',user2_id.eq.' + user.id).order('criado_em', { ascending: false }).limit(50)).data || [];
-      if (!hist.length) { lista.innerHTML = '<div class="mw-vazio">Ainda não tens compras, vendas ou trocas.</div>'; return; }
+      var ativas = (await sb.from('mercado_vendas').select('*').eq('vendedor_id', user.id).eq('estado', 'ativo').order('criado_em', { ascending: false })).data || [];
+      if (!hist.length && !ativas.length) { lista.innerHTML = '<div class="mw-vazio">Ainda não tens compras, vendas ou trocas.</div>'; return; }
       var outros = {}; hist.forEach(function (h) { outros[h.user1_id === user.id ? h.user2_id : h.user1_id] = 1; });
       var nomes = {};
       try {
@@ -237,6 +248,16 @@
         ps.forEach(function (p) { nomes[p.id] = p.display_name; });
       } catch (e) {}
       lista.innerHTML = '';
+      ativas.forEach(function (v) {
+        var row = document.createElement('div'); row.className = 'mh-linha mh-ativa';
+        row.innerHTML = cromoHist(v.clube, v.num_cromo) +
+          '<div class="mh-seta sai">' + SETA_SAI + '</div>' +
+          '<div class="mh-info"><div class="mh-tipo">À venda</div><div class="mh-nome">' + esc(nomeCromo(v.clube, v.num_cromo)) + '</div><div class="mh-cromo-nome">À espera de comprador · pedes ' + fmt(v.preco) + '</div></div>' +
+          '<div class="mh-valor pend">+' + fmt(v.preco_vendedor != null ? v.preco_vendedor : v.preco / 1.1) + '</div>' +
+          '<div class="mh-data"><button class="mh-cancelar" type="button">Cancelar</button></div>';
+        row.querySelector('button').onclick = function () { cancelarVenda(v.id, v.clube, v.num_cromo); };
+        lista.appendChild(row);
+      });
       hist.forEach(function (h) {
         var souU1 = h.user1_id === user.id;
         var outro = nomes[souU1 ? h.user2_id : h.user1_id] || 'Utilizador';
