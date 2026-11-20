@@ -2652,19 +2652,23 @@ async function carregarAtividadeAmigos() {
   ].sort((x, y) => new Date(y.quando) - new Date(x.quando)).slice(0, 3);
 
   if (combinados.length === 0) return;
+  const novosAmigos = [];
 
   for (const item of combinados) {
     const { data: prof } = await sb.from('perfis_publicos').select('display_name, avatar_url').eq('id', item.outroId).single();
     const nome = prof?.display_name || 'Utilizador';
     const tempo = tempoRelativo(new Date(item.quando));
     const div = document.createElement('div');
-    div.className = 'atividade-item';
+    div.className = 'atividade-item ativ-amigo';
     div.innerHTML = `
       <div class="atividade-icon ai-user">${prof?.avatar_url ? `<img src="${String(prof.avatar_url).replace(/"/g,'&quot;')}" alt="" onerror="this.replaceWith(document.createTextNode('${(nome[0]||'?').toUpperCase().replace(/'/g,'')}'))"/>` : (nome[0]||'?').toUpperCase()}</div>
       <div class="atividade-texto">Tu e <strong>${nome}</strong> são agora amigos</div>
       <div class="atividade-tempo">${tempo}</div>`;
-    lista.prepend(div);
+    novosAmigos.push(div);
   }
+  const cAm = ativContainer('ativ-amigos');
+  cAm.innerHTML = '';
+  novosAmigos.forEach(function (d) { cAm.prepend(d); });
 }
 
 function tempoRelativo(data) {
@@ -2700,6 +2704,7 @@ carregarUtilizador().then(() => {
   carregarFotoPerfil();
   carregarCadernetas();
   carregarAtividadeAmigos();
+  try { carregarAtividadeMsgs(); } catch (e) { setTimeout(function () { try { carregarAtividadeMsgs(); } catch (e2) {} }, 1500); }
   atualizarBadgeMensagens();
 });
 setInterval(atualizarBadgeMensagens, 30 * 1000);
@@ -3378,8 +3383,44 @@ async function atualizarSaldoUI() {
   }
 }
 
-// Atualiza o aviso de mensagens/atividades (o ecrã de Atividades recentes volta a ler a base de dados)
+// Caixas fixas dentro de Atividades recentes: avisos (em cima) e amigos (por baixo)
+function ativContainer(id) {
+  const lista = document.getElementById('atividade-lista');
+  let m = document.getElementById('ativ-msgs'), a = document.getElementById('ativ-amigos');
+  if (!m) { m = document.createElement('div'); m.id = 'ativ-msgs'; lista.prepend(m); }
+  if (!a) { a = document.createElement('div'); a.id = 'ativ-amigos'; m.after(a); }
+  return id === 'ativ-msgs' ? m : a;
+}
+
+// Avisos do sistema (compras, vendas) nas Atividades recentes
+async function carregarAtividadeMsgs() {
+  const lista = document.getElementById('atividade-lista');
+  if (!lista) return;
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return;
+  const { data: msgs } = await sb.from('mensagens').select('mensagem, criado_em')
+    .eq('de_user_id', user.id).eq('para_user_id', user.id).order('criado_em', { ascending: false }).limit(5);
+  const esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  const novas = [];
+  (msgs || []).slice().reverse().forEach(function (m) {
+    const txt = String(m.mensagem || '');
+    const dinheiro = /^(💰|🛒)/.test(txt);
+    const limpo = txt.replace(/^(💰|🛒|🔄)\s*/, '');
+    let q = String(m.criado_em || ''); if (q && !/[zZ]|[+-]\d\d:?\d\d$/.test(q)) q += 'Z';
+    const div = document.createElement('div');
+    div.className = 'atividade-item ativ-msg';
+    div.innerHTML = '<div class="atividade-icon ' + (dinheiro ? 'ai-money">€' : 'ai-logo"><img src="images/logo-icon.png" alt=""/>') + '</div>' +
+      '<div class="atividade-texto">' + esc(limpo) + '</div><div class="atividade-tempo">' + tempoRelativo(new Date(q)) + '</div>';
+    novas.push(div);
+  });
+  const cMs = ativContainer('ativ-msgs');
+  cMs.innerHTML = '';
+  novas.forEach(function (d) { cMs.prepend(d); });
+}
+
+// Atualiza o ecrã de Atividades recentes
 function atualizarContadorMensagens() {
+  try { carregarAtividadeMsgs(); } catch (e) {}
   try { if (typeof carregarAtividadeAmigos === 'function') carregarAtividadeAmigos(); } catch (e) {}
 }
 
@@ -3387,10 +3428,10 @@ function atualizarContadorMensagens() {
 (function () {
   function visivel(id) { var e = document.getElementById(id); return !!e && e.style.display !== 'none' && e.offsetParent !== null; }
   async function tick() {
-    if (document.hidden) return;
     try {
       var r = await sb.auth.getSession(); if (!r.data.session) return;
       atualizarSaldoUI();
+      if (document.hidden) return;
       atualizarContadorMensagens();
       if (visivel('mercado-comprar')) carregarMercado();
       if (visivel('mercado-historico') && window.mzHistorico) window.mzHistorico();
@@ -3398,6 +3439,7 @@ function atualizarContadorMensagens() {
   }
   setInterval(tick, 10000);
   document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
+  window.addEventListener('focus', tick);
 })();
 
 // Inicializar mercado quando a página abre
