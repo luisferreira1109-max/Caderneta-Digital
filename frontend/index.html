@@ -261,11 +261,29 @@ body:has(.modal-overlay.aberto) .center,body:has(.modal-overlay.aberto) .rodape{
   var supabaseClient = supabase.createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY');
   var emailRegistoAtual = '';
 
+  // Recuperar password: o link do email faz login; só deixamos entrar depois de escolher a password nova
+  var RECOVERY_KEY = 'cd_recovery_pendente';
+  function recoveryPendente() { try { return sessionStorage.getItem(RECOVERY_KEY) === '1'; } catch (e) { return false; } }
+  function marcarRecovery(v) { try { if (v) sessionStorage.setItem(RECOVERY_KEY, '1'); else sessionStorage.removeItem(RECOVERY_KEY); } catch (e) {} }
+  var hashAtual = window.location.hash || '';
+  var isRecovery = hashAtual.indexOf('type=recovery') !== -1;
+  if (isRecovery) marcarRecovery(true);
+  supabaseClient.auth.onAuthStateChange(function(evento) {
+    if (evento === 'PASSWORD_RECOVERY') { marcarRecovery(true); abrirModal('novapass'); }
+  });
+
+  // Link do email expirado ou já usado
+  if (hashAtual.indexOf('error_code=otp_expired') !== -1 || hashAtual.indexOf('error=access_denied') !== -1) {
+    setTimeout(function() {
+      abrirModal('login');
+      mostrarErro('erro-login', 'O link expirou ou já foi usado. Pede um novo em "Recuperar password".');
+    }, 300);
+  }
+
   // Se já está autenticado vai direto ao dashboard
-  var isRecovery = window.location.hash.indexOf('type=recovery') !== -1;
   supabaseClient.auth.getSession().then(function(result) {
-    if (isRecovery) {
-      abrirModal('novapass');
+    if (isRecovery || recoveryPendente()) {
+      if (result.data.session) abrirModal('novapass');
     } else if (result.data.session && result.data.session.user.email_confirmed_at) {
       window.location.href = 'dashboard.html';
     } else if (result.data.session && !result.data.session.user.email_confirmed_at) {
@@ -279,6 +297,7 @@ body:has(.modal-overlay.aberto) .center,body:has(.modal-overlay.aberto) .rodape{
   }
 
   function fecharModal(tipo) {
+    if (tipo === 'novapass' && recoveryPendente()) { marcarRecovery(false); supabaseClient.auth.signOut(); }
     document.getElementById('modal-' + tipo).classList.remove('aberto');
     document.querySelectorAll('.erro').forEach(function(e) { e.style.display = 'none'; });
   }
@@ -386,7 +405,7 @@ body:has(.modal-overlay.aberto) .center,body:has(.modal-overlay.aberto) .rodape{
     var r2 = await supabaseClient.auth.updateUser({ password: pass1 });
     btn.disabled = false;
     if (r2.error) { mostrarErro('erro-novapass', 'Erro ao guardar password. Tenta novamente.'); }
-    else { alert('Password alterada com sucesso!'); window.location.href = 'dashboard.html'; }
+    else { marcarRecovery(false); alert('Password alterada com sucesso!'); window.location.href = 'dashboard.html'; }
   }
 
   async function entrar() {
