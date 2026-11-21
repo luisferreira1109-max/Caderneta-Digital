@@ -263,8 +263,8 @@ body:has(.modal-overlay.aberto) .center,body:has(.modal-overlay.aberto) .rodape{
 
   // Recuperar password: o link do email faz login; só deixamos entrar depois de escolher a password nova
   var RECOVERY_KEY = 'cd_recovery_pendente';
-  function recoveryPendente() { try { return sessionStorage.getItem(RECOVERY_KEY) === '1'; } catch (e) { return false; } }
-  function marcarRecovery(v) { try { if (v) sessionStorage.setItem(RECOVERY_KEY, '1'); else sessionStorage.removeItem(RECOVERY_KEY); } catch (e) {} }
+  function recoveryPendente() { try { return localStorage.getItem(RECOVERY_KEY) === '1'; } catch (e) { return false; } }
+  function marcarRecovery(v) { try { if (v) localStorage.setItem(RECOVERY_KEY, '1'); else localStorage.removeItem(RECOVERY_KEY); } catch (e) {} }
   var hashAtual = window.location.hash || '';
   var isRecovery = hashAtual.indexOf('type=recovery') !== -1;
   if (isRecovery) marcarRecovery(true);
