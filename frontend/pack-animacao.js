@@ -1,5 +1,5 @@
 /* ===== ANIMAÇÃO DE ABERTURA DE PACKS (Caderneta Digital) =====
-   Pack normal:  loading -> abertura de estádio com o logo do site -> cromos em fila
+   Pack normal:  loading (ícone do site) -> cromos em fila
    Pack lendário: loading -> abertura de estádio com o emblema do clube -> cromo dourado -> revelação -> loading -> cromos em fila
    Se sair mais do que um lendário, mostra-se o de número mais baixo. */
 (function () {
@@ -176,10 +176,8 @@
         mostrarLoading();
         await esperar(1300);
         if (cancelado) return;
-      } else {
-        await momentoLendario(null, { emblema: ICONE });
-        if (cancelado) return;
       }
+      // pack normal: só o ícone a carregar (sem abertura de estádio) e depois os cromos
       terminar();
     } catch (err) {
       console.error('PackAnim:', err);
