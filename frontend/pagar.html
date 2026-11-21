@@ -26,6 +26,12 @@ h1{font-family:var(--fonte);font-weight:700;font-size:32px;text-transform:upperc
 .btn{width:100%;padding:13px;background:var(--azul-vivo);color:#fff;border:0;font-family:var(--fonte);font-weight:700;font-size:21px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
 .btn:disabled{background:#b7c3ec;cursor:not-allowed;}
 .nota{font-size:12px;color:var(--suave);text-align:center;margin-top:12px;line-height:1.5;}
+.cod{display:flex;gap:8px;margin-bottom:6px;}
+.cod input{flex:1;min-width:0;padding:11px 12px;border:1px solid var(--linha);font-family:var(--fonte);font-weight:600;font-size:19px;letter-spacing:.1em;text-transform:uppercase;color:var(--azul);outline:none;}
+.cod input:focus{border-color:var(--azul-vivo);}
+.cod button{padding:0 18px;background:var(--azul);color:#fff;border:0;font-family:var(--fonte);font-weight:700;font-size:17px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
+.cod-msg{font-size:13px;font-weight:600;min-height:18px;margin-bottom:12px;}
+.cod-msg.ok{color:#0e7a55;}.cod-msg.erro{color:#c0392b;}
 .msg{font-size:16px;text-align:center;line-height:1.6;padding:10px 0;}
 a{color:var(--azul-vivo);}
 </style>
@@ -39,6 +45,8 @@ a{color:var(--azul-vivo);}
     <h1>Pedido de saldo</h1>
     <p class="sub"><b id="nome"></b> pediu-te para carregares saldo na conta dele(a) na Caderneta Digital (cromos de futebol). <b>Escolhe um valor.</b></p>
     <div class="pacotes" id="pacotes"></div>
+ <div class="cod"><input type="text" id="cod" placeholder="CÓDIGO DE DESCONTO (OPCIONAL)" maxlength="20" autocomplete="off"><button onclick="aplicar()">Aplicar</button></div>
+    <div class="cod-msg" id="cod-msg"></div>
     <button class="btn" id="btn" onclick="pagar()" disabled>Escolhe um valor</button>
     <p class="nota">🔒 Pagamento seguro através do Stripe (cartão, Apple Pay, Google Pay, MB WAY…). Não guardamos dados do teu cartão.<br>
     O saldo é usado dentro do jogo e não é levantável. <a href="termos.html" target="_blank">Termos</a> · <a href="privacidade.html" target="_blank">Privacidade</a></p>
@@ -52,6 +60,10 @@ var sb = supabase.createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', ANON)
 var FN = 'https://xbzugnrqrbimydsqjfvs.supabase.co/functions/v1/';
 var token = new URLSearchParams(location.search).get('t') || '';
 var escolhido = null;
+var desc = null; // {codigo, pct}
+function total(){ return Math.round(escolhido.euros*100 - Math.round(escolhido.euros*100*(desc?desc.pct:0)/100))/100; }
+function txt(v){ return v.toFixed(2).replace('.',',') + ' €'; }
+function rotulo(){ var b=document.getElementById('btn'); b.textContent = escolhido ? 'Pagar ' + txt(total()) : 'Escolhe um valor'; }
 var PACOTES = [
   {id:'p5', euros:5, of:'1 pack prata'},
   {id:'p10', euros:10, of:'2 packs prata'},
@@ -81,17 +93,29 @@ function escolher(id) {
   document.querySelectorAll('.pacote').forEach(function(p){p.classList.remove('ativo');});
   document.getElementById(id).classList.add('ativo');
   escolhido = PACOTES.filter(function(p){return p.id===id;})[0];
-  var b = document.getElementById('btn'); b.disabled = false; b.textContent = 'Pagar ' + escolhido.euros + ',00 €';
+  document.getElementById('btn').disabled = false; rotulo();
+}
+function msg(t, tipo) { var m = document.getElementById('cod-msg'); m.textContent = t; m.className = 'cod-msg ' + (tipo || ''); }
+async function aplicar() {
+  var c = document.getElementById('cod').value.trim();
+  if (!c) { msg('Escreve o código.', 'erro'); return; }
+  try {
+    var r = await fetch(FN + 'rapid-worker', { method:'POST', headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':'Bearer '+ANON}, body: JSON.stringify({ pacote: 'p5', token: token, codigo: c, validar: true }) });
+    var d = await r.json();
+    if (r.ok && d.desconto) { desc = { codigo: c, pct: d.desconto }; msg('Código aplicado: ' + d.desconto + '% de desconto!', 'ok'); }
+    else { desc = null; msg(d.erro === 'codigo_ja_usado' ? 'Esta conta já usou um código de desconto.' : 'Código inválido.', 'erro'); }
+  } catch (e) { desc = null; msg('Não foi possível validar o código.', 'erro'); }
+  rotulo();
 }
 async function pagar() {
   if (!escolhido) return;
   var b = document.getElementById('btn'); b.disabled = true; b.textContent = 'A abrir o pagamento…';
   try {
-    var r = await fetch(FN + 'rapid-worker', { method:'POST', headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':'Bearer '+ANON}, body: JSON.stringify({ pacote: escolhido.id, token: token }) });
+    var r = await fetch(FN + 'rapid-worker', { method:'POST', headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':'Bearer '+ANON}, body: JSON.stringify({ pacote: escolhido.id, token: token, codigo: desc ? desc.codigo : null }) });
     var d = await r.json();
-    if (!r.ok || !d.url) { alert(d.erro === 'pedido_invalido' ? 'Este pedido já não é válido.' : 'Não foi possível abrir o pagamento. Tenta novamente.'); b.disabled = false; b.textContent = 'Pagar ' + escolhido.euros + ',00 €'; return; }
+    if (!r.ok || !d.url) { if (d.erro === 'codigo_invalido' || d.erro === 'codigo_ja_usado') { desc = null; msg('Este código já não pode ser usado.', 'erro'); } else alert(d.erro === 'pedido_invalido' ? 'Este pedido já não é válido.' : 'Não foi possível abrir o pagamento. Tenta novamente.'); b.disabled = false; rotulo(); return; }
     location.href = d.url;
-  } catch (e) { alert('Erro de ligação.'); b.disabled = false; b.textContent = 'Pagar ' + escolhido.euros + ',00 €'; }
+  } catch (e) { alert('Erro de ligação.'); b.disabled = false; rotulo(); }
 }
 </script>
 </body>
