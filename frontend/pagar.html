@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Caderneta Digital — Pedido de saldo</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+@font-face{font-family:'Barlow Condensed';font-weight:600;font-display:swap;src:url('fonts/barlow-condensed-latin-600-normal.woff2') format('woff2');}
+@font-face{font-family:'Barlow Condensed';font-weight:700;font-display:swap;src:url('fonts/barlow-condensed-latin-700-normal.woff2') format('woff2');}
+:root{--azul:#17399a;--azul-vivo:#1d55e6;--ouro:#C9943A;--fonte:'Barlow Condensed','Arial Narrow',sans-serif;--suave:#6a77a8;--caixa:#eef1fd;--linha:#cfd6f0;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;color:var(--azul);min-height:100vh;display:flex;justify-content:center;padding:28px 16px;
+  background:radial-gradient(ellipse 60% 50% at 78% 8%,rgba(255,255,255,.75),transparent 70%),linear-gradient(135deg,#c9d2f6 0%,#dfe4fa 45%,#cdd6f7 100%) fixed;}
+.caixa{width:100%;max-width:560px;background:rgba(255,255,255,.97);padding:26px 24px;box-shadow:0 6px 22px rgba(30,50,130,.14);align-self:flex-start;}
+.logo{width:64px;height:64px;object-fit:contain;display:block;margin:0 auto 10px;}
+h1{font-family:var(--fonte);font-weight:700;font-size:32px;text-transform:uppercase;letter-spacing:.03em;text-align:center;line-height:1.05;}
+.sub{font-size:14px;color:var(--suave);text-align:center;margin:10px 0 18px;line-height:1.5;}
+.pacotes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.pacote{background:var(--caixa);border:2px solid transparent;padding:14px;cursor:pointer;}
+.pacote:hover{border-color:rgba(29,85,230,.45);}
+.pacote.ativo{border-color:var(--azul-vivo);background:#e3eaff;}
+.p-euros{font-family:var(--fonte);font-weight:700;font-size:38px;line-height:1;margin-bottom:4px;}
+.p-of{font-size:12.5px;font-weight:600;line-height:1.35;color:#0e7a55;}
+.btn{width:100%;padding:13px;background:var(--azul-vivo);color:#fff;border:0;font-family:var(--fonte);font-weight:700;font-size:21px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
+.btn:disabled{background:#b7c3ec;cursor:not-allowed;}
+.nota{font-size:12px;color:var(--suave);text-align:center;margin-top:12px;line-height:1.5;}
+.msg{font-size:16px;text-align:center;line-height:1.6;padding:10px 0;}
+a{color:var(--azul-vivo);}
+</style>
+</head>
+<body>
+<div class="caixa">
+  <img class="logo" src="images/logo-icon.png" alt="" onerror="this.style.display='none'">
+  <div id="v-carregar"><p class="msg">A carregar…</p></div>
+
+  <div id="v-escolher" style="display:none">
+    <h1>Pedido de saldo</h1>
+    <p class="sub"><b id="nome"></b> pediu-te para carregares saldo na conta dele(a) na Caderneta Digital (cromos de futebol). <b>Escolhe um valor.</b></p>
+    <div class="pacotes" id="pacotes"></div>
+    <button class="btn" id="btn" onclick="pagar()" disabled>Escolhe um valor</button>
+    <p class="nota">🔒 Pagamento seguro através do Stripe (cartão, Apple Pay, Google Pay, MB WAY…). Não guardamos dados do teu cartão.<br>
+    O saldo é usado dentro do jogo e não é levantável. <a href="termos.html" target="_blank">Termos</a> · <a href="privacidade.html" target="_blank">Privacidade</a></p>
+  </div>
+
+  <div id="v-fim" style="display:none"><h1 id="fim-t"></h1><p class="msg" id="fim-m"></p></div>
+</div>
+<script>
+var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY';
+var sb = supabase.createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', ANON);
+var FN = 'https://xbzugnrqrbimydsqjfvs.supabase.co/functions/v1/';
+var token = new URLSearchParams(location.search).get('t') || '';
+var escolhido = null;
+var PACOTES = [
+  {id:'p5', euros:5, of:'1 pack prata'},
+  {id:'p10', euros:10, of:'2 packs prata'},
+  {id:'p20', euros:20, of:'2 packs verdes'},
+  {id:'p50', euros:50, of:'2 packs dourados + 1 verde + 1 prata'}
+];
+function ver(id) { ['v-carregar','v-escolher','v-fim'].forEach(function(v){document.getElementById(v).style.display = v===id?'block':'none';}); }
+function fim(t, m) { document.getElementById('fim-t').textContent = t; document.getElementById('fim-m').textContent = m; ver('v-fim'); }
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+(async function() {
+  if (!token) { fim('Link inválido', 'Pede ao jogador para criar um novo pedido.'); return; }
+  var r = await sb.rpc('ver_pedido', { p_token: token });
+  var d = r.data || {};
+  if (/[?&]ok=1/.test(location.search) && d.estado !== 'pendente') { fim('Obrigado! 🎉', 'O pagamento foi recebido e o saldo já está na conta.'); return; }
+  if (/[?&]ok=1/.test(location.search)) { fim('Obrigado! 🎉', 'Pagamento recebido. O saldo aparece na conta em poucos segundos (ou assim que o banco confirmar).'); return; }
+  if (d.estado === 'pago') { fim('Pedido já pago', 'Este pedido já foi pago. Obrigado!'); return; }
+  if (d.estado !== 'pendente') { fim('Pedido expirado', 'Este link já não é válido. Pede ao jogador para criar um novo pedido.'); return; }
+  document.getElementById('nome').textContent = d.nome;
+  var h = '';
+  PACOTES.forEach(function(p) { h += '<div class="pacote" id="' + p.id + '" onclick="escolher(\'' + p.id + '\')"><div class="p-euros">' + p.euros + '€</div><div class="p-of">Oferta: ' + esc(p.of) + '</div></div>'; });
+  document.getElementById('pacotes').innerHTML = h;
+  ver('v-escolher');
+})();
+
+function escolher(id) {
+  document.querySelectorAll('.pacote').forEach(function(p){p.classList.remove('ativo');});
+  document.getElementById(id).classList.add('ativo');
+  escolhido = PACOTES.filter(function(p){return p.id===id;})[0];
+  var b = document.getElementById('btn'); b.disabled = false; b.textContent = 'Pagar ' + escolhido.euros + ',00 €';
+}
+async function pagar() {
+  if (!escolhido) return;
+  var b = document.getElementById('btn'); b.disabled = true; b.textContent = 'A abrir o pagamento…';
+  try {
+    var r = await fetch(FN + 'rapid-worker', { method:'POST', headers:{'Content-Type':'application/json','apikey':ANON,'Authorization':'Bearer '+ANON}, body: JSON.stringify({ pacote: escolhido.id, token: token }) });
+    var d = await r.json();
+    if (!r.ok || !d.url) { alert(d.erro === 'pedido_invalido' ? 'Este pedido já não é válido.' : 'Não foi possível abrir o pagamento. Tenta novamente.'); b.disabled = false; b.textContent = 'Pagar ' + escolhido.euros + ',00 €'; return; }
+    location.href = d.url;
+  } catch (e) { alert('Erro de ligação.'); b.disabled = false; b.textContent = 'Pagar ' + escolhido.euros + ',00 €'; }
+}
+</script>
+</body>
+</html>

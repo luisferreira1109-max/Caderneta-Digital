@@ -96,6 +96,12 @@ h3{font-family:var(--fonte);font-weight:700;font-size:30px;letter-spacing:.03em;
 .btn-pagar:hover{background:#3a6df0;}
 .btn-pagar:disabled{background:#b7c3ec;cursor:not-allowed;}
 
+.nota-seg{font-size:12px;color:var(--suave);margin-top:10px;line-height:1.5;}
+.pedido-box{margin-top:16px;background:var(--caixa);padding:14px;}
+.pedido-box input{width:100%;padding:10px 12px;background:#fff;border:1px solid var(--linha);color:var(--azul);font-size:13px;margin-bottom:10px;}
+.pedido-acoes{display:flex;gap:8px;flex-wrap:wrap;}
+.pedido-acoes .btn-sec{padding:10px 18px;text-decoration:none;display:inline-block;}
+.tile.so-ver .pacote{cursor:default;filter:grayscale(1);opacity:.5;}.tile.so-ver .pacote:hover{border-color:transparent;transform:none;}
 .sucesso-overlay{display:none;position:fixed;inset:0;background:rgba(20,30,90,.55);z-index:999;align-items:center;justify-content:center;}
 .sucesso-overlay.visible{display:flex;}
 .sucesso-box{background:#fff;border-top:5px solid var(--azul-vivo);padding:34px 38px;text-align:center;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);}
@@ -130,8 +136,7 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
     <section class="tile t-pacotes">
       <div class="voltar" onclick="window.location.href='dashboard.html'">← Voltar</div>
       <h3>Carregar saldo</h3>
-      <p class="sub">Escolhe o pacote e recebe packs oferecidos</p>
-      <div class="aviso">Modo de teste — os pagamentos não são reais</div>
+      <p class="sub" id="sub-pacotes">Escolhe o pacote e recebe packs oferecidos</p>
       <div class="pacotes">
         <div class="pacote" id="p5" onclick="selecionarPacote('p5', 5, {prata:1}, '1 pack prata')">
           <div class="p-euros">5€</div>
@@ -168,39 +173,45 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
     </section>
 
     <section class="tile t-pagar">
-      <h3>Pagamento</h3>
-      <p class="sub">Escolhe o método de pagamento</p>
-      <div class="metodos">
-        <div class="metodo" id="m-cartao" onclick="selecionarMetodo('cartao')">
-          <div class="metodo-icon">💳</div>
-          <div><div class="metodo-nome">Cartão</div><div class="metodo-sub">Visa, Mastercard</div></div>
+      <h3 id="pg-titulo">Pagamento</h3>
+
+      <!-- ADULTO -->
+      <div id="vista-adulto" style="display:none">
+        <p class="sub">Pagas em segurança no Stripe: cartão, Apple Pay, Google Pay, MB WAY e outros.</p>
+        <div class="resumo" id="resumo">
+          <div class="res-linha"><span>Pacote</span><span id="res-preco">0,00 €</span></div>
+          <div class="res-linha res-desc" id="res-desc-linha" style="display:none"><span id="res-desc-txt">Desconto</span><span id="res-desc-val">-0,00 €</span></div>
+          <div class="res-total"><span>Total a pagar</span><span id="res-total">0,00 €</span></div>
         </div>
-        <div class="metodo" id="m-mbway" onclick="selecionarMetodo('mbway')">
-          <div class="metodo-icon">📱</div>
-          <div><div class="metodo-nome">MB Way</div><div class="metodo-sub">Pagamento rápido</div></div>
+        <button class="btn-pagar" id="btn-pagar" onclick="pagar()" disabled>Seleciona um pacote</button>
+        <p class="nota-seg">🔒 Não guardamos dados do teu cartão.</p>
+      </div>
+
+      <!-- MENOR -->
+      <div id="vista-menor" style="display:none">
+        <p class="sub">Para carregar saldo precisas de um adulto. Cria um pedido e envia-lhe o link: o adulto escolhe o valor e paga. O saldo aparece na tua conta.</p>
+        <button class="btn-pagar" id="btn-pedir" onclick="pedirAdulto()">Pedir a um adulto</button>
+        <div class="pedido-box" id="pedido-box" style="display:none">
+          <p class="form-label">Envia este link a um adulto</p>
+          <input type="text" id="pedido-link" readonly onclick="this.select()">
+          <div class="pedido-acoes">
+            <button class="btn-sec" onclick="copiarLink()">Copiar</button>
+            <a class="btn-sec" id="pedido-wa" target="_blank" rel="noopener">WhatsApp</a>
+            <a class="btn-sec" id="pedido-mail">Email</a>
+          </div>
+          <p class="nota-seg" id="pedido-msg">O link é válido durante 7 dias e só serve para este pedido.</p>
         </div>
       </div>
 
-      <div class="form-box" id="form-cartao">
-        <p class="form-label">Dados do cartão (teste)</p>
-        <div class="campo"><label>Número do cartão</label><input type="text" id="num-cartao" placeholder="4242 4242 4242 4242" maxlength="19" oninput="formatarCartao(this)"/></div>
-        <div class="campos-row">
-          <div class="campo"><label>Validade</label><input type="text" id="validade" placeholder="MM/AA" maxlength="5"/></div>
-          <div class="campo"><label>CVC</label><input type="text" id="cvc" placeholder="123" maxlength="3"/></div>
-        </div>
-      </div>
-      <div class="form-box" id="form-mbway">
-        <p class="form-label">MB Way</p>
-        <div class="campo"><label>Número de telemóvel</label><input type="text" id="telemovel" placeholder="9XX XXX XXX" maxlength="9"/></div>
+      <!-- CONTA ANTIGA SEM DATA DE NASCIMENTO -->
+      <div id="vista-data" style="display:none">
+        <p class="sub">Para carregar saldo precisamos da tua data de nascimento (só se pede uma vez).</p>
+        <div class="campo"><label>Data de nascimento</label><input type="date" id="data-nasc"></div>
+        <button class="btn-pagar" onclick="guardarData()">Guardar</button>
+        <p class="cod-msg erro" id="data-msg"></p>
       </div>
 
-      <div class="resumo" id="resumo">
-        <div class="res-linha"><span>Pacote</span><span id="res-preco">0,00 €</span></div>
-        <div class="res-linha res-desc" id="res-desc-linha" style="display:none"><span id="res-desc-txt">Desconto</span><span id="res-desc-val">-0,00 €</span></div>
-        <div class="res-total"><span>Total a pagar</span><span id="res-total">0,00 €</span></div>
-      </div>
-
-      <button class="btn-pagar" id="btn-pagar" onclick="pagar()" disabled>Seleciona um pacote</button>
+      <p class="sub" id="vista-carregar">A carregar…</p>
     </section>
 
   </div>
@@ -208,7 +219,7 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 
 <div class="sucesso-overlay" id="sucesso">
   <div class="sucesso-box">
-    <div class="s-titulo">Pagamento confirmado!</div>
+    <div class="s-titulo" id="s-titulo">Pagamento confirmado!</div>
     <div class="s-valor" id="s-valor">+5 €</div>
     <div class="s-sub" id="s-sub">Saldo adicionado!</div>
     <button class="btn-continuar" onclick="window.location.href='dashboard.html'">Ir para o dashboard</button>
@@ -216,13 +227,11 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 </div>
 
 <script>
-var sb = supabase.createClient(
-  'https://xbzugnrqrbimydsqjfvs.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY'
-);
+var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhienVnbnJxcmJpbXlkc3FqZnZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjczMjQsImV4cCI6MjA5NzY0MzMyNH0.CfXb16J0aruQuyYTXShyR1tKm-aZXjFou1NTjDQE2cY';
+var sb = supabase.createClient('https://xbzugnrqrbimydsqjfvs.supabase.co', ANON);
 
 var pacote = null;
-var metodo = null;
+var estado = null;
 var userId = null;
 var desconto = null;   // { codigo, pct }
 
@@ -240,13 +249,10 @@ sb.auth.getSession().then(function(r) {
     var av = document.getElementById('pill-ava');
     if (res.data.avatar_url) { var im = document.createElement('img'); im.src = res.data.avatar_url; av.appendChild(im); }
     else av.textContent = nome.split(' ').map(function(n) { return n[0]; }).join('').substring(0, 2).toUpperCase();
+    if (/[?&]pago=1/.test(location.search)) { history.replaceState(null, '', 'carregar.html'); aposPagamento(); }
   });
+  iniciar();
 });
-
-function formatarCartao(input) {
-  var v = input.value.replace(/\D/g, '').substring(0, 16);
-  input.value = v.replace(/(.{4})/g, '$1 ').trim();
-}
 
 /* ----- código de desconto ----- */
 function msgCodigo(texto, tipo) {
@@ -293,59 +299,124 @@ function atualizarResumo() {
 }
 
 function selecionarPacote(id, euros, packs, texto) {
+  if (estado !== 'adulto') return;
   document.querySelectorAll('.pacote').forEach(function(p) { p.classList.remove('ativo'); });
   document.getElementById(id).classList.add('ativo');
   pacote = { id: id, euros: euros, packs: packs, texto: texto };
   atualizarResumo();
 }
 
-function selecionarMetodo(tipo) {
-  document.querySelectorAll('.metodo').forEach(function(m) { m.classList.remove('ativo'); });
-  document.getElementById('m-' + tipo).classList.add('ativo');
-  metodo = tipo;
-  document.getElementById('form-cartao').className = 'form-box' + (tipo === 'cartao' ? ' visible' : '');
-  document.getElementById('form-mbway').className = 'form-box' + (tipo === 'mbway' ? ' visible' : '');
-  atualizarBotao();
-}
-
 function atualizarBotao() {
   var btn = document.getElementById('btn-pagar');
   if (!pacote) { btn.textContent = 'Seleciona um pacote'; btn.disabled = true; return; }
-  if (!metodo) { btn.textContent = 'Seleciona um método'; btn.disabled = true; return; }
   btn.textContent = 'Pagar ' + euro(total());
   btn.disabled = false;
 }
 
+var FN = 'https://xbzugnrqrbimydsqjfvs.supabase.co/functions/v1/';
 async function pagar() {
-  if (!pacote || !metodo) return;
+  if (!pacote || estado !== 'adulto') return;
   var btn = document.getElementById('btn-pagar');
-  btn.disabled = true;
-  btn.textContent = 'A processar...';
-
+  btn.disabled = true; btn.textContent = 'A abrir o pagamento…';
   try {
-    /* tudo é feito no servidor: código de desconto, saldo e packs oferecidos */
-    var r2 = await sb.rpc('carregar_saldo_teste', { p_pacote: pacote.id, p_codigo: desconto ? desconto.codigo : null });
-    if (r2.error || !r2.data) {
-      var m = (r2.error && r2.error.message) || '';
-      if (/codigo_invalido/.test(m)) { desconto = null; msgCodigo('Este código já não pode ser usado.', 'erro'); atualizarResumo(); }
-      else if (/pagamentos_indisponiveis/.test(m)) { alert('Os pagamentos ainda não estão ativos.'); }
-      else { alert('Não foi possível concluir o carregamento. Tenta novamente.'); }
-      btn.disabled = false; atualizarBotao();
+    var ses = (await sb.auth.getSession()).data.session;
+    var r = await fetch(FN + 'rapid-worker', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ses.access_token, 'apikey': ANON },
+      body: JSON.stringify({ pacote: pacote.id, codigo: desconto ? desconto.codigo : null })
+    });
+    var d = await r.json();
+    if (!r.ok || !d.url) {
+      var e = d && d.erro;
+      if (e === 'codigo_invalido' || e === 'codigo_ja_usado') { desconto = null; msgCodigo('Este código já não pode ser usado.', 'erro'); atualizarResumo(); }
+      else if (e === 'menor' || e === 'sem_data') { iniciar(); }
+      else alert('Não foi possível abrir o pagamento. Tenta novamente.');
+      btn.disabled = false; atualizarBotao(); return;
+    }
+    window.location.href = d.url;
+  } catch (e) {
+    alert('Erro de ligação. Tenta novamente.');
+    btn.disabled = false; atualizarBotao();
+  }
+}
+
+/* ----- estado da conta: adulto, menor ou sem data ----- */
+function mostrar(vista) {
+  ['adulto', 'menor', 'data'].forEach(function(v) { document.getElementById('vista-' + v).style.display = v === vista ? 'block' : 'none'; });
+  document.getElementById('vista-carregar').style.display = 'none';
+}
+async function iniciar() {
+  var r = await sb.rpc('estado_carregamento');
+  estado = r.data && r.data.estado;
+  var tile = document.querySelector('.t-pacotes');
+  var cod = document.querySelector('.t-codigo');
+  if (estado === 'adulto') {
+    mostrar('adulto'); tile.classList.remove('so-ver'); cod.style.display = '';
+  } else if (estado === 'menor') {
+    mostrar('menor'); tile.classList.add('so-ver'); cod.style.display = 'none';
+    document.getElementById('sub-pacotes').textContent = 'Só um adulto pode escolher e pagar';
+  } else if (estado === 'sem_data') {
+    mostrar('data'); tile.classList.add('so-ver'); cod.style.display = 'none';
+  } else {
+    document.getElementById('vista-carregar').textContent = 'Não foi possível carregar. Atualiza a página.';
+  }
+}
+async function guardarData() {
+  var v = document.getElementById('data-nasc').value, m = document.getElementById('data-msg');
+  if (!v) { m.textContent = 'Escolhe a data.'; return; }
+  var r = await sb.rpc('definir_data_nascimento', { p_data: v });
+  if (r.error) {
+    m.textContent = /menor_de_13/.test(r.error.message) ? 'A Caderneta Digital é para maiores de 13 anos.' : 'Data inválida.';
+    return;
+  }
+  iniciar();
+}
+async function pedirAdulto() {
+  var btn = document.getElementById('btn-pedir'); btn.disabled = true;
+  var r = await sb.rpc('criar_pedido_adulto');
+  btn.disabled = false;
+  if (r.error || !r.data) {
+    alert(/demasiados_pedidos/.test((r.error && r.error.message) || '') ? 'Já fizeste muitos pedidos hoje. Tenta amanhã.' : 'Não foi possível criar o pedido.');
+    return;
+  }
+  var link = location.origin + '/pagar.html?t=' + r.data;
+  var txt = 'Olá! Pedi-te para carregares saldo na minha conta da Caderneta Digital. Podes escolher o valor aqui: ' + link;
+  document.getElementById('pedido-link').value = link;
+  document.getElementById('pedido-wa').href = 'https://wa.me/?text=' + encodeURIComponent(txt);
+  document.getElementById('pedido-mail').href = 'mailto:?subject=' + encodeURIComponent('Pedido de saldo — Caderneta Digital') + '&body=' + encodeURIComponent(txt);
+  document.getElementById('pedido-box').style.display = 'block';
+}
+function copiarLink() {
+  var i = document.getElementById('pedido-link'); i.select();
+  try { navigator.clipboard.writeText(i.value); } catch (e) { document.execCommand('copy'); }
+  document.getElementById('pedido-msg').textContent = 'Link copiado! Envia-o ao adulto.';
+}
+
+/* ----- regresso do Stripe ----- */
+async function lerSaldo() {
+  var res = await sb.from('profiles').select('saldo').eq('id', userId).single();
+  return res.data ? parseFloat(res.data.saldo) || 0 : 0;
+}
+async function aposPagamento() {
+  var antes = parseFloat(document.getElementById('pill-saldo').textContent.replace(',', '.')) || 0;
+  var box = document.getElementById('sucesso');
+  document.getElementById('s-titulo').textContent = 'A confirmar o pagamento…';
+  document.getElementById('s-valor').textContent = '';
+  document.getElementById('s-sub').textContent = 'Isto demora só alguns segundos.';
+  box.classList.add('visible');
+  for (var i = 0; i < 15; i++) {
+    var s = await lerSaldo();
+    if (s > antes) {
+      document.getElementById('pill-saldo').textContent = s.toFixed(2).replace('.', ',');
+      document.getElementById('s-titulo').textContent = 'Pagamento confirmado!';
+      document.getElementById('s-valor').textContent = '+' + euro(s - antes);
+      document.getElementById('s-sub').textContent = 'Novo saldo: ' + euro(s) + '\nSe tiveres packs oferecidos, abre-os em Packs.';
       return;
     }
-    var pctUsado = r2.data.desconto || 0;
-    var pago = parseFloat(r2.data.pago);
-    var novoSaldo = parseFloat(r2.data.saldo);
-    var avisoPacks = '\nOferta: ' + pacote.texto + ' (abre-os em Packs).';
-
-    document.getElementById('s-valor').textContent = '+' + pacote.euros + ' €';
-    document.getElementById('s-sub').textContent = 'Pagaste ' + euro(pago) + (pctUsado ? ' (desconto de ' + pctUsado + '%)' : '') + '\nNovo saldo: ' + euro(novoSaldo) + avisoPacks;
-    document.getElementById('sucesso').classList.add('visible');
-  } catch (e) {
-    alert('Erro: ' + e.message);
-    btn.disabled = false;
-    atualizarBotao();
+    await new Promise(function(r) { setTimeout(r, 2000); });
   }
+  document.getElementById('s-titulo').textContent = 'Pagamento recebido';
+  document.getElementById('s-sub').textContent = 'O saldo aparece sozinho assim que o pagamento estiver confirmado.';
 }
 </script>
 <script src="instalar.js"></script></body>
