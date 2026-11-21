@@ -129,12 +129,57 @@
     };
   };
 
-  /* ---------- TROCAS (entre amigos) ---------- */
+  /* ---------- TROCAS (entre amigos e públicas) ---------- */
   var _amigoTroca = null, _meuSel = null, _delSel = null, _invAmigo = [];
+  var MAX_TROCA = 4;
+
+  function grupoCromos(arr, cls) {
+    return '<div class="tr-grupo ' + (cls || '') + '">' + (arr || []).map(function (x) { return cromoHist(x.clube, x.num); }).join('') + '</div>';
+  }
+  function avaHtml(nome, av) { return av ? '<img src="' + esc(av) + '" alt="">' : esc((nome || '?')[0].toUpperCase()); }
+  function atualizarTudo() {
+    try { if (typeof carregarColecao === 'function') carregarColecao(); } catch (e) {}
+    try { if (typeof atualizarContadorMensagens === 'function') atualizarContadorMensagens(); } catch (e) {}
+    try { if (typeof atualizarSaldoUI === 'function') atualizarSaldoUI(); } catch (e) {}
+    try { if (window.carregarTrocasAtividade) window.carregarTrocasAtividade(); } catch (e) {}
+  }
+  function erroTroca(e) {
+    var m = (e && e.message) || '';
+    if (/sem_cromo/.test(m)) return 'Já não tens um dos cromos necessários para esta troca.';
+    if (/amigo_sem_cromo/.test(m)) return 'O teu amigo já não tem um dos cromos que pediste.';
+    if (/troca_indisponivel/.test(m)) return 'Esta proposta já não está disponível.';
+    if (/demasiadas_propostas/.test(m)) return 'Já tens muitas propostas ativas (máximo 20).';
+    if (/nao_sao_amigos/.test(m)) return 'Só podes propor trocas a amigos.';
+    if (/troca_propria/.test(m)) return 'Não podes aceitar a tua própria proposta.';
+    return 'Não foi possível concluir a troca. Tenta novamente.';
+  }
+  window.aceitarTrocaRpc = async function (id) {
+    var r = await sb.rpc('aceitar_troca', { p_id: id });
+    if (r.error) { mostrarNotificacao(erroTroca(r.error), 'erro'); atualizarTudo(); return false; }
+    mostrarNotificacao('✅ Troca realizada com sucesso!', 'sucesso'); atualizarTudo(); return true;
+  };
+  window.recusarTrocaRpc = async function (id) {
+    var r = await sb.rpc('recusar_troca', { p_id: id });
+    if (r.error) { mostrarNotificacao(erroTroca(r.error), 'erro'); atualizarTudo(); return false; }
+    mostrarNotificacao('Troca recusada.', 'info'); atualizarTudo(); return true;
+  };
+  window.cancelarTroca = async function (id) {
+    var r = await sb.rpc('cancelar_troca', { p_id: id });
+    if (r.error) { mostrarNotificacao(erroTroca(r.error), 'erro'); }
+    else mostrarNotificacao('Proposta cancelada. Os cromos voltaram para a tua coleção.', 'info');
+    atualizarTudo();
+    if ($('troca-amigos') && $('troca-amigos').style.display !== 'none') mzTrocasInicio();
+  };
 
   window.mzTrocasInicio = async function () {
-    $('troca-amigos').style.display = ''; $('troca-ecra').style.display = 'none';
-    var lista = $('troca-amigos-lista'); lista.innerHTML = '<div class="mw-vazio">A carregar amigos...</div>';
+    var box = $('troca-amigos'); box.style.display = ''; $('troca-ecra').style.display = 'none';
+    box.innerHTML =
+      '<h4 class="mw-tit">Trocas</h4>' +
+      '<p class="mw-sub">Escolhe um amigo para lhe propor uma troca, ou faz uma proposta pública que qualquer jogador pode aceitar.</p>' +
+      '<div id="troca-amigos-lista" class="mw-amigos"><div class="mw-vazio">A carregar amigos...</div></div>' +
+      '<h4 class="mw-tit tr-sec">Propostas públicas</h4><div id="trocas-pub" class="tr-lista"></div>' +
+      '<h4 class="mw-tit tr-sec">As tuas propostas ativas</h4><div id="trocas-minhas" class="tr-lista"></div>';
+    var lista = $('troca-amigos-lista');
     try {
       var r = await sb.auth.getUser(); var u = r.data.user; if (!u) return;
       var a1 = (await sb.from('amigos').select('*').eq('user_id', u.id).eq('status', 'aceite')).data || [];
@@ -145,26 +190,69 @@
         var p = (await sb.from('perfis_publicos').select('id, display_name, avatar_url').eq('id', ids[i]).single()).data;
         if (p) amigos.push(p);
       }
-      if (!amigos.length) { lista.innerHTML = '<div class="mw-vazio">Ainda não tens amigos. Adiciona amigos no separador Amigos para poderes trocar cromos.</div>'; return; }
       lista.innerHTML = '';
+      var pub = document.createElement('div'); pub.className = 'mw-amigo mw-amigo-pub';
+      pub.innerHTML = '<div class="mw-amigo-ava">🌍</div><div class="mw-amigo-nome">Proposta pública</div><div class="mw-amigo-cta">Para todos</div>';
+      pub.onclick = function () { mzAbrirTroca(null); };
+      lista.appendChild(pub);
       amigos.forEach(function (p) {
         var c = document.createElement('div'); c.className = 'mw-amigo';
-        c.innerHTML = '<div class="mw-amigo-ava">' + (p.avatar_url ? '<img src="' + esc(p.avatar_url) + '" alt="">' : esc((p.display_name || '?')[0].toUpperCase())) + '</div><div class="mw-amigo-nome">' + esc(p.display_name || 'Utilizador') + '</div><div class="mw-amigo-cta">Trocar</div>';
+        c.innerHTML = '<div class="mw-amigo-ava">' + avaHtml(p.display_name, p.avatar_url) + '</div><div class="mw-amigo-nome">' + esc(p.display_name || 'Utilizador') + '</div><div class="mw-amigo-cta">Trocar</div>';
         c.onclick = function () { mzAbrirTroca(p); };
         lista.appendChild(c);
       });
     } catch (e) { lista.innerHTML = '<div class="mw-vazio">Não foi possível carregar os amigos.</div>'; }
+
+    /* propostas públicas de outros jogadores */
+    try {
+      var pubs = (await sb.rpc('trocas_publicas')).data || [];
+      var cp = $('trocas-pub'); if (!cp) return;
+      if (!pubs.length) cp.innerHTML = '<div class="mw-vazio">Não há propostas públicas neste momento.</div>';
+      pubs.forEach(function (t) {
+        var row = document.createElement('div'); row.className = 'tr-linha';
+        row.innerHTML = '<div class="mz-pedido-ava">' + avaHtml(t.nome, t.avatar_url) + '</div>' +
+          '<div class="tr-info"><strong>' + esc(t.nome) + '</strong><span>oferece</span></div>' + grupoCromos(t.oferta) +
+          '<div class="tr-seta">⇄</div><div class="tr-info"><span>quer</span></div>' + grupoCromos(t.pedido) +
+          '<button class="tr-btn" type="button">Aceitar</button>';
+        row.querySelector('.tr-btn').onclick = async function () { this.disabled = true; await aceitarTrocaRpc(t.id); mzTrocasInicio(); };
+        cp.appendChild(row);
+      });
+    } catch (e) {}
+
+    /* as minhas propostas */
+    try {
+      var r2 = await sb.auth.getUser(); var me = r2.data.user;
+      var mine = (await sb.from('mercado_trocas').select('*').eq('proponente_id', me.id).eq('estado', 'pendente').order('criado_em', { ascending: false })).data || [];
+      var cm = $('trocas-minhas'); if (!cm) return;
+      if (!mine.length) { cm.innerHTML = '<div class="mw-vazio">Não tens propostas ativas.</div>'; return; }
+      var dests = {};
+      var did = mine.filter(function (t) { return t.destinatario_id; }).map(function (t) { return t.destinatario_id; });
+      if (did.length) { ((await sb.from('perfis_publicos').select('id, display_name').in('id', did)).data || []).forEach(function (p) { dests[p.id] = p.display_name; }); }
+      mine.forEach(function (t) {
+        var row = document.createElement('div'); row.className = 'tr-linha';
+        row.innerHTML = '<div class="tr-info"><strong>' + (t.destinatario_id ? 'Para ' + esc(dests[t.destinatario_id] || 'amigo') : 'Pública') + '</strong><span>ofereces</span></div>' + grupoCromos(t.oferta) +
+          '<div class="tr-seta">⇄</div><div class="tr-info"><span>queres</span></div>' + grupoCromos(t.pedido) +
+          '<button class="tr-btn tr-btn-no" type="button">Cancelar</button>';
+        row.querySelector('.tr-btn').onclick = function () { this.disabled = true; cancelarTroca(t.id); };
+        cm.appendChild(row);
+      });
+    } catch (e) {}
   };
 
-  var MAX_TROCA = 4;
   window.mzAbrirTroca = async function (amigo) {
+    var publica = !amigo;
+    try { await carregarColecao(); } catch (e) {}
     _amigoTroca = amigo; _meuSel = []; _delSel = []; _invAmigo = [];
-    try { var q = await sb.rpc('inventario_amigo', { p_amigo: amigo.id }); _invAmigo = q.data || []; } catch (e) {}
+    if (publica) {
+      ['fcps', 'ccrdsv'].forEach(function (cl) { Object.keys(CROMOS_IMAGENS).forEach(function (k) { if (k.indexOf(cl + '-') === 0) _invAmigo.push({ clube: cl, num_cromo: parseInt(k.split('-')[1], 10) }); }); });
+    } else {
+      try { var q = await sb.rpc('inventario_amigo', { p_amigo: amigo.id }); _invAmigo = q.data || []; } catch (e) {}
+    }
     $('troca-amigos').style.display = 'none';
     var ec = $('troca-ecra'); ec.style.display = '';
-    var nome = esc(amigo.display_name || 'Utilizador');
+    var nome = publica ? 'Todos os cromos' : esc(amigo.display_name || 'Utilizador');
     ec.innerHTML =
-      '<div class="mz-voltar mz-voltar-peq" onclick="mzTrocasInicio()">← Outros amigos</div>' +
+      '<div class="mz-voltar mz-voltar-peq" onclick="mzTrocasInicio()">← Voltar às trocas</div>' +
       '<div class="mt-cols">' +
         '<div class="mt-esq">' +
           '<div class="mt-tabs"><button class="on" data-t="meu">O teu inventário</button><button data-t="dele">' + nome + '</button></div>' +
@@ -173,8 +261,10 @@
         '<div class="mt-dir">' +
           '<div class="mt-bloco"><div class="mt-tit">Os teus itens <small id="mt-cont-meu">0/' + MAX_TROCA + '</small></div><div class="mt-slots" id="mt-slots-meu"></div></div>' +
           '<div class="mt-setas">⇅</div>' +
-          '<div class="mt-bloco"><div class="mt-tit">Os itens de ' + nome + ' <small id="mt-cont-dele">0/' + MAX_TROCA + '</small></div><div class="mt-slots" id="mt-slots-dele"></div></div>' +
-          '<p class="mw-aviso">Podes trocar até ' + MAX_TROCA + ' cromos de cada lado. ' + nome + ' vai receber uma notificação com a tua proposta e pode aceitar ou recusar.</p>' +
+          '<div class="mt-bloco"><div class="mt-tit">' + (publica ? 'Os cromos que queres' : 'Os itens de ' + nome) + ' <small id="mt-cont-dele">0/' + MAX_TROCA + '</small></div><div class="mt-slots" id="mt-slots-dele"></div></div>' +
+          '<p class="mw-aviso">' + (publica
+            ? 'Podes trocar até ' + MAX_TROCA + ' cromos de cada lado. Qualquer jogador que tenha os cromos que pedes pode aceitar a tua proposta. Os teus cromos ficam guardados até alguém aceitar ou tu cancelares.'
+            : 'Podes trocar até ' + MAX_TROCA + ' cromos de cada lado. ' + nome + ' vai ver a tua proposta nas Atividades recentes e pode aceitar ou recusar. Os teus cromos ficam guardados até lá.') + '</p>' +
           '<button class="mw-btn" id="mt-enviar" disabled>Fazer proposta</button>' +
         '</div>' +
       '</div>';
@@ -195,7 +285,7 @@
         d.onclick = function () {
           var i = sel.findIndex(function (x) { return chave(x) === chave(c); });
           if (i >= 0) sel.splice(i, 1);
-          else if (sel.length >= MAX_TROCA) { mostrarNotificacao('Só podes trocar até ' + MAX_TROCA + ' cromos de cada vez.', 'erro'); return; }
+          else if (sel.length >= MAX_TROCA) { mostrarNotificacao('Só podes trocar até ' + MAX_TROCA + ' cromos de cada lado.', 'erro'); return; }
           else sel.push(c);
           pintarSlots(); pintar();
         };
@@ -223,9 +313,40 @@
     ec.querySelectorAll('.mt-tabs button').forEach(function (b) {
       b.onclick = function () { tab = b.dataset.t; ec.querySelectorAll('.mt-tabs button').forEach(function (x) { x.classList.toggle('on', x === b); }); pintar(); };
     });
-    $('mt-enviar').onclick = function () { mostrarNotificacao('As propostas de troca ficam disponíveis na próxima atualização.', 'info'); };
+    $('mt-enviar').onclick = async function () {
+      var btn = this; btn.disabled = true;
+      var conv = function (arr) { return arr.map(function (c) { return { clube: c.clube, num: c.num_cromo }; }); };
+      var r = await sb.rpc('propor_troca', { p_dest: publica ? null : amigo.id, p_oferta: conv(_meuSel), p_pedido: conv(_delSel) });
+      if (r.error) { mostrarNotificacao(erroTroca(r.error), 'erro'); btn.disabled = false; atualizarTudo(); return; }
+      mostrarNotificacao(publica ? '✅ Proposta pública publicada!' : '✅ Proposta enviada a ' + (amigo.display_name || 'amigo') + '!', 'sucesso');
+      atualizarTudo(); mzTrocasInicio();
+    };
     pintarSlots(); pintar();
   };
+
+  /* ---------- Propostas recebidas, nas Atividades recentes ---------- */
+  window.carregarTrocasAtividade = async function () {
+    try {
+      var r = await sb.auth.getUser(); if (!r.data.user) return;
+      var ref = document.getElementById('mz-pedidos-ativ'); if (!ref) return;
+      var cont = document.getElementById('mz-trocas-ativ');
+      if (!cont) { cont = document.createElement('div'); cont.id = 'mz-trocas-ativ'; ref.insertAdjacentElement('beforebegin', cont); }
+      var ts = (await sb.rpc('trocas_para_mim')).data || [];
+      cont.innerHTML = '';
+      ts.forEach(function (t) {
+        var d = document.createElement('div'); d.className = 'mz-troca';
+        d.innerHTML = '<div class="mz-troca-topo"><div class="mz-pedido-ava">' + avaHtml(t.nome, t.avatar_url) + '</div>' +
+          '<div class="mz-pedido-txt"><strong>' + esc(t.nome) + '</strong> propõe-te uma troca</div>' +
+          '<div class="mz-pedido-btns"><button class="mzt-ok" type="button">Aceitar</button><button class="mzt-no" type="button">Recusar</button></div></div>' +
+          '<div class="mz-troca-cromos"><span>Oferece</span>' + grupoCromos(t.oferta) + '<span class="tr-seta">⇄</span><span>Quer</span>' + grupoCromos(t.pedido) + '</div>';
+        d.querySelector('.mzt-ok').onclick = async function () { d.querySelectorAll('button').forEach(function (b) { b.disabled = true; }); await aceitarTrocaRpc(t.id); carregarTrocasAtividade(); };
+        d.querySelector('.mzt-no').onclick = async function () { d.querySelectorAll('button').forEach(function (b) { b.disabled = true; }); await recusarTrocaRpc(t.id); carregarTrocasAtividade(); };
+        cont.appendChild(d);
+      });
+    } catch (e) {}
+  };
+  setTimeout(function () { carregarTrocasAtividade(); }, 3000);
+  setInterval(function () { carregarTrocasAtividade(); }, 15000);
 
   /* ---------- HISTÓRICO ---------- */
   var SETA_SAI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>';
@@ -271,14 +392,15 @@
             '<div class="mh-valor ' + (vendi ? 'mais' : 'menos') + '">' + (vendi ? '+' + fmt(h.preco_vendedor != null ? h.preco_vendedor : h.preco) : '−' + fmt(h.preco)) + '</div>' +
             '<div class="mh-data">' + data + '</div>';
         } else {
-          var sai = souU1 ? [h.clube1, h.num_cromo1] : [h.clube2, h.num_cromo2];
-          var entra = souU1 ? [h.clube2, h.num_cromo2] : [h.clube1, h.num_cromo1];
-          row.className += ' mh-troca';
-          row.innerHTML = '<div class="mh-par">' +
-              '<div class="mh-par-l">' + cromoHist(sai[0], sai[1]) + '<div class="mh-seta sai">' + SETA_SAI + '</div></div>' +
-              '<div class="mh-par-l">' + cromoHist(entra[0], entra[1]) + '<div class="mh-seta entra">' + SETA_ENTRA + '</div></div>' +
+          var of = (h.oferta && h.oferta.length) ? h.oferta : [{ clube: h.clube1, num: h.num_cromo1 }];
+          var pe = (h.pedido && h.pedido.length) ? h.pedido : [{ clube: h.clube2, num: h.num_cromo2 }];
+          var sai = souU1 ? of : pe, entra = souU1 ? pe : of;
+          row.className += ' mh-troca mh-troca-multi';
+          row.innerHTML = '<div class="mh-grupos">' +
+              '<div class="mh-g"><div class="mh-seta sai">' + SETA_SAI + '</div>' + sai.map(function (x) { return cromoHist(x.clube, x.num); }).join('') + '</div>' +
+              '<div class="mh-g"><div class="mh-seta entra">' + SETA_ENTRA + '</div>' + entra.map(function (x) { return cromoHist(x.clube, x.num); }).join('') + '</div>' +
             '</div>' +
-            '<div class="mh-info"><div class="mh-tipo">Troca</div><div class="mh-nome">' + esc(outro) + '</div><div class="mh-cromo-nome">' + esc(nomeCromo(sai[0], sai[1])) + ' ⇄ ' + esc(nomeCromo(entra[0], entra[1])) + '</div></div>' +
+            '<div class="mh-info"><div class="mh-tipo">Troca</div><div class="mh-nome">' + esc(outro) + '</div><div class="mh-cromo-nome">' + esc(sai.map(function (x) { return nomeCromo(x.clube, x.num); }).join(', ')) + ' ⇄ ' + esc(entra.map(function (x) { return nomeCromo(x.clube, x.num); }).join(', ')) + '</div></div>' +
             '<div class="mh-valor"></div><div class="mh-data">' + data + '</div>';
         }
         lista.appendChild(row);

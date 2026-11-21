@@ -1889,10 +1889,29 @@ async function carregarListaAmigos(userId) {
           <div class="amigo-nome">${nome} ${statusPers}</div>
           <div class="amigo-status-texto ${statusClass}">${statusTexto}</div>
         </div>
+        <div class="amigo-prog" data-amigo="${a.id}"></div>
         <button class="amigo-remover" onclick="mzRemoverAmigo('${a.amizade_id}', '${nome.replace(/'/g, "")}')">Remover amizade</button>
       </div>`;
   });
+  preencherProgressoAmigos();
 }
+
+// % da caderneta de cada amigo (FCPS e CCRDSV)
+async function preencherProgressoAmigos() {
+  try {
+    const { data } = await sb.rpc('amigos_progresso');
+    const nomes = { fcps: 'FCPS', ccrdsv: 'CCRDSV' };
+    document.querySelectorAll('.amigo-prog').forEach(function (el) {
+      const mine = (data || []).filter(function (x) { return x.amigo_id === el.dataset.amigo; });
+      el.innerHTML = ['fcps', 'ccrdsv'].map(function (cl) {
+        const x = mine.find(function (y) { return y.clube === cl; });
+        const pct = x && x.total ? Math.round(100 * x.colados / x.total) : 0;
+        return '<div class="amigo-prog-linha"><span class="amigo-prog-nome">' + nomes[cl] + '</span><span class="amigo-prog-barra"><i style="width:' + pct + '%"></i></span><span class="amigo-prog-pct">' + pct + '%</span></div>';
+      }).join('');
+    });
+  } catch (e) {}
+}
+
 
 async function aceitarPedido(pedidoId, userId) {
   await sb.from('amigos').update({ status: 'aceite' }).eq('id', pedidoId);

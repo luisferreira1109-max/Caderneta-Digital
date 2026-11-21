@@ -661,3 +661,40 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 
 /* Caderneta: espaços vazios não abrem popup (só cromos colados) */
 .cromo-slot:not(.tem-cromo){cursor:default !important;}
+
+/* ===== Trocas (propostas) e progresso dos amigos ===== */
+.amigo-prog{display:flex;flex-direction:column;gap:4px;min-width:190px;margin-right:12px;}
+.amigo-prog-linha{display:flex;align-items:center;gap:8px;font-family:var(--mz-fonte);color:var(--mz-azul);}
+.amigo-prog-nome{font-weight:700;font-size:14px;letter-spacing:.06em;width:58px;}
+.amigo-prog-barra{flex:1;height:8px;background:#d9e0f6;display:block;}
+.amigo-prog-barra i{display:block;height:100%;background:var(--mz-azul-vivo);}
+.amigo-prog-pct{font-weight:700;font-size:15px;width:38px;text-align:right;}
+
+.mw-amigo-pub .mw-amigo-ava{background:var(--mz-ouro);font-size:28px;}
+.tr-sec{margin-top:26px;}
+.tr-lista{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.tr-linha{display:flex;align-items:center;gap:14px;background:#eef1fd;padding:10px 14px;flex-wrap:wrap;}
+.tr-info{display:flex;flex-direction:column;font-size:12px;color:#6a77a8;min-width:70px;}
+.tr-info strong{font-family:var(--mz-fonte);font-size:19px;color:var(--mz-azul);}
+.tr-grupo{display:flex;gap:6px;}
+.tr-seta{color:var(--mz-ouro);font-size:22px;font-weight:700;}
+.tr-linha .mh-cromo,.mz-troca .mh-cromo{width:38px;height:56px;}
+.tr-btn{margin-left:auto;border:0;cursor:pointer;background:var(--mz-azul);color:#fff;font-family:var(--mz-fonte);font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase;padding:8px 18px;}
+.tr-btn:hover:not(:disabled){background:var(--mz-azul-vivo);}
+.tr-btn:disabled{opacity:.5;cursor:default;}
+.tr-btn-no{background:#e3e8fb;color:var(--mz-azul);}
+.tr-btn-no:hover:not(:disabled){background:#d4dbf6;}
+
+.mz-troca{padding:10px 0;border-bottom:1px solid rgba(23,57,154,.1);}
+.mz-troca-topo{display:flex;align-items:center;gap:10px;}
+.mz-troca-cromos{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;color:#6a77a8;flex-wrap:wrap;}
+.mzt-ok,.mzt-no{border:0;cursor:pointer;font-family:var(--mz-fonte);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;padding:6px 14px;}
+.mzt-ok{background:var(--mz-azul);color:#fff;}
+.mzt-ok:hover:not(:disabled){background:var(--mz-azul-vivo);}
+.mzt-no{background:#e3e8fb;color:var(--mz-azul);}
+.mzt-ok:disabled,.mzt-no:disabled{opacity:.5;cursor:default;}
+
+.mh-linha.mh-troca-multi{grid-template-columns:minmax(150px,auto) minmax(160px,1fr) 130px 110px;min-height:84px;}
+.mh-grupos{display:flex;gap:18px;align-items:center;flex-wrap:wrap;}
+.mh-g{display:flex;gap:4px;align-items:center;}
+.mh-troca-multi .mh-cromo{width:36px;height:52px;}
