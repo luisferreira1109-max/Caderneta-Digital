@@ -352,7 +352,7 @@
   var SETA_SAI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>';
   var SETA_ENTRA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7 7 17M15 17H7V9"/></svg>';
   function cromoHist(clube, num) {
-    var m = mini(clube, num);
+    var m = CROMOS_IMAGENS[clube + '-' + num] || '';
     return '<div class="mh-cromo">' + (m ? '<img src="' + m + '" alt="">' : '#' + num) + '</div>';
   }
   window.mzHistorico = async function () {
