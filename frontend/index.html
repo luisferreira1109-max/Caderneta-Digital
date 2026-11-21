@@ -112,6 +112,10 @@ body{font-family:'Inter','Segoe UI',Arial,sans-serif;background:#dfe4fa;overflow
 .campo select option{background:#fff;color:var(--nz-azul);}
 .btn-modal{background:var(--nz-vivo);color:#fff;border-radius:2px;font-family:var(--nz-fonte);font-weight:700;font-size:19px;letter-spacing:1.5px;text-transform:uppercase;}
 .btn-modal:hover{background:#1747c4;}
+.aceito{display:flex;align-items:flex-start;gap:10px;margin:2px 0 14px;font-size:13px;line-height:1.45;color:#5b6a9a;cursor:pointer;}
+.aceito input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--nz-vivo);cursor:pointer;}
+.aceito a{color:var(--nz-vivo);font-weight:600;}
+.campo input[type=date]{min-height:44px;}
 .modal-trocar{color:#7b88b4;}
 .modal-trocar span{color:var(--nz-vivo);font-weight:600;}
 .modal-trocar span[onclick*="recuperar"]{color:#7b88b4 !important;}
@@ -190,6 +194,7 @@ body:has(.modal-overlay.aberto) .center,body:has(.modal-overlay.aberto) .rodape{
       <p class="modal-sub">Junta-te à Caderneta Digital</p>
       <div class="campo"><label>Nome</label><input type="text" id="reg-nome" placeholder="O teu nome"/></div>
       <div class="campo"><label>Email</label><input type="email" id="reg-email" placeholder="email@exemplo.com"/></div>
+      <div class="campo"><label>Data de nascimento</label><input type="date" id="reg-nasc" min="1900-01-01"/></div>
       <div class="campo"><label>Password</label><input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres"/></div>
       <div class="campo"><label>Confirmar password</label><input type="password" id="reg-pass2" placeholder="Repete a password"/></div>
       <div class="campo"><label>De onde vens?</label>
@@ -200,8 +205,9 @@ body:has(.modal-overlay.aberto) .center,body:has(.modal-overlay.aberto) .rodape{
           <option value="Outros">Outros</option>
         </select>
       </div>
+      <label class="aceito"><input type="checkbox" id="reg-termos" onchange="document.getElementById('btn-registar').disabled=!this.checked"/><span>Li e aceito os <a href="termos.html" target="_blank" rel="noopener">Termos de Utilização</a> e a <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</span></label>
       <div class="erro" id="erro-registo"></div>
-      <button class="btn-modal" id="btn-registar" onclick="registar()">Criar conta</button>
+      <button class="btn-modal" id="btn-registar" onclick="registar()" disabled>Criar conta</button>
       <div class="modal-trocar">Já tens conta? <span onclick="trocarModal('registo','login')">Entra aqui</span></div>
     </div>
     <div id="registo-confirmar-email" style="display:none; text-align:center; padding:20px 0;">
@@ -294,18 +300,27 @@ body:has(.modal-overlay.aberto) .center,body:has(.modal-overlay.aberto) .rodape{
     var pass = document.getElementById('reg-pass').value;
     var pass2 = document.getElementById('reg-pass2').value;
     var origem = document.getElementById('reg-origem').value;
+    var nasc = document.getElementById('reg-nasc').value;
+    var aceitou = document.getElementById('reg-termos').checked;
     var btn = document.getElementById('btn-registar');
     document.getElementById('erro-registo').style.display = 'none';
 
     if (!nome || !email || !pass || !pass2) { mostrarErro('erro-registo', 'Preenche todos os campos!'); return; }
     if (pass.length < 6) { mostrarErro('erro-registo', 'A password deve ter pelo menos 6 caracteres!'); return; }
     if (pass !== pass2) { mostrarErro('erro-registo', 'As passwords não coincidem!'); return; }
+    if (!nasc) { mostrarErro('erro-registo', 'Indica a tua data de nascimento!'); return; }
+    var dn = new Date(nasc + 'T00:00:00'), hoje = new Date();
+    if (isNaN(dn.getTime()) || dn > hoje || dn.getFullYear() < 1900) { mostrarErro('erro-registo', 'A data de nascimento não é válida!'); return; }
+    var idade = hoje.getFullYear() - dn.getFullYear();
+    if (hoje.getMonth() < dn.getMonth() || (hoje.getMonth() === dn.getMonth() && hoje.getDate() < dn.getDate())) idade--;
+    if (idade < 13) { mostrarErro('erro-registo', 'A Caderneta Digital é para maiores de 13 anos. Pede a um adulto para jogar contigo ou espera até fazeres 13 anos.'); return; }
+    if (!aceitou) { mostrarErro('erro-registo', 'Tens de aceitar os Termos e a Política de Privacidade!'); return; }
     if (!origem) { mostrarErro('erro-registo', 'Diz-nos de onde vens (Irivo, Paço de Sousa ou Outros)!'); return; }
 
     btn.disabled = true;
     btn.textContent = 'A criar conta...';
 
-    var result = await supabaseClient.auth.signUp({ email: email, password: pass, options: { data: { display_name: nome, origem: origem } } });
+    var result = await supabaseClient.auth.signUp({ email: email, password: pass, options: { data: { display_name: nome, origem: origem, data_nascimento: nasc, aceitou_termos: 'true' } } });
 
     if (result.error) {
       btn.disabled = false;
