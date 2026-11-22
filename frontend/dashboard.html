@@ -1083,7 +1083,7 @@ body { font-family: 'Inter', 'Segoe UI', sans-serif; min-height: 100vh; overflow
               <label>Nome de utilizador</label>
               <input type="text" id="perfil-nome-input" placeholder="O teu nome"/>
             </div>
-            <button class="perfil-btn" onclick="guardarPerfil()">💾 Guardar alterações</button>
+            <button class="perfil-btn" onclick="guardarPerfil()">Guardar alterações</button>
           </div>
         </div>
       </div>
@@ -1525,8 +1525,8 @@ function previewFotoDefinicoes(e) {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = (ev) => {
-    fotoBase64 = ev.target.result;
+  reader.onload = async (ev) => {
+    fotoBase64 = await ajustarFoto(ev.target.result);
     document.getElementById('def-avatar').innerHTML = `<img src="${fotoBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
     const avatarTop = document.getElementById('user-avatar');
     if(avatarTop) avatarTop.innerHTML = `<img src="${fotoBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
@@ -1573,12 +1573,30 @@ document.addEventListener('click', () => {
   document.getElementById('perfil-menu')?.classList.remove('show');
 });
 
+/* Recorta a foto ao centro (quadrada) e guarda em boa qualidade (400x400) */
+function ajustarFoto(src) {
+  return new Promise((ok) => {
+    const im = new Image();
+    im.onload = () => {
+      try {
+        const lado = Math.min(im.width, im.height), T = Math.min(400, lado);
+        const c = document.createElement('canvas'); c.width = T; c.height = T;
+        const g = c.getContext('2d'); g.imageSmoothingQuality = 'high';
+        g.drawImage(im, (im.width - lado) / 2, (im.height - lado) / 2, lado, lado, 0, 0, T, T);
+        ok(c.toDataURL('image/jpeg', 0.92));
+      } catch (e) { ok(src); }
+    };
+    im.onerror = () => ok(src);
+    im.src = src;
+  });
+}
+
 function previewFoto(e) {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = (ev) => {
-    fotoBase64 = ev.target.result;
+  reader.onload = async (ev) => {
+    fotoBase64 = await ajustarFoto(ev.target.result);
     // Mostrar preview no menu
     const avatarMenu = document.getElementById('perfil-avatar-menu');
     avatarMenu.innerHTML = `<img src="${fotoBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
@@ -1598,7 +1616,7 @@ async function guardarPerfil() {
   if (!user) return;
 
   const novoNome = document.getElementById('perfil-nome-input').value.trim();
-  if (!novoNome) { btn.textContent = '💾 Guardar alterações'; btn.classList.remove('perfil-btn-saving'); return; }
+  if (!novoNome) { btn.textContent = 'Guardar alterações'; btn.classList.remove('perfil-btn-saving'); return; }
 
   const updates = { display_name: novoNome };
   if (fotoBase64) updates.avatar_url = fotoBase64;
@@ -1612,15 +1630,15 @@ async function guardarPerfil() {
       const ini = novoNome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
       document.getElementById('user-avatar').textContent = ini;
     }
-    btn.textContent = '✅ Guardado!';
+    btn.textContent = 'Guardado!';
     setTimeout(() => {
-      btn.textContent = '💾 Guardar alterações';
+      btn.textContent = 'Guardar alterações';
       btn.classList.remove('perfil-btn-saving');
       document.getElementById('perfil-menu').classList.remove('show');
     }, 1500);
   } else {
-    btn.textContent = '❌ Erro!';
-    setTimeout(() => { btn.textContent = '💾 Guardar alterações'; btn.classList.remove('perfil-btn-saving'); }, 2000);
+    btn.textContent = 'Erro ao guardar';
+    setTimeout(() => { btn.textContent = 'Guardar alterações'; btn.classList.remove('perfil-btn-saving'); }, 2000);
   }
 }
 

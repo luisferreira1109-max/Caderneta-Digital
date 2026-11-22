@@ -704,3 +704,13 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 .tr-linha .mh-cromo img,.mz-troca .mh-cromo img,.mh-troca-multi .mh-cromo img{filter:none;image-rendering:auto;}
 .tr-lista{max-height:340px;overflow-y:auto;padding-right:6px;display:flex;flex-direction:column;gap:6px;}
 .tr-lista::-webkit-scrollbar{width:8px;}.tr-lista::-webkit-scrollbar-thumb{background:#b9c4ee;border-radius:4px;}
+
+/* Menu de perfil: botão e foto no estilo novo */
+#perfil-form .perfil-foto-circulo{width:96px;height:96px;border-radius:0 !important;border:0;box-shadow:0 0 0 3px #fff,0 0 0 5px var(--mz-ouro);font-family:var(--mz-fonte);font-size:30px;}
+#perfil-form .perfil-foto-circulo img{border-radius:0 !important;}
+#perfil-form .perfil-foto-circulo .foto-overlay{border-radius:0;}
+#perfil-form .perfil-foto-label{font-size:12px;}
+#perfil-form label{font-family:var(--mz-fonte);font-weight:600;font-size:14px !important;letter-spacing:.1em;}
+#perfil-form input[type=text]{border-radius:0 !important;padding:10px 12px !important;font-size:15px !important;}
+#perfil-form .perfil-btn{background:var(--mz-azul) !important;color:#fff !important;border-radius:0 !important;padding:11px !important;font-family:var(--mz-fonte);font-weight:700;font-size:18px;letter-spacing:.08em;text-transform:uppercase;border-bottom:3px solid var(--mz-ouro);}
+#perfil-form .perfil-btn:hover{background:var(--mz-azul-vivo) !important;}
