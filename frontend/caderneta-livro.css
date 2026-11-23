@@ -78,6 +78,11 @@
 #livro-modal .lv-campo svg path{vector-effect:non-scaling-stroke;stroke-width:4;stroke-linecap:round}
 
 /* Fundo com foto de relvado (teste) */
-#livro-modal .lv-fundo{background:url('images/fundo-relva.webp') center/cover no-repeat !important}
+#livro-modal .lv-fundo{background:url('images/fundo-site2.webp') center 55%/cover no-repeat #04070a !important}
 #livro-modal .lv-fundo::before,#livro-modal .lv-bancada,#livro-modal .lv-relva{display:none !important}
-#livro-modal .lv-fundo::after{background:radial-gradient(ellipse at 50% 50%,rgba(0,20,8,.15) 30%,rgba(0,20,8,.6) 100%) !important}
+#livro-modal .lv-fundo::after{background:none !important}
+/* Capa = mesma imagem da caderneta na página Cadernetas */
+#livro-modal .lv-capa img{object-fit:contain !important}
+#livro-modal .lv-face.lv-capa{box-shadow:none !important}
+/* Livro fechado: só se vê a capa (sem a página de baixo a aparecer pelos cantos) */
+#livro-modal .lv-cena.fechado .lv-folha:not(:first-child){visibility:hidden}

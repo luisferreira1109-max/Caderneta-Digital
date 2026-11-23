@@ -53,7 +53,7 @@
       '<div class="lv-cena fechado"><div class="lv-livro"></div><div class="lv-sombra"></div></div>' +
       '<div class="lv-nav"><button class="lv-seta lv-ant">‹</button><button class="lv-seta lv-prox">›</button></div>';
     var P = paginas(clube, colados), livro = modal.querySelector('.lv-livro'), cena = modal.querySelector('.lv-cena');
-    var folhas = [['<div class="lv-capa" style="position:absolute;inset:0"><img src="images/capa-' + clube + '.png" alt=""></div>', P[0]]];
+    var folhas = [['<div class="lv-capa" style="position:absolute;inset:0"><img src="images/caderneta-' + clube + '.png" alt=""></div>', P[0]]];
     for (var k = 1; k < P.length / 2; k++) folhas.push([P[2 * k - 1], P[2 * k]]);
     folhas.push([P[P.length - 1], '']);
     var els = folhas.map(function (f, i) {
