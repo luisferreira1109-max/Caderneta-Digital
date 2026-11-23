@@ -1,0 +1,52 @@
+/* ===== Caderneta em livro (substitui a caderneta antiga) ===== */
+#livro-modal{background:url('images/fundo-estadio.jpg') center/cover no-repeat !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;padding:0;flex-direction:column;gap:22px;
+  --P:min(340px,40vw);--H:calc(var(--P)*1.32);--lv-azul:#17399a;--lv-azul-vivo:#1d55e6;--lv-ouro:#C9943A;--lv-cor:#c0392b;
+  font-family:'Barlow Condensed','Arial Narrow',sans-serif;}
+#livro-modal.lv-ccrdsv{--lv-cor:#1e8449;}
+#livro-modal .lv-fechar{position:absolute;top:18px;left:18px;border:1px solid var(--lv-azul);background:#fff;color:var(--lv-azul);font:600 16px 'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;cursor:pointer;z-index:5}
+#livro-modal .lv-cena{perspective:2200px;width:calc(var(--P)*2);height:var(--H);position:relative;transition:transform .9s cubic-bezier(.65,.05,.36,1)}
+#livro-modal .lv-cena.fechado{transform:translateX(calc(var(--P)*-.5))}
+#livro-modal .lv-livro{position:absolute;inset:0;transform-style:preserve-3d}
+#livro-modal .lv-sombra{position:absolute;left:4%;right:4%;bottom:-26px;height:34px;background:radial-gradient(ellipse at center,rgba(0,0,0,.45),transparent 70%);filter:blur(6px)}
+#livro-modal .lv-folha{position:absolute;top:0;right:0;width:var(--P);height:var(--H);transform-origin:left center;transform-style:preserve-3d;transition:transform .95s cubic-bezier(.62,.04,.3,1)}
+#livro-modal .lv-folha.virada{transform:rotateY(-180deg)}
+#livro-modal .lv-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;background:#f8f5f0}
+#livro-modal .lv-frente{border-radius:0 8px 8px 0}
+#livro-modal .lv-verso{transform:rotateY(180deg);border-radius:8px 0 0 8px;background:#f5f2ed}
+#livro-modal .lv-face.lv-capa{background:transparent;box-shadow:2px 4px 10px rgba(0,0,0,.45)}
+#livro-modal .lv-capa img{width:100%;height:100%;object-fit:cover;display:block}
+#livro-modal .lv-frente::after,#livro-modal .lv-verso::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .95s}
+#livro-modal .lv-frente::after{background:linear-gradient(to right,rgba(0,0,0,.28),rgba(0,0,0,.05) 40%,transparent 70%)}
+#livro-modal .lv-verso::after{background:linear-gradient(to left,rgba(0,0,0,.28),rgba(0,0,0,.05) 40%,transparent 70%)}
+#livro-modal .lv-folha.virando .lv-frente::after,#livro-modal .lv-folha.virando .lv-verso::after{opacity:1;transition:opacity .4s}
+#livro-modal .lv-frente::before{content:"";position:absolute;left:0;top:0;bottom:0;width:26px;background:linear-gradient(to right,rgba(0,0,0,.16),transparent);pointer-events:none;z-index:2}
+#livro-modal .lv-verso::before{content:"";position:absolute;right:0;top:0;bottom:0;width:26px;background:linear-gradient(to left,rgba(0,0,0,.16),transparent);pointer-events:none;z-index:2}
+#livro-modal .lv-pg{position:absolute;inset:0;padding:calc(var(--P)*.075) calc(var(--P)*.065) calc(var(--P)*.1);display:flex;flex-direction:column}
+#livro-modal .lv-pg h2{font:700 calc(var(--P)*.085) 'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--lv-cor);line-height:1}
+#livro-modal .lv-sub{font:600 calc(var(--P)*.04) 'Barlow Condensed',sans-serif;letter-spacing:.16em;color:#4a5a8e;margin:4px 0 calc(var(--P)*.035);padding-bottom:calc(var(--P)*.025);border-bottom:1px solid #e3ddd3;text-transform:uppercase}
+#livro-modal .lv-num{position:absolute;bottom:12px;font:600 13px 'Barlow Condensed',sans-serif;letter-spacing:.2em;color:#7b88b4}
+#livro-modal .lv-verso .lv-num{left:20px}#livro-modal .lv-frente .lv-num{right:20px}
+#livro-modal .lv-grelha{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:10px;min-height:0}
+#livro-modal .lv-slot{width:100%;height:auto;align-self:center;justify-self:center;aspect-ratio:2/3;position:relative;border:1.5px dashed #c8c4bc;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;color:#c8c4bc}
+#livro-modal .lv-slot span{position:absolute;bottom:3px;font:600 11px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#a9a39a}
+#livro-modal .lv-slot.tem{border:0;background:transparent;cursor:pointer}
+#livro-modal .lv-slot.tem span{display:none}
+#livro-modal .lv-slot img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 5px rgba(20,30,90,.3));transition:transform .15s}
+#livro-modal .lv-slot.tem:hover img{transform:scale(1.06)}
+#livro-modal .lv-intro{align-items:center;justify-content:center;text-align:center;gap:10px;background:linear-gradient(160deg,var(--lv-cor),color-mix(in srgb,var(--lv-cor) 70%,#000));color:#fff;padding:20px}
+#livro-modal .lv-intro img{width:38%;filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))}
+#livro-modal .lv-intro h2{color:#fff;font-size:calc(var(--P)*.1)}
+#livro-modal .lv-intro p{font:600 calc(var(--P)*.045) 'Barlow Condensed',sans-serif;letter-spacing:.25em;opacity:.85}
+#livro-modal .lv-intro .lv-prog{margin-top:6px;font:700 calc(var(--P)*.06) 'Barlow Condensed',sans-serif;letter-spacing:.14em}
+#livro-modal .lv-idx-topo{padding-bottom:4px;border-bottom:1px solid #e3ddd3;margin-bottom:2px}
+#livro-modal .lv-indice+*,#livro-modal ul.lv-indice{margin-bottom:22px}
+#livro-modal ul.lv-indice{padding:0;margin:0}
+#livro-modal li.lv-idx{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:2px 8px;border-bottom:1px solid #eee;cursor:pointer;transition:background .15s,padding-left .2s}
+#livro-modal li.lv-idx:hover{background:rgba(0,0,0,.05);padding-left:14px}
+#livro-modal li.lv-idx b{display:block;font:700 calc(var(--P)*.047) 'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--lv-cor);line-height:1}
+#livro-modal li.lv-idx small{display:block;font:600 calc(var(--P)*.03) 'Barlow Condensed',sans-serif;letter-spacing:.14em;color:#7b88b4;text-transform:uppercase}
+#livro-modal li.lv-idx span{font:700 calc(var(--P)*.047) 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#7b88b4;white-space:nowrap}
+#livro-modal .lv-nav{display:flex;align-items:center;gap:40px}
+#livro-modal .lv-seta{width:44px;height:44px;border-radius:50%;border:0;background:var(--lv-azul);color:#fff;font:700 22px 'Barlow Condensed',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.35);transition:transform .15s,opacity .2s}
+#livro-modal .lv-seta:hover:not(:disabled){transform:scale(1.1);background:var(--lv-azul-vivo)}
+#livro-modal .lv-seta:disabled{opacity:.3;cursor:default}
