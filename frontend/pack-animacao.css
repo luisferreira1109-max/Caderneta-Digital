@@ -84,14 +84,29 @@
 @media(max-width:760px){.cromos-grid-pack{flex-wrap:wrap}.cromo-pack{width:26vw}}
 
 /* ===== Fundo com a foto do estádio (em vez de preto) ===== */
-#pa-layer{background:linear-gradient(rgba(8,8,34,.2),rgba(8,8,34,.3)),url('images/imagens de fundo do site/bg-packs.jpg') center bottom/cover no-repeat !important}
+#pa-layer{background:url('images/fundo-site2.webp') center 55%/cover no-repeat #04070a !important}
 .pa-load{background:none !important}
 .pa-stadium{background:none !important}
 .pa-floor{background:none !important}
 .pa-dim{background:radial-gradient(ellipse at 50% 46%,rgba(8,8,34,0) 25%,rgba(8,8,34,.55) 100%) !important}
-.pa-wall{opacity:.55 !important}
+.pa-wall{display:none !important}
 
 /* sem rectângulo amarelo atrás do cromo: aparece a relva */
 .pa-door-light{transition:opacity .5s ease-out}
 .pa-screen.open .pa-door-light{opacity:0 !important}
 .pa-screen.open{box-shadow:none !important}
+.pa-beam,.pa-spot{display:none !important}
+
+/* ===== Abertura do lendário: aura de luz (aprovada 23/11) ===== */
+/* F — Aura de luz (sem caixa) */
+.pa-screen{border-radius:0 !important;box-shadow:none !important;width:min(52vw,90vh) !important}
+.pa-screen.charge{box-shadow:none !important}
+.pa-door-light{inset:-6% 14% !important;border-radius:50% !important;background:radial-gradient(closest-side,#fff 0,rgba(255,255,255,.96) 52%,rgba(255,236,170,.55) 78%,rgba(255,236,170,0) 100%) !important;box-shadow:none !important;filter:blur(2px)}
+.pa-door-in{background:transparent !important;box-shadow:none !important}
+.pa-door-in::before{display:none !important}
+.pa-door{overflow:visible !important}
+.pa-door.l::after,.pa-door.r::after{top:-35% !important;bottom:-35% !important;width:3px !important;background:linear-gradient(180deg,transparent,#fff 30%,#fff 70%,transparent) !important;box-shadow:0 0 22px 5px rgba(255,236,170,.9) !important}
+.pa-shield{height:70% !important;max-width:40% !important;filter:drop-shadow(0 0 10px rgba(255,255,255,.9)) !important}
+.pa-shine{display:none !important}
+.pa-door.l::after,.pa-door.r::after{transition:opacity .35s ease-out !important}
+.pa-screen.open .pa-door.l::after,.pa-screen.open .pa-door.r::after{opacity:0 !important}

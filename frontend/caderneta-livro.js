@@ -49,7 +49,7 @@
       document.body.appendChild(modal);
     }
     modal.className = 'caderneta-modal show lv-' + clube;
-    modal.innerHTML = '<button class="lv-fechar">✕ Fechar</button>' +
+    modal.innerHTML = '<div class="lv-fundo"><div class="lv-bancada"></div><div class="lv-relva"><div class="lv-campo"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none" fill="none" stroke="rgba(255,255,255,.95)"><path d="M330 90 H1000"/><path d="M330 90 V1000"/><path d="M330 180 A90 90 0 0 0 420 90"/><path d="M640 90 V380 H900 V90"/><path d="M720 90 V220 H820 V90"/></svg></div></div></div>' + '<button class="lv-fechar">✕ Fechar</button>' +
       '<div class="lv-cena fechado"><div class="lv-livro"></div><div class="lv-sombra"></div></div>' +
       '<div class="lv-nav"><button class="lv-seta lv-ant">‹</button><button class="lv-seta lv-prox">›</button></div>';
     var P = paginas(clube, colados), livro = modal.querySelector('.lv-livro'), cena = modal.querySelector('.lv-cena');

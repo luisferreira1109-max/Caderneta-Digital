@@ -556,7 +556,7 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 
 /* ===== Resultado do pack: fundo com foto do estádio ===== */
 #pack-overlay.resultado{
-  background:linear-gradient(rgba(8,8,34,.25),rgba(8,8,34,.35)),url('images/imagens de fundo do site/bg-packs.jpg') center bottom/cover no-repeat !important;
+  background:url('images/fundo-site2.webp') center 55%/cover no-repeat #04070a !important;
 }
 #pack-overlay.resultado .pack-resultado-titulo{text-shadow:0 2px 12px rgba(0,0,0,.6);}
 #pack-overlay.resultado .pack-resultado-sub{color:#f1eeff !important;text-shadow:0 1px 6px rgba(0,0,0,.7);}
@@ -714,3 +714,9 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 #perfil-form input[type=text]{border-radius:0 !important;padding:10px 12px !important;font-size:15px !important;}
 #perfil-form .perfil-btn{background:var(--mz-azul) !important;color:#fff !important;border-radius:0 !important;padding:11px !important;font-family:var(--mz-fonte);font-weight:700;font-size:18px;letter-spacing:.08em;text-transform:uppercase;border-bottom:3px solid var(--mz-ouro);}
 #perfil-form .perfil-btn:hover{background:var(--mz-azul-vivo) !important;}
+
+/* ===== Fundo do site: relvado (atrás das caixas brancas) ===== */
+.bg, .bg.bg-inicio, .bg[class*="bg-"]{
+  background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0)),url('images/fundo-site2.webp') center 55%/cover no-repeat #1f3a1c !important;
+}
+.bg::before{display:none !important;}
