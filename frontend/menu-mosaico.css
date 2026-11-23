@@ -720,3 +720,13 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
   background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0)),url('images/fundo-site2.webp') center 55%/cover no-repeat #1f3a1c !important;
 }
 .bg::before{display:none !important;}
+
+/* ===== Textos legíveis sobre o estádio (opção 5, aprovada 23/11): letras grandes com contorno ===== */
+#pagina-packs .page-titulo,#pagina-cadernetas .page-titulo,#pagina-colecao .page-titulo{color:#fff !important;font-size:40px !important;-webkit-text-stroke:1.5px rgba(0,0,0,.65);paint-order:stroke fill;text-shadow:0 3px 16px rgba(0,0,0,.9)}
+#pagina-packs .page-sub{color:#fff !important;font-weight:600;text-shadow:0 1px 3px #000,0 0 12px rgba(0,0,0,.95)}
+#pagina-packs .pack-info-preco,#pagina-packs .pack-info-preco.pra,#pagina-packs .pack-info-preco.pre,#pagina-packs .pack-info-preco.dou{color:#ffd978 !important;font-size:44px !important;-webkit-text-stroke:1.5px rgba(0,0,0,.7);paint-order:stroke fill;text-shadow:0 0 18px rgba(255,200,80,.55),0 3px 12px rgba(0,0,0,.95)}
+#pagina-packs .pk-cromos{color:#fff !important;font-weight:700;text-shadow:0 1px 3px #000,0 0 12px #000}
+#pagina-cadernetas .cad-label-nome{color:#fff !important;font-size:26px !important;-webkit-text-stroke:1.2px rgba(0,0,0,.7);paint-order:stroke fill;text-shadow:0 3px 14px rgba(0,0,0,.95)}
+#pagina-cadernetas .cad-label-sub{color:#ffd978 !important;font-size:14px !important;font-weight:700;text-shadow:0 1px 3px #000,0 0 12px #000}
+#pagina-packs .mz-voltar,#pagina-cadernetas .mz-voltar,#pagina-colecao .mz-voltar{color:#fff !important;border-color:#fff !important;background:rgba(0,0,0,.4);font-weight:700}
+#pagina-packs .page-sub{display:none !important}
