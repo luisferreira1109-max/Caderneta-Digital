@@ -113,12 +113,13 @@
   function intro(clube) {
     var s = estado, v = document.createElement('video'), feito = false;
     v.className = 'lv-video'; v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = VIDEOS[clube];
-    s.modal.classList.add('lv-intro-on'); s.modal.appendChild(v);
+    var w = document.createElement('div'); w.className = 'lv-vid'; w.appendChild(v);
+    s.modal.classList.add('lv-intro-on'); s.modal.appendChild(w);
     s.est = 1; pinta();
     function fim() {
       if (feito) return; feito = true;
-      s.modal.classList.remove('lv-intro-on'); v.classList.add('sai');
-      setTimeout(function () { if (v.parentNode) v.parentNode.removeChild(v); }, 900);
+      s.modal.classList.remove('lv-intro-on'); w.classList.add('sai');
+      setTimeout(function () { if (w.parentNode) w.parentNode.removeChild(w); }, 900);
     }
     v.addEventListener('timeupdate', function () { if (v.currentTime >= 2.4) fim(); });
     v.addEventListener('ended', fim); v.addEventListener('error', fim);
