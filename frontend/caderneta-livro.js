@@ -58,7 +58,7 @@
     folhas.push([P[P.length - 1], '']);
     var els = folhas.map(function (f, i) {
       var d = document.createElement('div'); d.className = 'lv-folha';
-      d.innerHTML = '<div class="lv-face lv-frente' + (i === 0 ? ' lv-capa' : '') + '">' + f[0] + (i === 0 ? '' : '<div class="lv-num">' + (2 * i) + '</div>') + '</div>' +
+      d.innerHTML = '<div class="lv-borda"></div><div class="lv-face lv-frente' + (i === 0 ? ' lv-capa' : '') + '">' + f[0] + (i === 0 ? '' : '<div class="lv-num">' + (2 * i) + '</div>') + '</div>' +
         (i === folhas.length - 1 ? '' : '<div class="lv-face lv-verso">' + f[1] + '<div class="lv-num">' + (2 * i + 1) + '</div></div>');
       livro.appendChild(d); return d;
     });

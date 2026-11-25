@@ -730,3 +730,7 @@ body > button[style*="78px"]{left:auto !important;right:18px !important;bottom:1
 #pagina-cadernetas .cad-label-sub{color:#ffd978 !important;font-size:14px !important;font-weight:700;text-shadow:0 1px 3px #000,0 0 12px #000}
 #pagina-packs .mz-voltar,#pagina-cadernetas .mz-voltar,#pagina-colecao .mz-voltar{color:#fff !important;border-color:#fff !important;background:rgba(0,0,0,.4);font-weight:700}
 #pagina-packs .page-sub{display:none !important}
+
+/* ===== Coleção: painel claro, por isso o título volta ao azul do resto do site ===== */
+#pagina-colecao .page-titulo{color:var(--mz-azul) !important;font-size:32px !important;-webkit-text-stroke:0 !important;paint-order:normal;text-shadow:none !important}
+#pagina-colecao .mz-voltar{color:var(--mz-azul) !important;border-color:rgba(23,57,154,.45) !important;background:transparent !important;font-weight:inherit}
