@@ -3,6 +3,7 @@
 (function () {
   var NOMES = { fcps: 'FC Paço de Sousa', ccrdsv: 'CCRDSV Irivo Penafiel' };
   var estado = null;
+  function nm(t) { return String(t).replace(/\s+Forma[cç][aã]o$/i, ''); }
   var EMB = { fcps: 'images/simbolo paço de sousa/emblema-fcps.png', ccrdsv: 'images/simbolo irivo/emblema-ccrdsv.png' };
 
   function mini(img) { return img.replace('/cromos/', '/cromos-mini/'); }
@@ -30,14 +31,14 @@
     P.push('<div class="lv-pg lv-intro">' + (emblema ? '<img src="' + emblema + '" alt="">' : '') +
       '<h2>' + esc(NOMES[clube]) + '</h2></div>');
     var itens = esc_.map(function (e, k) {
-      return '<li class="lv-idx" data-pag="' + (3 + 2 * k) + '"><div><b>' + esc(e.nome) + '</b><small>Cromos ' + e.min + ' a ' + e.max + '</small></div><span>Pág. ' + (3 + 2 * k) + '</span></li>';
+      return '<li class="lv-idx" data-pag="' + (3 + 2 * k) + '"><div><b>' + esc(nm(e.nome)) + '</b><small>Cromos ' + e.min + ' a ' + e.max + '</small></div><span>Pág. ' + (3 + 2 * k) + '</span></li>';
     }).join('');
     P.push('<div class="lv-pg"><div class="lv-idx-topo"><h2>Índice</h2><div class="lv-sub" style="border:0;margin:2px 0 0;padding:0">' + total + ' cromos · ' + esc_.length + ' escalões</div></div><ul class="lv-indice">' + itens + '</ul></div>');
     esc_.forEach(function (e) {
       [0, 12].forEach(function (off) {
         var ini = e.min + off, fim = Math.min(e.max, ini + 11), g = '';
         for (var n = ini; n <= fim; n++) g += slot(clube, n, colados);
-        P.push('<div class="lv-pg"><div class="lv-cab"><img src="' + EMB[clube] + '" alt=""><h2>' + esc(e.nome) + '</h2></div><div class="lv-sub">' + esc(NOMES[clube]) + ' · 2026/2027</div><div class="lv-grelha">' + g + '</div></div>');
+        P.push('<div class="lv-pg"><div class="lv-cab"><img src="' + EMB[clube] + '" alt=""><h2' + (nm(e.nome).length > 11 ? ' class="lv-longo"' : '') + '>' + esc(nm(e.nome)) + '</h2></div><div class="lv-sub">' + esc(NOMES[clube]) + ' · 2026/2027</div><div class="lv-grelha">' + g + '</div></div>');
       });
     });
     return P;

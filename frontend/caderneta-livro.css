@@ -140,3 +140,5 @@
 #livro-modal .lv-verso::before{width:90px;background:linear-gradient(to left,rgba(0,0,0,.22),rgba(0,0,0,.08) 45%,transparent)}
 #livro-modal .lv-livro::after{content:"";position:absolute;top:0;bottom:0;left:calc(100% - var(--P));width:18px;margin-left:-9px;background:linear-gradient(to right,transparent,rgba(0,0,0,.22) 50%,transparent);transform:translateZ(1px);pointer-events:none}
 #livro-modal .lv-cena.fechado .lv-livro::after{display:none}
+#livro-modal .lv-cab h2.lv-longo{font-size:calc(var(--P)*.068);letter-spacing:.08em;white-space:nowrap}
+#livro-modal .lv-slot em{font-size:calc(var(--P)*.02);letter-spacing:.02em;white-space:nowrap}
