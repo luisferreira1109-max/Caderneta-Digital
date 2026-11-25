@@ -116,3 +116,27 @@
 #livro-modal .lv-verso::before{width:60px;background:linear-gradient(to left,rgba(0,0,0,.3),transparent)}
 #livro-modal .lv-sombra{bottom:-36px;height:52px;background:radial-gradient(ellipse at center,rgba(0,0,0,.55),transparent 70%);filter:blur(12px)}
 #livro-modal .lv-borda{position:absolute;top:0;right:-2px;width:4px;height:100%;transform:rotateY(90deg);background:linear-gradient(90deg,#d8d1c2,#fbf8f1 50%,#d8d1c2);box-shadow:0 0 6px rgba(0,0,0,.35)}
+#livro-modal.lv-sem-anim .lv-folha,#livro-modal.lv-sem-anim .lv-frente::after,#livro-modal.lv-sem-anim .lv-verso::after{transition:none !important}
+
+/* ===== Visual da caderneta antiga dentro do livro novo ===== */
+#livro-modal .lv-cab{display:flex;align-items:center;gap:calc(var(--P)*.025)}
+#livro-modal .lv-cab img{width:calc(var(--P)*.075);height:calc(var(--P)*.075);object-fit:contain;flex-shrink:0}
+#livro-modal .lv-cab h2{font:400 calc(var(--P)*.095) 'Bebas Neue','Barlow Condensed',sans-serif;letter-spacing:.14em}
+#livro-modal .lv-pg .lv-sub{font:500 calc(var(--P)*.034) 'Inter','Barlow Condensed',sans-serif;letter-spacing:.1em;color:#444;text-transform:none}
+#livro-modal .lv-slot{flex-direction:column;gap:3px;border-radius:6px;border:1.5px dashed #c8c4bc;background:rgba(255,255,255,.6)}
+#livro-modal .lv-slot b{font:400 calc(var(--P)*.1) 'Bebas Neue','Barlow Condensed',sans-serif;letter-spacing:.04em;color:#b4aea2;line-height:1}
+#livro-modal .lv-slot em{font-style:normal;font:700 calc(var(--P)*.024) 'Inter','Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#a9822b}
+#livro-modal .lv-slot.lv-tec{border-color:#c9a24b;background:linear-gradient(180deg,#fffaf0,#fbf3de)}
+#livro-modal .lv-slot.lv-tec b{color:#b98f2f}
+#livro-modal .lv-slot.tem b,#livro-modal .lv-slot.tem em{display:none}
+#livro-modal .lv-slot.tem{border:0;background:transparent}
+#livro-modal .lv-indbtn{display:none;position:absolute;top:18px;left:140px;z-index:10;border:1px solid var(--lv-azul);background:#fff;color:var(--lv-azul);font:600 16px 'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;cursor:pointer}
+#livro-modal.lv-nao-indice .lv-indbtn{display:block}
+#livro-modal.lv-intro-on .lv-indbtn{display:none !important}
+/* folha a virar fica sempre por cima (evita ver a página de baixo, ex. cromo 63, durante a viragem) */
+#livro-modal .lv-folha.virando{z-index:999 !important}
+/* lombada: sombra suave e simétrica no meio, sem linha clara */
+#livro-modal .lv-frente::before{width:90px;background:linear-gradient(to right,rgba(0,0,0,.22),rgba(0,0,0,.08) 45%,transparent)}
+#livro-modal .lv-verso::before{width:90px;background:linear-gradient(to left,rgba(0,0,0,.22),rgba(0,0,0,.08) 45%,transparent)}
+#livro-modal .lv-livro::after{content:"";position:absolute;top:0;bottom:0;left:calc(100% - var(--P));width:18px;margin-left:-9px;background:linear-gradient(to right,transparent,rgba(0,0,0,.22) 50%,transparent);transform:translateZ(1px);pointer-events:none}
+#livro-modal .lv-cena.fechado .lv-livro::after{display:none}

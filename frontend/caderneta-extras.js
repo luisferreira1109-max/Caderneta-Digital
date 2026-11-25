@@ -218,9 +218,10 @@
     const lend = (cromo.raridade || getRaridade(clube, cromo.num_cromo)) === 'lendario';
     const clubeNome = clube === 'fcps' ? 'FCPS Paço de Sousa' : 'CCRDSV Irivo';
 
-    const achado = acharSlot(clube, cromo.num_cromo);
-    if (!achado) { mostrarNotificacao('Slot não encontrado na caderneta!', 'erro'); return; }
-    const slot = achado.slot;
+    const usarLivro = typeof window.abrirLivroParaColar === 'function';
+    const achado = usarLivro ? null : acharSlot(clube, cromo.num_cromo);
+    if (!usarLivro && !achado) { mostrarNotificacao('Slot não encontrado na caderneta!', 'erro'); return; }
+    let slot = achado ? achado.slot : null;
 
     // Posição inicial = cromo no popup
     const imgPop = document.querySelector('#cromo-overlay-img img');
@@ -231,6 +232,12 @@
     }
     fecharCromoOverlay(null);
 
+    if (usarLivro) {
+      // Livro novo: abre na página do cromo e cola ali
+      slot = await window.abrirLivroParaColar(clube, cromo.num_cromo);
+      if (!slot) { mostrarNotificacao('Slot não encontrado na caderneta!', 'erro'); return; }
+      await esperar(500);
+    } else {
     // Abrir a caderneta na página certa (sem animação de capa)
     window._cadSemCapa = true;
     const cadNav = document.querySelector('.nav-item[onclick*="cadernetas"]');
@@ -243,6 +250,7 @@
     await carregarCromosColados(clube);
     setTimeout(() => { window._cadSemCapa = false; }, 80);
     await esperar(350);
+    }
 
     const fim = slot.getBoundingClientRect();
     // Voo
@@ -271,7 +279,8 @@
       slot.innerHTML = '<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a2a3a,#0d1a2a);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#c8a84b;font-weight:700;">#' + cromo.num_cromo + '</div>';
     }
     slot.classList.add('tem-cromo', 'cx-colado');
-    slot.onclick = img ? () => abrirCromoImg(img) : null;
+    if (usarLivro) slot.classList.add('tem');
+    slot.onclick = (img && !usarLivro) ? () => abrirCromoImg(img) : null;
     const br = document.createElement('div');
     br.className = 'cx-brilho-slot';
     slot.appendChild(br);
