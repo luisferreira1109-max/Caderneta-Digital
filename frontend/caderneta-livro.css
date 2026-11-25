@@ -142,3 +142,6 @@
 #livro-modal .lv-cena.fechado .lv-livro::after{display:none}
 #livro-modal .lv-cab h2.lv-longo{font-size:calc(var(--P)*.068);letter-spacing:.08em;white-space:nowrap}
 #livro-modal .lv-slot em{font-size:calc(var(--P)*.02);letter-spacing:.02em;white-space:nowrap}
+/* faixa da borda da folha: só visível durante a viragem (parada, deixava linhas à volta do livro) */
+#livro-modal .lv-borda{opacity:0;transition:opacity .15s}
+#livro-modal .lv-folha.virando .lv-borda{opacity:1}
