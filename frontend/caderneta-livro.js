@@ -53,7 +53,7 @@
       '<div class="lv-cena fechado"><div class="lv-livro"></div><div class="lv-sombra"></div></div>' +
       '<div class="lv-nav"><button class="lv-seta lv-ant">‹</button><button class="lv-seta lv-prox">›</button></div>';
     var P = paginas(clube, colados), livro = modal.querySelector('.lv-livro'), cena = modal.querySelector('.lv-cena');
-    var folhas = [['<div class="lv-capa" style="position:absolute;inset:0"><img src="images/caderneta-' + clube + '.png" alt=""></div>', P[0]]];
+    var folhas = [['<div class="lv-capa" style="position:absolute;inset:0"><img class="c3d" src="images/caderneta-' + clube + '.png" alt=""></div>', P[0]]];
     for (var k = 1; k < P.length / 2; k++) folhas.push([P[2 * k - 1], P[2 * k]]);
     folhas.push([P[P.length - 1], '']);
     var els = folhas.map(function (f, i) {
@@ -78,8 +78,11 @@
     var s = estado; if (!s) return;
     var n = s.est + d; if (n < 0 || n > s.max) return;
     var f = s.els[d > 0 ? s.est : n]; f.classList.add('virando');
+    s.cena.classList.add('solta');
+    clearTimeout(s.tsolta);
     setTimeout(function () { f.classList.remove('virando'); }, 950);
     s.est = n; pinta();
+    s.tsolta = setTimeout(function () { if (estado === s && s.est === 0) s.cena.classList.remove('solta'); }, 1000);
   }
 
   function saltar(pag) {
@@ -106,9 +109,26 @@
   document.addEventListener('pointerup', function (e) { if (x0 === null) return; var dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 60) ir(dx < 0 ? 1 : -1); });
 
   /* Substitui a caderneta antiga */
+  var VIDEOS = { fcps: 'images/abrir-fcps.mp4', ccrdsv: 'images/abrir-ccrdsv.mp4' };
+  function intro(clube) {
+    var s = estado, v = document.createElement('video'), feito = false;
+    v.className = 'lv-video'; v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = VIDEOS[clube];
+    s.modal.classList.add('lv-intro-on'); s.modal.appendChild(v);
+    s.est = 1; pinta();
+    function fim() {
+      if (feito) return; feito = true;
+      s.modal.classList.remove('lv-intro-on'); v.classList.add('sai');
+      setTimeout(function () { if (v.parentNode) v.parentNode.removeChild(v); }, 900);
+    }
+    v.addEventListener('timeupdate', function () { if (v.currentTime >= 2.4) fim(); });
+    v.addEventListener('ended', fim); v.addEventListener('error', fim);
+    setTimeout(fim, 6000);
+    var pr = v.play(); if (pr && pr.catch) pr.catch(fim);
+  }
   window.abrirCaderneta = async function (clube) {
     var colados = await buscarColados(clube);
     construir(clube, colados);
+    if (VIDEOS[clube]) intro(clube);
   };
   window.fecharLivro = fechar;
 })();
