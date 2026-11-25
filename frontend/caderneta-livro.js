@@ -70,13 +70,13 @@
     var s = estado;
     s.els.forEach(function (e, i) { e.classList.toggle('virada', i < s.est); e.style.zIndex = i < s.est ? i : (s.els.length - i); });
     s.cena.classList.toggle('fechado', s.est === 0);
-    s.modal.querySelector('.lv-ant').disabled = s.est === 0;
+    s.modal.querySelector('.lv-ant').disabled = s.est <= 1;
     s.modal.querySelector('.lv-prox').disabled = s.est === s.max;
   }
 
   function ir(d) {
     var s = estado; if (!s) return;
-    var n = s.est + d; if (n < 0 || n > s.max) return;
+    var n = s.est + d; if (n < 1 || n > s.max) return;
     var f = s.els[d > 0 ? s.est : n]; f.classList.add('virando');
     s.cena.classList.add('solta');
     clearTimeout(s.tsolta);

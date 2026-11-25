@@ -98,7 +98,9 @@
 #livro-modal .lv-cena.fechado .lv-livro{transform:rotateY(-16deg) rotateX(3deg)}
 
 /* Video de abertura */
-#livro-modal .lv-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#04070a;z-index:4;pointer-events:none;opacity:1;transition:opacity .7s ease}
+#livro-modal .lv-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:transparent;z-index:4;pointer-events:none;opacity:1;transition:opacity .7s ease;-webkit-mask-image:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent),linear-gradient(0deg,transparent,#000 20%,#000 80%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent),linear-gradient(0deg,transparent,#000 20%,#000 80%,transparent);mask-composite:intersect}
 #livro-modal .lv-video.sai{opacity:0}
 #livro-modal.lv-intro-on .lv-nav{opacity:0;pointer-events:none}
 #livro-modal .lv-fechar{z-index:10}
+#livro-modal .lv-cena{transition:transform .9s cubic-bezier(.65,.05,.36,1),opacity .7s ease}
+#livro-modal.lv-intro-on .lv-cena{opacity:0}
