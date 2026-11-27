@@ -158,3 +158,5 @@
 /* sombra da folha: acende no início e apaga devagar até a folha pousar (sem "pico" de claridade na lombada) */
 #livro-modal .lv-folha.virando .lv-frente::after,#livro-modal .lv-folha.virando .lv-verso::after{opacity:0;transition:opacity .5s ease-out}
 #livro-modal .lv-folha.virando.lv-som .lv-frente::after,#livro-modal .lv-folha.virando.lv-som .lv-verso::after{opacity:1;transition:opacity .3s}
+/* sem sombra variável nas folhas: a luz do livro fica constante (nada escurece/clareia a meio da viragem) */
+#livro-modal .lv-frente::after,#livro-modal .lv-verso::after{display:none !important}
