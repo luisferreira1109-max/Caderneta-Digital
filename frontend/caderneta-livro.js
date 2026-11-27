@@ -52,12 +52,10 @@
       document.body.appendChild(modal);
     }
     modal.className = 'caderneta-modal show lv-' + clube;
-    var qx = /[?&]lvx=([a-ezp])/.exec(location.search); if (qx) modal.classList.add('lvx-' + qx[1]);
     modal.innerHTML = '<div class="lv-fundo"><div class="lv-bancada"></div><div class="lv-relva"><div class="lv-campo"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none" fill="none" stroke="rgba(255,255,255,.95)"><path d="M330 90 H1000"/><path d="M330 90 V1000"/><path d="M330 180 A90 90 0 0 0 420 90"/><path d="M640 90 V380 H900 V90"/><path d="M720 90 V220 H820 V90"/></svg></div></div></div>' + '<button class="lv-fechar">✕ Fechar</button><button class="lv-indbtn">← Índice</button>' +
       '<div class="lv-cena fechado"><div class="lv-livro"></div><div class="lv-sombra"></div></div>' +
       '<div class="lv-nav"><button class="lv-seta lv-ant">‹</button><button class="lv-seta lv-prox">›</button></div>';
     var P = paginas(clube, colados), livro = modal.querySelector('.lv-livro'), cena = modal.querySelector('.lv-cena');
-    var semPre = /[?&]lvx=z/.test(location.search);
     var folhas = [['<div class="lv-capa" style="position:absolute;inset:0"><img class="c3d" src="images/caderneta-' + clube + '.png" alt=""></div>', P[0]]];
     for (var k = 1; k < P.length / 2; k++) folhas.push([P[2 * k - 1], P[2 * k]]);
     folhas.push([P[P.length - 1], '']);
@@ -68,7 +66,7 @@
       livro.appendChild(d); return d;
     });
     estado = { clube: clube, est: 0, max: folhas.length - 1, els: els, cena: cena, modal: modal };
-    if (!semPre) {
+    {
       /* pré-carrega e descodifica já todas as imagens das páginas (evita páginas "em branco" ao virar) */
       modal.querySelectorAll('.lv-folha img').forEach(function (im) { im.decoding = 'sync'; im.loading = 'eager'; if (im.decode) im.decode().catch(function () {}); });
     }
@@ -91,14 +89,14 @@
     setTimeout(function () { f.classList.remove('lv-som'); }, 420);
     s.cena.classList.add('solta');
     clearTimeout(s.tsolta);
-    setTimeout(function () { f.classList.remove('virando'); }, 570);
+    setTimeout(function () { f.classList.remove('virando'); }, 950);
     s.est = n; pinta();
     s.tsolta = setTimeout(function () { if (estado === s && s.est === 0) s.cena.classList.remove('solta'); }, 1000);
   }
 
   function saltar(pag) {
     var alvo = Math.ceil(pag / 2);
-    (function passo() { if (!estado || estado.est === alvo) return; ir(estado.est < alvo ? 1 : -1); setTimeout(passo, 180); })();
+    (function passo() { if (!estado || estado.est === alvo) return; ir(estado.est < alvo ? 1 : -1); setTimeout(passo, 260); })();
   }
 
   function fechar() { var m = document.getElementById('livro-modal'); if (m) { m.classList.remove('show'); m.innerHTML = ''; } estado = null; }
