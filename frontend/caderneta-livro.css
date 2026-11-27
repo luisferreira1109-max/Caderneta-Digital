@@ -164,3 +164,15 @@
 #livro-modal .lv-frente::after,#livro-modal .lv-verso::after{display:block !important;background:rgba(25,18,8,.7) !important;opacity:0;transition:none !important}
 #livro-modal .lv-folha.virando .lv-frente::after,#livro-modal .lv-folha.virando .lv-verso::after{animation:lv-som-ang .95s linear both}
 @keyframes lv-som-ang{0%{opacity:0}22%{opacity:.12}47%{opacity:1}72%{opacity:.12}100%{opacity:0}}
+
+/* ===== TESTE (endereço ?lvx=a..e): desliga efeitos para descobrir a piscadela ===== */
+/* a: sem sombra/escurecimento da folha */
+#livro-modal.lvx-a .lv-frente::after,#livro-modal.lvx-a .lv-verso::after,#livro-modal.lvx-e .lv-frente::after,#livro-modal.lvx-e .lv-verso::after{display:none !important;animation:none !important}
+/* b: sem faixa da borda da folha */
+#livro-modal.lvx-b .lv-borda,#livro-modal.lvx-e .lv-borda{display:none !important}
+/* c: sem sombra da lombada (sombras fixas do meio) */
+#livro-modal.lvx-c .lv-frente::before,#livro-modal.lvx-c .lv-verso::before,#livro-modal.lvx-c .lv-livro::after,#livro-modal.lvx-e .lv-frente::before,#livro-modal.lvx-e .lv-verso::before,#livro-modal.lvx-e .lv-livro::after{display:none !important}
+/* d: sem textura de papel e sem inclinação */
+#livro-modal.lvx-d .lv-face,#livro-modal.lvx-e .lv-face{background-image:none !important}
+#livro-modal.lvx-d .lv-cena:not(.fechado) .lv-livro,#livro-modal.lvx-e .lv-cena:not(.fechado) .lv-livro{transform:none !important}
+/* e: tudo desligado */
