@@ -302,3 +302,14 @@
     atualizarBarrasProgresso();
   };
 })();
+
+/* Raridade "Épico" já não existe: tira-a do filtro do Mercado */
+(function () {
+  function tirarEpico() {
+    var s = document.getElementById('mercado-filtro-raridade');
+    if (!s) return;
+    var o = s.querySelector('option[value="epico"]');
+    if (o) { if (s.value === 'epico') s.value = ''; o.remove(); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', tirarEpico); else tirarEpico();
+})();
