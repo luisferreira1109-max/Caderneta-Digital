@@ -147,3 +147,6 @@
 #livro-modal .lv-folha.virando .lv-borda{opacity:1}
 /* borda da folha: mais curta (não passa os cantos redondos) e sem sombra, para não aparecer linha branca no topo */
 #livro-modal .lv-borda{top:8px;height:calc(100% - 16px);border-radius:2px;box-shadow:none}
+/* faixa da borda mais discreta (tom de papel na sombra da lombada), para não piscar branco a meio da viragem */
+#livro-modal .lv-borda{width:3px;right:-1.5px;background:linear-gradient(90deg,#a9a190,#cfc8b7 50%,#a9a190)}
+#livro-modal .lv-folha.virando .lv-borda{opacity:.7}
