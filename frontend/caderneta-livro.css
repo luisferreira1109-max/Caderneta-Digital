@@ -155,3 +155,6 @@
 #livro-modal .lv-folha.virando .lv-borda{opacity:.5}
 /* sombra da folha a pousar desaparece depressa (antes demorava ~1s e a lombada ia ficando clara aos poucos) */
 #livro-modal .lv-frente::after,#livro-modal .lv-verso::after{transition:opacity .2s}
+/* sombra da folha: acende no início e apaga devagar até a folha pousar (sem "pico" de claridade na lombada) */
+#livro-modal .lv-folha.virando .lv-frente::after,#livro-modal .lv-folha.virando .lv-verso::after{opacity:0;transition:opacity .5s ease-out}
+#livro-modal .lv-folha.virando.lv-som .lv-frente::after,#livro-modal .lv-folha.virando.lv-som .lv-verso::after{opacity:1;transition:opacity .3s}

@@ -81,7 +81,8 @@
   function ir(d) {
     var s = estado; if (!s) return;
     var n = s.est + d; if (n < 1 || n > s.max) return;
-    var f = s.els[d > 0 ? s.est : n]; f.classList.add('virando');
+    var f = s.els[d > 0 ? s.est : n]; f.classList.add('virando', 'lv-som');
+    setTimeout(function () { f.classList.remove('lv-som'); }, 420);
     s.cena.classList.add('solta');
     clearTimeout(s.tsolta);
     setTimeout(function () { f.classList.remove('virando'); }, 950);
