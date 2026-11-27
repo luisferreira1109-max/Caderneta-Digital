@@ -150,3 +150,6 @@
 /* faixa da borda mais discreta (tom de papel na sombra da lombada), para não piscar branco a meio da viragem */
 #livro-modal .lv-borda{width:3px;right:-1.5px;background:linear-gradient(90deg,#a9a190,#cfc8b7 50%,#a9a190)}
 #livro-modal .lv-folha.virando .lv-borda{opacity:.7}
+/* borda da folha ainda mais discreta: vinco escuro na lombada (sem brilho branco, nem a recuar) */
+#livro-modal .lv-borda{background:linear-gradient(90deg,#7c7565,#a39b8a 50%,#7c7565)}
+#livro-modal .lv-folha.virando .lv-borda{opacity:.5}
