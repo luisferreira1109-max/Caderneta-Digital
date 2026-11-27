@@ -160,3 +160,7 @@
 #livro-modal .lv-folha.virando.lv-som .lv-frente::after,#livro-modal .lv-folha.virando.lv-som .lv-verso::after{opacity:1;transition:opacity .3s}
 /* sem sombra variável nas folhas: a luz do livro fica constante (nada escurece/clareia a meio da viragem) */
 #livro-modal .lv-frente::after,#livro-modal .lv-verso::after{display:none !important}
+/* a folha escurece com o ângulo: clara quando está deitada, escura quando está "de pé" (a meio da viragem) */
+#livro-modal .lv-frente::after,#livro-modal .lv-verso::after{display:block !important;background:rgba(25,18,8,.7) !important;opacity:0;transition:none !important}
+#livro-modal .lv-folha.virando .lv-frente::after,#livro-modal .lv-folha.virando .lv-verso::after{animation:lv-som-ang .95s linear both}
+@keyframes lv-som-ang{0%{opacity:0}22%{opacity:.12}47%{opacity:1}72%{opacity:.12}100%{opacity:0}}
