@@ -176,3 +176,6 @@
 #livro-modal.lvx-d .lv-face,#livro-modal.lvx-e .lv-face{background-image:none !important}
 #livro-modal.lvx-d .lv-cena:not(.fechado) .lv-livro,#livro-modal.lvx-e .lv-cena:not(.fechado) .lv-livro{transform:none !important}
 /* e: tudo desligado */
+
+/* ===== Páginas já prontas antes de aparecerem (evita piscar em branco ao virar) ===== */
+#livro-modal:not(.lvx-z) .lv-folha,#livro-modal:not(.lvx-z) .lv-face{will-change:transform}
