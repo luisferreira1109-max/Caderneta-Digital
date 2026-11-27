@@ -91,14 +91,14 @@
     setTimeout(function () { f.classList.remove('lv-som'); }, 420);
     s.cena.classList.add('solta');
     clearTimeout(s.tsolta);
-    setTimeout(function () { f.classList.remove('virando'); }, 950);
+    setTimeout(function () { f.classList.remove('virando'); }, 570);
     s.est = n; pinta();
     s.tsolta = setTimeout(function () { if (estado === s && s.est === 0) s.cena.classList.remove('solta'); }, 1000);
   }
 
   function saltar(pag) {
     var alvo = Math.ceil(pag / 2);
-    (function passo() { if (!estado || estado.est === alvo) return; ir(estado.est < alvo ? 1 : -1); setTimeout(passo, 260); })();
+    (function passo() { if (!estado || estado.est === alvo) return; ir(estado.est < alvo ? 1 : -1); setTimeout(passo, 180); })();
   }
 
   function fechar() { var m = document.getElementById('livro-modal'); if (m) { m.classList.remove('show'); m.innerHTML = ''; } estado = null; }

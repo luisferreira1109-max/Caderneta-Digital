@@ -84,8 +84,8 @@
 /* Capa = mesma imagem da caderneta na página Cadernetas */
 #livro-modal .lv-face.lv-capa{box-shadow:none !important}
 /* Livro fechado: só se vê a capa (sem a página de baixo a aparecer pelos cantos) */
-#livro-modal .lv-folha:not(:first-child){transition:transform .95s cubic-bezier(.62,.04,.3,1),visibility 0s linear .08s}
-#livro-modal .lv-cena.fechado .lv-folha:not(:first-child){visibility:hidden;transition:transform .95s cubic-bezier(.62,.04,.3,1),visibility 0s linear .8s}
+#livro-modal .lv-folha:not(:first-child){transition:transform .55s cubic-bezier(.62,.04,.3,1),visibility 0s linear .08s}
+#livro-modal .lv-cena.fechado .lv-folha:not(:first-child){visibility:hidden;transition:transform .55s cubic-bezier(.62,.04,.3,1),visibility 0s linear .8s}
 /* Capa = imagem 3D da caderneta, sempre (páginas com a mesma proporção) */
 #livro-modal .lv-capa img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:fill}
 /* Páginas mais baixas: cromos da grelha cabem sempre inteiros */
@@ -162,7 +162,7 @@
 #livro-modal .lv-frente::after,#livro-modal .lv-verso::after{display:none !important}
 /* a folha escurece com o ângulo: clara quando está deitada, escura quando está "de pé" (a meio da viragem) */
 #livro-modal .lv-frente::after,#livro-modal .lv-verso::after{display:block !important;background:rgba(25,18,8,.7) !important;opacity:0;transition:none !important}
-#livro-modal .lv-folha.virando .lv-frente::after,#livro-modal .lv-folha.virando .lv-verso::after{animation:lv-som-ang .95s linear both}
+#livro-modal .lv-folha.virando .lv-frente::after,#livro-modal .lv-folha.virando .lv-verso::after{animation:lv-som-ang .55s linear both}
 @keyframes lv-som-ang{0%{opacity:0}22%{opacity:.12}47%{opacity:1}72%{opacity:.12}100%{opacity:0}}
 
 /* ===== TESTE (endereço ?lvx=a..e): desliga efeitos para descobrir a piscadela ===== */
